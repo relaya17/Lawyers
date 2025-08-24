@@ -1,0 +1,217 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Jerusalem'
+    open-pull-requests-limit: 10
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    labels:
+      - 'dependencies'
+      - 'automated'
+    ignore:
+      # Ignore major version updates for these packages
+      - dependency-name: '@types/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react-dom'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@mui/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'vite'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'vitest'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'playwright'
+        update-types: ['version-update:semver-major']
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Jerusalem'
+    open-pull-requests-limit: 5
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'ci'
+      include: 'scope'
+    labels:
+      - 'github-actions'
+      - 'automated'
+
+  # Enable version updates for Docker
+  - package-ecosystem: 'docker'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Jerusalem'
+    open-pull-requests-limit: 5
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'ci'
+      include: 'scope'
+    labels:
+      - 'docker'
+      - 'automated'
+
+  # Enable version updates for pip (if using Python)
+  - package-ecosystem: 'pip'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Jerusalem'
+    open-pull-requests-limit: 5
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    labels:
+      - 'python'
+      - 'automated'
+
+  # Enable version updates for composer (if using PHP)
+  - package-ecosystem: 'composer'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Jerusalem'
+    open-pull-requests-limit: 5
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    labels:
+      - 'php'
+      - 'automated'
+
+  # Enable version updates for maven (if using Java)
+  - package-ecosystem: 'maven'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Jerusalem'
+    open-pull-requests-limit: 5
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    labels:
+      - 'java'
+      - 'automated'
+
+  # Enable version updates for gradle (if using Java)
+  - package-ecosystem: 'gradle'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Jerusalem'
+    open-pull-requests-limit: 5
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    labels:
+      - 'java'
+      - 'automated'
+
+  # Enable version updates for nuget (if using .NET)
+  - package-ecosystem: 'nuget'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Jerusalem'
+    open-pull-requests-limit: 5
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    labels:
+      - 'dotnet'
+      - 'automated'
+
+  # Enable version updates for cargo (if using Rust)
+  - package-ecosystem: 'cargo'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Jerusalem'
+    open-pull-requests-limit: 5
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    labels:
+      - 'rust'
+      - 'automated'
+
+  # Enable version updates for go modules (if using Go)
+  - package-ecosystem: 'gomod'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Jerusalem'
+    open-pull-requests-limit: 5
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    labels:
+      - 'go'
+      - 'automated'
+
+  # Enable version updates for terraform (if using Terraform)
+  - package-ecosystem: 'terraform'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Jerusalem'
+    open-pull-requests-limit: 5
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    labels:
+      - 'terraform'
+      - 'automated'
