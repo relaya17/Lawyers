@@ -36,6 +36,7 @@ import {
   Tabs,
   Tab
 } from '@mui/material';
+import { CheckCircle, Refresh as RefreshIcon } from '@mui/icons-material';
 import { 
   Close as CloseIcon,
   CheckCircle as CorrectIcon,
@@ -1248,7 +1249,7 @@ export const CompleteLegalExam50Questions: React.FC<CompleteLegalExam50Questions
                   variant="outlined"
                 />
                 <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                  מילים: {currentAnswer ? currentAnswer.split(' ').filter(w => w.length > 0).length : 0} | 
+                  מילים: {currentAnswer ? currentAnswer.split(' ').filter((w: string) => w.length > 0).length : 0} | 
                   זמן משוער: {currentQuestion.timeEstimate} דק'
                 </Typography>
               </Box>

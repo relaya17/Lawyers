@@ -636,7 +636,7 @@ const CompleteLegalSourcesExam: React.FC = () => {
             <Chip 
               label={results.grade} 
               color={results.percentage >= 70 ? 'success' : 'error'} 
-              size="large" 
+              size="medium" 
               sx={{ fontSize: '1.2rem', p: 2 }} 
             />
           </Box>
