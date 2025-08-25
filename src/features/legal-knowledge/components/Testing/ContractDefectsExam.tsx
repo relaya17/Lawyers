@@ -612,28 +612,28 @@ const ContractDefectsExam: React.FC = () => {
               <ListItemIcon><Warning color="primary" /></ListItemIcon>
               <ListItemText 
                 primary="עושק" 
-                secondary="מצוקה, חולשה, ניצול - פס"ד סאסי קיקאון, חיים כהן ושות'" 
+                secondary="מצוקה, חולשה, ניצול - פס&quot;ד סאסי קיקאון, חיים כהן ושות'" 
               />
             </ListItem>
             <ListItem>
               <ListItemIcon><Article color="primary" /></ListItemIcon>
               <ListItemText 
                 primary="חוזה למראית עין" 
-                secondary="מוחלט/יחסי, חוזה מלאכותי - פס"ד סולל צוקרמן" 
+                secondary="מוחלט/יחסי, חוזה מלאכותי - פס&quot;ד סולל צוקרמן" 
               />
             </ListItem>
             <ListItem>
               <ListItemIcon><Assignment color="primary" /></ListItemIcon>
               <ListItemText 
                 primary="חוזה על תנאי ופסול" 
-                secondary="תנאי מתלה/מפסיק, הגבלת חופש עיסוק - פס"ד צים מזיאר" 
+                secondary="תנאי מתלה/מפסיק, הגבלת חופש עיסוק - פס&quot;ד צים מזיאר" 
               />
             </ListItem>
             <ListItem>
               <ListItemIcon><Balance color="primary" /></ListItemIcon>
               <ListItemText 
                 primary="תום לב" 
-                secondary="חובות בשלב המו"מ ובקיום החוזה, פיצויי הסתמכות" 
+                secondary="חובות בשלב המו&quot;מ ובקיום החוזה, פיצויי הסתמכות" 
               />
             </ListItem>
           </List>

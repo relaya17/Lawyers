@@ -1,1 +1,1 @@
-export { LegalKnowledgePage } from './index.tsx';
+export { LegalKnowledgePage } from './index';

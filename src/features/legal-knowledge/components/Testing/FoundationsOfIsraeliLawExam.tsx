@@ -325,7 +325,7 @@ export const FoundationsOfIsraeliLawExam: React.FC = () => {
                   <ListItemText primary="🔄 מעבר מהמשפט העות'מאני והבריטי למשפט הישראלי" />
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary="🎯 בג\"ץ ותפקידו במערכת המשפט" />
+                  <ListItemText primary="🎯 בג&quot;ץ ותפקידו במערכת המשפט" />
                 </ListItem>
               </List>
             </Alert>

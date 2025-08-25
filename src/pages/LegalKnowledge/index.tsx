@@ -34,7 +34,12 @@ import {
   History,
   Psychology,
   AccountBalance,
-  Flag
+  Flag,
+  Lightbulb,
+  Description as DescriptionIcon,
+  Warning as WarningIcon,
+  LocalPolice as LocalPoliceIcon,
+  MenuBook
 } from '@mui/icons-material';
 
 // Import all the components we created
@@ -150,7 +155,7 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     id: 'intro-law-contracts',
     title: 'מבוא למשפט ודיני חוזים',
     description: 'מבחן יסודי על מקורות המשפט, תקדימים, ועקרונות בסיסיים בדיני חוזים',
-    icon: <Balance />,
+    icon: <BalanceIcon />,
     color: '#607d8b',
     category: 'exams',
     component: IntroToLawAndContractsExam,
@@ -205,7 +210,7 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       id: 'parliamentary-equality-exam',
       title: 'מבחן תנאי מועמדות ושוויון במשפט',
       description: 'מבחן מקיף על תנאי מועמדות לכנסת, שוויון הזדמנויות בעבודה ואיסור הפליה',
-      icon: <AccountBalanceIcon />,
+      icon: <AccountBalance />,
       color: '#673ab7',
       category: 'exams',
       component: ParliamentaryAndEqualityLawExam,

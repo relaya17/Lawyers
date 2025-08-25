@@ -612,28 +612,28 @@ const ContractFormationExam: React.FC = () => {
               <ListItemIcon><Article color="primary" /></ListItemIcon>
               <ListItemText 
                 primary="דרישת הכתב במקרקעין" 
-                secondary="פס"ד קפולסקי, בוטקובסקי - פרטים מהותיים וזכרון דברים" 
+                secondary="פס&quot;ד קפולסקי, בוטקובסקי - פרטים מהותיים וזכרון דברים" 
               />
             </ListItem>
             <ListItem>
               <ListItemIcon><Handshake color="primary" /></ListItemIcon>
               <ListItemText 
                 primary="הצעה וקיבול" 
-                secondary="פס"ד מנורה, ברוך, כהן - מועד קבלה, פקיעה, הצעה מזכה" 
+                secondary="פס&quot;ד מנורה, ברוך, כהן - מועד קבלה, פקיעה, הצעה מזכה" 
               />
             </ListItem>
             <ListItem>
               <ListItemIcon><Balance color="primary" /></ListItemIcon>
               <ListItemText 
                 primary="פירוש והשלמת חוזה" 
-                secondary="פס"ד אפרופים - מבחן חד-שלבי, היררכיית פירוש" 
+                secondary="פס&quot;ד אפרופים - מבחן חד-שלבי, היררכיית פירוש" 
               />
             </ListItem>
             <ListItem>
               <ListItemIcon><Gavel color="primary" /></ListItemIcon>
               <ListItemText 
                 primary="פגמים בכריתת חוזה" 
-                secondary="טעות, הטעיה, כפייה - פס"ד לוטם רהיטים" 
+                secondary="טעות, הטעיה, כפייה - פס&quot;ד לוטם רהיטים" 
               />
             </ListItem>
           </List>
