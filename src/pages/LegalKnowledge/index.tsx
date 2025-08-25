@@ -33,7 +33,8 @@ import {
   Assessment as ExamIcon,
   History,
   Psychology,
-  AccountBalance
+  AccountBalance,
+  Flag
 } from '@mui/icons-material';
 
 // Import all the components we created
@@ -56,6 +57,14 @@ import { CaseStudyViewer } from '../../features/legal-knowledge/components/CaseS
 import { LawVsCustomGame } from '../../features/legal-knowledge/components/GameModes/LawVsCustom/LawVsCustomGame';
 import { ProgressDashboard } from '../../features/legal-knowledge/components/Statistics/ProgressDashboard';
 import { VirtualCourtroomSimulator } from '../../features/legal-knowledge/components/CourtRoom1/VirtualCourtroomSimulator';
+import ComprehensiveLegalSourcesExam from '../../features/legal-knowledge/components/Testing/ComprehensiveLegalSourcesExam';
+import LawVsCustomQuiz from '../../features/legal-knowledge/components/Interactive/LawVsCustomQuiz';
+import ConstitutionalLawComparison from '../../features/legal-knowledge/components/Testing/ConstitutionalLawComparison';
+import LawOfReturnExam from '../../features/legal-knowledge/components/Testing/LawOfReturnExam';
+import ParliamentaryAndEqualityLawExam from '../../features/legal-knowledge/components/Testing/ParliamentaryAndEqualityLawExam';
+import ContractFormationExam from '../../features/legal-knowledge/components/Testing/ContractFormationExam';
+import ContractDefectsExam from '../../features/legal-knowledge/components/Testing/ContractDefectsExam';
+import CriminalLawExam from '../../features/legal-knowledge/components/Testing/CriminalLawExam';
 
 interface LegalKnowledgeFeature {
   id: string;
@@ -170,6 +179,72 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     difficulty: 'expert',
     estimatedTime: 100
   },
+  {
+    id: 'comprehensive-sources-exam',
+    title: 'מבחן מקיף מקורות המשפט - 50 שאלות',
+    description: 'מבחן מקיף ביותר עם 50 שאלות בכל רמות הקושי, כולל סימולציות בית משפט',
+    icon: <TrophyIcon />,
+    color: '#ff4444',
+    category: 'exams',
+    component: ComprehensiveLegalSourcesExam,
+    difficulty: 'expert',
+    estimatedTime: 150
+  },
+      {
+      id: 'constitutional-comparison',
+      title: 'משפט חוקתי השוואתי',
+      description: 'השוואה מעמיקה בין המערכת החוקתית האמריקאית לישראלית',
+      icon: <Flag />,
+      color: '#3f51b5',
+      category: 'exams',
+      component: ConstitutionalLawComparison,
+      difficulty: 'advanced',
+      estimatedTime: 45
+    },
+    {
+      id: 'parliamentary-equality-exam',
+      title: 'מבחן תנאי מועמדות ושוויון במשפט',
+      description: 'מבחן מקיף על תנאי מועמדות לכנסת, שוויון הזדמנויות בעבודה ואיסור הפליה',
+      icon: <AccountBalanceIcon />,
+      color: '#673ab7',
+      category: 'exams',
+      component: ParliamentaryAndEqualityLawExam,
+      difficulty: 'advanced',
+      estimatedTime: 90
+    },
+    {
+      id: 'contract-formation-exam',
+      title: 'מבחן דיני חוזים - כריתת חוזה',
+      description: 'מבחן מקיף על כריתת חוזה, פירוש, השלמה ופגמים בכריתת חוזה',
+      icon: <DescriptionIcon />,
+      color: '#009688',
+      category: 'exams', 
+      component: ContractFormationExam,
+      difficulty: 'advanced',
+      estimatedTime: 75
+    },
+    {
+      id: 'contract-defects-exam',
+      title: 'מבחן פגמים בכריתת חוזה',
+      description: 'מבחן מתקדם על עושק, חוזה למראית עין, חוזה על תנאי ותום לב',
+      icon: <WarningIcon />,
+      color: '#ff9800',
+      category: 'exams',
+      component: ContractDefectsExam,
+      difficulty: 'expert',
+      estimatedTime: 80
+    },
+    {
+      id: 'criminal-law-exam',
+      title: 'מבחן דיני עונשין',
+      description: 'מבחן מקיף על יסודות עבירות פליליות, יסוד נפשי וריבוב',
+      icon: <LocalPoliceIcon />,
+      color: '#d32f2f',
+      category: 'exams',
+      component: CriminalLawExam,
+      difficulty: 'expert',
+      estimatedTime: 90
+    },
 
   // למידה וחקירה
   {
@@ -250,6 +325,17 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     component: LawVsCustomGame,
     difficulty: 'intermediate',
     estimatedTime: 20
+  },
+  {
+    id: 'law-vs-custom-quiz',
+    title: 'חידון: חוק נגד מנהג',
+    description: 'חידון אינטראקטיבי עם סיטואציות סותרות בין חקיקה למנהגים',
+    icon: <BalanceIcon />,
+    color: '#2196f3',
+    category: 'games',
+    component: LawVsCustomQuiz,
+    difficulty: 'intermediate',
+    estimatedTime: 25
   },
   {
     id: 'virtual-courtroom',

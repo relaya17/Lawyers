@@ -1,0 +1,4 @@
+[33m213bc5e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m הוספת מבחן מקיף למקורות המשפט עם כל סוגי השאלות ורמות הקושי
+[33m22039d8[m Add comprehensive legal testing system with 50-question exam, essay questions, and legal dynamics engine
+[33m9e2f180[m Fix shared package configuration and dependencies
+[33mfc9d7db[m Initial commit - lawyers project
