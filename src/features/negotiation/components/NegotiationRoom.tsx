@@ -57,6 +57,7 @@ import {
   EmojiEmotions
 } from '@mui/icons-material'
 import { AppDispatch } from '@shared/store'
+import { logger } from '@shared/utils/logger'
 import { 
   fetchRoom, 
   joinRoom, 
@@ -160,7 +161,7 @@ const NegotiationRoom: React.FC<NegotiationRoomProps> = ({ roomId: propRoomId })
       setMessageText('')
       setIsTyping(false)
     } catch (error) {
-      console.error('שגיאה בשליחת הודעה:', error)
+      logger.error('שגיאה בשליחת הודעה:', error)
     }
   }
 
@@ -179,7 +180,7 @@ const NegotiationRoom: React.FC<NegotiationRoomProps> = ({ roomId: propRoomId })
     const files = event.target.files
     if (files && files.length > 0) {
       // TODO: Implement file upload
-      console.log('Uploading files:', files)
+      // console.log('Uploading files:', files)
     }
   }
 

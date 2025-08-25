@@ -59,6 +59,7 @@ import {
 } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
 import { versionControlService, ContractVersion, VersionHistory, VersionComparison } from '@shared/services/versionControl'
+import { logger } from '@shared/utils/logger'
 
 export const VersionControlPage: React.FC = () => {
   const { t } = useTranslation()
@@ -67,7 +68,7 @@ export const VersionControlPage: React.FC = () => {
   
   // Debug: Log when selectedVersion changes
   useEffect(() => {
-    console.log('selectedVersion changed:', selectedVersion)
+    // console.log('selectedVersion changed:', selectedVersion)
   }, [selectedVersion])
   const [comparison, setComparison] = useState<VersionComparison | null>(null)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
@@ -94,10 +95,10 @@ export const VersionControlPage: React.FC = () => {
     setLoading(true)
     try {
       const history = await versionControlService.getVersionHistory('contract_1')
-      console.log('Loaded version history:', history)
+      // console.log('Loaded version history:', history)
       setVersionHistory(history)
     } catch (error) {
-      console.error('Failed to load version history:', error)
+      logger.error('Failed to load version history:', error)
       showNotification('error', 'שגיאה בטעינת היסטוריית הגרסאות')
     } finally {
       setLoading(false)

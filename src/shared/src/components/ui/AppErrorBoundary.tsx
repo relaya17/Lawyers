@@ -78,7 +78,7 @@ export class AppErrorBoundary extends Component<Props, State> {
     }
 
     // Send to error reporting service
-    console.log('Error Report:', errorReport)
+    // console.log('Error Report:', errorReport)
     
     // In production, send to actual service:
     // Sentry.captureException(error, { extra: errorReport })

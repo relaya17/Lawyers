@@ -34,6 +34,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+import { logger } from '@shared/utils/logger'
 import { LoadingSpinner } from '@shared/components/ui/LoadingSpinner'
 import type { Contract, ContractTerm, ContractParty } from '../types'
 
@@ -74,7 +75,7 @@ export const ContractEditor: React.FC<ContractEditorProps> = ({
   useEffect(() => {
     if (id && mode !== 'create') {
       // TODO: Implement fetchContract
-      console.log('Fetching contract:', id)
+      // console.log('Fetching contract:', id)
     }
   }, [id, mode, dispatch])
 
@@ -88,14 +89,14 @@ export const ContractEditor: React.FC<ContractEditorProps> = ({
     try {
       if (mode === 'create') {
         // TODO: Implement createContract
-        console.log('Creating contract:', contract)
+        // console.log('Creating contract:', contract)
         navigate('/contracts')
       } else if (id) {
         // TODO: Implement updateContract
-        console.log('Updating contract:', id, contract)
+        // console.log('Updating contract:', id, contract)
       }
     } catch (error) {
-      console.error('שגיאה בשמירת חוזה:', error)
+      logger.error('שגיאה בשמירת חוזה:', error)
     }
   }
 
