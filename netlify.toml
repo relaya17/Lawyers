@@ -19,17 +19,9 @@
 [build.processing]
   skip_processing = false
 
-# 🗂️ Cache Plugins - תוספי מטמון
-[[plugins]]
-  package = "@netlify/plugin-cache"
-  [plugins.inputs]
-    paths = [
-      "node_modules/.cache",
-      ".pnpm-store",
-      "dist",
-      ".vite",
-      "playwright-report"
-    ]
+# 🗂️ Cache Configuration - הגדרות מטמון
+# Netlify automatically caches node_modules and build artifacts
+# No additional cache plugin needed
 
 # 🚀 Redirects - הפניות וניתוב
 # SPA Routing
