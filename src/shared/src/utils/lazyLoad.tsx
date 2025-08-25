@@ -4,8 +4,10 @@ import React, { Suspense, lazy, ComponentType } from 'react';
 import { LoadingSpinner } from '@shared/components/ui/LoadingSpinner';
 
 // Loading component with error boundary
+import { Box } from '@mui/material';
+
 const PageLoader: React.FC = () => (
-  <div style={{ 
+  <Box sx={{ 
     display: 'flex', 
     justifyContent: 'center', 
     alignItems: 'center', 
@@ -13,7 +15,7 @@ const PageLoader: React.FC = () => (
     padding: '2rem'
   }}>
     <LoadingSpinner />
-  </div>
+  </Box>
 );
 
 // Error boundary for lazy components
@@ -37,16 +39,17 @@ class LazyErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return this.props.fallback || (
-        <div style={{ 
+        <Box sx={{ 
           padding: '2rem', 
           textAlign: 'center',
           color: '#d32f2f'
         }}>
           <h3>שגיאה בטעינת הדף</h3>
           <p>נא לנסות לרענן את הדף</p>
-          <button 
+          <Box 
+            component="button"
             onClick={() => window.location.reload()}
-            style={{
+            sx={{
               padding: '0.5rem 1rem',
               margin: '1rem',
               border: '1px solid #d32f2f',
@@ -57,8 +60,8 @@ class LazyErrorBoundary extends React.Component<
             }}
           >
             רענן דף
-          </button>
-        </div>
+          </Box>
+        </Box>
       );
     }
 
@@ -168,9 +171,9 @@ export const LazyImage: React.FC<{
 
   if (hasError) {
     return (
-      <div 
+      <Box 
         className={className}
-        style={{
+        sx={{
           ...style,
           display: 'flex',
           alignItems: 'center',
@@ -181,14 +184,14 @@ export const LazyImage: React.FC<{
         }}
       >
         שגיאה בטעינת התמונה
-      </div>
+      </Box>
     );
   }
 
   return (
-    <div ref={imgRef} className={className} style={style}>
+    <Box ref={imgRef} className={className} sx={style}>
       {!isLoaded && placeholder && (
-        <div style={{
+        <Box sx={{
           background: `url(${placeholder}) center/cover`,
           width: '100%',
           height: '100%',
@@ -197,10 +200,11 @@ export const LazyImage: React.FC<{
         }} />
       )}
       {isLoaded && (
-        <img
+        <Box
+          component="img"
           src={src}
           alt={alt}
-          style={{
+          sx={{
             width: '100%',
             height: '100%',
             objectFit: 'cover',
@@ -209,7 +213,7 @@ export const LazyImage: React.FC<{
           }}
         />
       )}
-    </div>
+    </Box>
   );
 };
 

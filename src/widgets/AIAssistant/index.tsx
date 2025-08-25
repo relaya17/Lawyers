@@ -707,10 +707,11 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
       </DialogContent>
 
       {/* קובץ נסתר להעלאה */}
-      <input
+      <Box
+        component="input"
         ref={fileInputRef}
         type="file"
-        style={{ display: 'none' }}
+        sx={{ display: 'none' }}
         accept=".pdf,.doc,.docx,.txt"
         onChange={handleFileUpload}
         aria-label="העלה קובץ לניתוח"

@@ -9,11 +9,6 @@ import {
   Grid,
   Paper,
   Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  IconButton,
   FormControl,
   FormControlLabel,
   RadioGroup,
@@ -21,41 +16,17 @@ import {
   TextField,
   LinearProgress,
   Alert,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Avatar,
-  Stepper,
-  Step,
-  StepLabel,
-  Divider,
-  Tabs,
-  Tab
+  Avatar
 } from '@mui/material';
 import { CheckCircle, Refresh as RefreshIcon } from '@mui/icons-material';
 import { 
-  Close as CloseIcon,
-  CheckCircle as CorrectIcon,
-  Cancel as WrongIcon,
   Quiz as QuizIcon,
   Edit as EssayIcon,
   Timer as TimerIcon,
-  TrendingUp as ProgressIcon,
-  School as LearnIcon,
-  Star as StarIcon,
   EmojiEvents as TrophyIcon,
-  Lightbulb as TipIcon,
-  Book as BookIcon,
   Assessment as ResultsIcon,
   NavigateNext as NextIcon,
-  NavigateBefore as PrevIcon,
-  Flag as FlagIcon,
-  ExpandMore as ExpandIcon,
-  Save as SaveIcon
+  NavigateBefore as PrevIcon
 } from '@mui/icons-material';
 
 interface Question {
@@ -752,8 +723,19 @@ const complete50Questions: Question[] = [
   // [המשך עם שאר השאלות...]
 ];
 
+interface ExamResults {
+  totalQuestions: number;
+  totalPoints: number;
+  earnedPoints: number;
+  percentage: number;
+  correctAnswers: number;
+  sectionResults: Map<string, { correct: number; total: number; points: number; maxPoints: number }>;
+  difficultyResults: Map<string, { correct: number; total: number }>;
+  timeSpent: number;
+}
+
 interface CompleteLegalExam50QuestionsProps {
-  onComplete: (results: any) => void;
+  onComplete: (results: ExamResults) => void;
   timeLimit?: number;
 }
 
@@ -762,13 +744,12 @@ export const CompleteLegalExam50Questions: React.FC<CompleteLegalExam50Questions
   timeLimit = 120
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState<Map<string, any>>(new Map());
-  const [currentAnswer, setCurrentAnswer] = useState<any>('');
+  const [userAnswers, setUserAnswers] = useState<Map<string, string | number | boolean>>(new Map());
+  const [currentAnswer, setCurrentAnswer] = useState<string | number | boolean>('');
   const [timeRemaining, setTimeRemaining] = useState(timeLimit * 60);
   const [examStarted, setExamStarted] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [examResults, setExamResults] = useState<any>(null);
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [examResults, setExamResults] = useState<ExamResults | null>(null);
 
   const currentQuestion = complete50Questions[currentQuestionIndex];
 
@@ -851,7 +832,7 @@ export const CompleteLegalExam50Questions: React.FC<CompleteLegalExam50Questions
       let isCorrect = false;
       if (question.type === 'essay') {
         // שאלות חיבור - ציון חלקי בהתאם לאורך ואיכות
-        if (userAnswer && userAnswer.length > 50) {
+        if (userAnswer && typeof userAnswer === 'string' && userAnswer.length > 50) {
           const essayScore = Math.min(question.points, Math.floor(userAnswer.length / 50) * 2);
           earnedPoints += essayScore;
           isCorrect = essayScore >= question.points * 0.6;
@@ -1061,7 +1042,8 @@ export const CompleteLegalExam50Questions: React.FC<CompleteLegalExam50Questions
             </Typography>
             
             <Grid container spacing={3}>
-              {Array.from(examResults.sectionResults.entries()).map(([section, stats]: [string, any]) => {
+              {Array.from(examResults.sectionResults.entries()).map((entry) => {
+                const [section, stats] = entry as [string, { correct: number; total: number; points: number; maxPoints: number }];
                 const percentage = Math.round((stats.points / stats.maxPoints) * 100);
                 return (
                   <Grid item xs={12} md={4} key={section}>
@@ -1249,7 +1231,7 @@ export const CompleteLegalExam50Questions: React.FC<CompleteLegalExam50Questions
                   variant="outlined"
                 />
                 <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                  מילים: {currentAnswer ? currentAnswer.split(' ').filter((w: string) => w.length > 0).length : 0} | 
+                  מילים: {currentAnswer && typeof currentAnswer === 'string' ? currentAnswer.split(' ').filter((w: string) => w.length > 0).length : 0} | 
                   זמן משוער: {currentQuestion.timeEstimate} דק'
                 </Typography>
               </Box>

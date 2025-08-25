@@ -1,1 +1,0 @@
-export { LegalKnowledgePage } from './index';

@@ -78,7 +78,7 @@ interface LegalKnowledgeFeature {
   icon: React.ReactElement;
   color: string;
   category: 'exams' | 'learning' | 'games' | 'advanced' | 'simulation' | 'reference';
-  component: React.ComponentType<any>;
+  component: React.ComponentType;
   difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert' | 'all' | 'hard';
   estimatedTime: number;
 }

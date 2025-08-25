@@ -405,7 +405,7 @@ export const LegalConceptsSummary: React.FC = () => {
                     </Typography>
                     <Chip
                       label={getImportanceText(concept.importance)}
-                      color={getImportanceColor(concept.importance) as any}
+                      color={getImportanceColor(concept.importance) as 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'}
                       size="small"
                     />
                   </Box>
