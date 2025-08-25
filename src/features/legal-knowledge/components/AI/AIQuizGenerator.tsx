@@ -17,6 +17,7 @@ import {
   Step,
   StepLabel,
   CircularProgress,
+  LinearProgress,
   Alert
 } from '@mui/material';
 import { 
@@ -324,7 +325,7 @@ export const AIQuizGenerator: React.FC<AIQuizGeneratorProps> = ({
             </Grid>
 
             {/* המלצות AI */}
-            {userProfile?.weakAreas.length > 0 && (
+            {userProfile?.weakAreas && userProfile.weakAreas.length > 0 && (
               <Alert severity="info" sx={{ mt: 3 }}>
                 <Typography variant="subtitle2" gutterBottom>
                   🎯 המלצת הבינה המלאכותית:

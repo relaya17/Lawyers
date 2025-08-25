@@ -1061,7 +1061,7 @@ export const CompleteLegalExam50Questions: React.FC<CompleteLegalExam50Questions
             </Typography>
             
             <Grid container spacing={3}>
-              {Array.from(examResults.sectionResults.entries()).map(([section, stats]: [string, any]) => {
+              {Array.from(examResults.sectionResults.entries()).map(([section, stats]) => {
                 const percentage = Math.round((stats.points / stats.maxPoints) * 100);
                 return (
                   <Grid item xs={12} md={4} key={section}>
