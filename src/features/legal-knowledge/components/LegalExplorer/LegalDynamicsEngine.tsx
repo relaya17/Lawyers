@@ -1035,9 +1035,9 @@ export const LegalDynamicsEngine: React.FC<LegalDynamicsEngineProps> = ({
                         <Grid item xs={12} md={6} key={index}>
                           <Paper elevation={1} sx={{ p: 2 }}>
                             <Box display="flex" alignItems="center" gap={1} mb={1}>
-                              <span style={{ fontSize: '1.5rem' }}>
+                              <Box component="span" sx={{ fontSize: '1.5rem' }}>
                                 {getRelationshipIcon(interaction.relationship)}
-                              </span>
+                              </Box>
                               <Typography variant="subtitle1" fontWeight="bold">
                                 {targetPrinciple?.name}
                               </Typography>

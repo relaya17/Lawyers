@@ -675,16 +675,16 @@ const CompleteLegalSourcesExam: React.FC = () => {
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
                       <Typography variant="body2" color="text.secondary">
-                        התשובה שלך: <strong style={{ color: isCorrect ? '#4caf50' : '#f44336' }}>
+                        התשובה שלך: <Box component="strong" sx={{ color: isCorrect ? '#4caf50' : '#f44336' }}>
                           {userAnswer || 'לא נענה'}
-                        </strong>
+                        </Box>
                       </Typography>
                     </Grid>
                     <Grid item xs={6}>
                       <Typography variant="body2" color="text.secondary">
-                        התשובה הנכונה: <strong style={{ color: '#4caf50' }}>
+                        התשובה הנכונה: <Box component="strong" sx={{ color: '#4caf50' }}>
                           {question.correctAnswer}
-                        </strong>
+                        </Box>
                       </Typography>
                     </Grid>
                   </Grid>

@@ -391,7 +391,7 @@ export const LegalConceptsTable: React.FC = () => {
                   >
                     <TableCell>
                       <Box display="flex" alignItems="center" gap={1}>
-                        <span style={{ fontSize: '1.2rem' }}>{concept.icon}</span>
+                        <Box component="span" sx={{ fontSize: '1.2rem' }}>{concept.icon}</Box>
                         <Typography variant="body2" fontWeight="medium">
                           {concept.category}
                         </Typography>
@@ -546,7 +546,7 @@ export const LegalConceptsTable: React.FC = () => {
             <DialogTitle>
               <Box display="flex" justifyContent="between" alignItems="center">
                 <Box display="flex" alignItems="center" gap={2}>
-                  <span style={{ fontSize: '2rem' }}>{selectedConcept.icon}</span>
+                  <Box component="span" sx={{ fontSize: '2rem' }}>{selectedConcept.icon}</Box>
                   <Box>
                     <Typography variant="h5">{selectedConcept.name}</Typography>
                     <Typography variant="subtitle2" color="text.secondary">

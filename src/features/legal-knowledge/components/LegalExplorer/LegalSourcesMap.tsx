@@ -517,7 +517,7 @@ export const LegalSourcesMap: React.FC<LegalSourcesMapProps> = ({
                       <Card variant="outlined" sx={{ border: `2px solid ${source.color}` }}>
                         <CardContent>
                           <Box display="flex" alignItems="center" gap={1} mb={1}>
-                            <span style={{ fontSize: '1.5rem' }}>{source.icon}</span>
+                            <Box component="span" sx={{ fontSize: '1.5rem' }}>{source.icon}</Box>
                             <Typography variant="subtitle1" fontWeight="bold">
                               {source.name}
                             </Typography>
@@ -659,7 +659,7 @@ export const LegalSourcesMap: React.FC<LegalSourcesMapProps> = ({
                   <Card elevation={2}>
                     <CardContent>
                       <Box display="flex" alignItems="center" gap={2} mb={2}>
-                        <span style={{ fontSize: '1.5rem' }}>{source.icon}</span>
+                        <Box component="span" sx={{ fontSize: '1.5rem' }}>{source.icon}</Box>
                         <Typography variant="h6">{source.name}</Typography>
                       </Box>
                       
@@ -715,7 +715,7 @@ export const LegalSourcesMap: React.FC<LegalSourcesMapProps> = ({
             <DialogTitle>
               <Box display="flex" justifyContent="between" alignItems="center">
                 <Box display="flex" alignItems="center" gap={2}>
-                  <span style={{ fontSize: '2.5rem' }}>{selectedSource.icon}</span>
+                  <Box component="span" sx={{ fontSize: '2.5rem' }}>{selectedSource.icon}</Box>
                   <Box>
                     <Typography variant="h5" fontWeight="bold">
                       {selectedSource.name}

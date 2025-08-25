@@ -274,10 +274,10 @@ const LawOfReturnExam: React.FC = () => {
         
         {/* Progress */}
         <div className="w-full bg-gray-200 rounded-full h-3 mt-6">
-          <div 
+          <Box 
             className="bg-blue-600 h-3 rounded-full transition-all duration-300"
-            style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
-          ></div>
+            sx={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
+          />
         </div>
         <p className="text-sm text-gray-600 mt-2">
           שאלה {currentQuestionIndex + 1} מתוך {questions.length}

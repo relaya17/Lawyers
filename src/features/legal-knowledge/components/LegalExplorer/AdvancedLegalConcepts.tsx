@@ -941,7 +941,7 @@ export const AdvancedLegalConcepts: React.FC<AdvancedLegalConceptsProps> = ({
             <DialogTitle>
               <Box display="flex" justifyContent="between" alignItems="center">
                 <Box display="flex" alignItems="center" gap={2}>
-                  <span style={{ fontSize: '2.5rem' }}>{selectedConcept.icon}</span>
+                  <Box component="span" sx={{ fontSize: '2.5rem' }}>{selectedConcept.icon}</Box>
                   <Box>
                     <Typography variant="h5" fontWeight="bold">
                       {selectedConcept.title}

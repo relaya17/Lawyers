@@ -410,7 +410,7 @@ export const AICaseAnalyzer: React.FC<AICaseAnalyzerProps> = ({
             {analysis.legalPrinciples.map((principle, index) => (
               <Paper key={index} elevation={1} sx={{ p: 2, mb: 2 }}>
                 <Box display="flex" alignItems="center" gap={1} mb={1}>
-                  <span style={{ fontSize: '1.2rem' }}>{principle.icon}</span>
+                  <Box component="span" sx={{ fontSize: '1.2rem' }}>{principle.icon}</Box>
                   <Typography variant="h6">
                     {principle.name}
                   </Typography>

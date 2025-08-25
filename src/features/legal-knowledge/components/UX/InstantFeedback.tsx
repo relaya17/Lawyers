@@ -259,7 +259,7 @@ export const InstantFeedback: React.FC<FeedbackProps> = ({
                   {relatedSources.map((source, index) => (
                     <Paper key={index} elevation={1} sx={{ p: 2, mb: 2 }}>
                       <Box display="flex" alignItems="center" gap={1} mb={1}>
-                        <span style={{ fontSize: '1.2rem' }}>{source.icon}</span>
+                        <Box component="span" sx={{ fontSize: '1.2rem' }}>{source.icon}</Box>
                         <Typography variant="subtitle1" fontWeight="bold">
                           {source.title}
                         </Typography>

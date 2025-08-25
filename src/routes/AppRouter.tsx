@@ -59,6 +59,8 @@ export const AppRouter: React.FC = () => {
         <meta name="description" content="פלטפורמה מתקדמת לניהול חוזים ולמידה משפטית" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#1565c0" />
+        <meta name="msapplication-navbutton-color" content="#1565c0" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </Helmet>
 
       <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>

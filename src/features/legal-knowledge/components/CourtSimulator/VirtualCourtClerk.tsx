@@ -294,7 +294,7 @@ export const VirtualCourtClerk: React.FC<VirtualCourtClerkProps> = ({
                 )}
                 <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
                   {currentTypingText}
-                  {isTyping && <span style={{ animation: 'blink 1s infinite' }}>|</span>}
+                  {isTyping && <Box component="span" sx={{ animation: 'blink 1s infinite' }}>|</Box>}
                 </Typography>
               </Box>
 
@@ -302,7 +302,7 @@ export const VirtualCourtClerk: React.FC<VirtualCourtClerkProps> = ({
               <Box sx={{ position: 'relative', textAlign: 'center' }}>
                 <Typography variant="body2" sx={{ mb: 1 }}>⌨️ מקלדת</Typography>
                 <Box sx={{ position: 'relative', display: 'inline-block' }}>
-                  <div style={{
+                  <Box sx={{
                     position: 'absolute',
                     left: `${handsPosition.left}%`,
                     top: '-20px',
@@ -310,8 +310,8 @@ export const VirtualCourtClerk: React.FC<VirtualCourtClerkProps> = ({
                     fontSize: '20px'
                   }}>
                     ✋
-                  </div>
-                  <div style={{
+                  </Box>
+                  <Box sx={{
                     position: 'absolute',
                     left: `${handsPosition.right}%`,
                     top: '-20px',
@@ -319,7 +319,7 @@ export const VirtualCourtClerk: React.FC<VirtualCourtClerkProps> = ({
                     fontSize: '20px'
                   }}>
                     🤚
-                  </div>
+                  </Box>
                   <Box sx={{ 
                     width: 300, 
                     height: 20, 

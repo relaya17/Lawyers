@@ -69,6 +69,7 @@ import ParliamentaryAndEqualityLawExam from '../../features/legal-knowledge/comp
 import ContractFormationExam from '../../features/legal-knowledge/components/Testing/ContractFormationExam';
 import ContractDefectsExam from '../../features/legal-knowledge/components/Testing/ContractDefectsExam';
 import CriminalLawExam from '../../features/legal-knowledge/components/Testing/CriminalLawExam';
+import { LegalConceptsSummary } from '../../features/legal-knowledge/components/Reference/LegalConceptsSummary';
 
 interface LegalKnowledgeFeature {
   id: string;
@@ -249,6 +250,17 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       difficulty: 'expert',
       estimatedTime: 90
     },
+    {
+      id: 'legal-concepts-summary',
+      title: 'מדריך מושגים משפטיים',
+      description: 'אוסף מקיף של מושגים יסודיים במשפט הישראלי עם הגדרות ודוגמאות',
+      icon: <DescriptionIcon />,
+      color: '#7b1fa2',
+      category: 'reference',
+      component: LegalConceptsSummary,
+      difficulty: 'all',
+      estimatedTime: 0
+    },
 
   // למידה וחקירה
   {
@@ -388,6 +400,7 @@ export const LegalKnowledgePage: React.FC = () => {
     { id: 'learning', label: 'למידה', icon: <LearnIcon /> },
     { id: 'games', label: 'משחקים', icon: <BalanceIcon /> },
     { id: 'simulation', label: 'סימולציות', icon: <CourtIcon /> },
+    { id: 'reference', label: 'חומרי עיון', icon: <DescriptionIcon /> },
     { id: 'advanced', label: 'מתקדם', icon: <AIIcon /> }
   ];
 
@@ -527,6 +540,20 @@ export const LegalKnowledgePage: React.FC = () => {
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 משחקים אינטראקטיביים
+              </Typography>
+            </Paper>
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={3}>
+            <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+              <Avatar sx={{ bgcolor: '#7b1fa2', margin: 'auto', mb: 2, width: 56, height: 56 }}>
+                <DescriptionIcon />
+              </Avatar>
+              <Typography variant="h4" color="primary">
+                {legalFeatures.filter(f => f.category === 'reference').length}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                חומרי עיון ומדריכים
               </Typography>
             </Paper>
           </Grid>
