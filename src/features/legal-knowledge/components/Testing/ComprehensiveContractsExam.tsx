@@ -413,7 +413,7 @@ export const ComprehensiveContractsExam: React.FC = () => {
           <Grid container spacing={3} sx={{ mt: 3, mb: 4 }}>
             <Grid item xs={12} md={3}>
               <Card>
-                <CardContent textAlign="center">
+                <CardContent sx={{ textAlign: 'center' }}>
                   <Typography variant="h4" color="primary">
                     {contractQuestions.length}
                   </Typography>
@@ -425,7 +425,7 @@ export const ComprehensiveContractsExam: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={3}>
               <Card>
-                <CardContent textAlign="center">
+                <CardContent sx={{ textAlign: 'center' }}>
                   <Typography variant="h4" color="warning.main">
                     {openQuestions.length}
                   </Typography>
@@ -437,7 +437,7 @@ export const ComprehensiveContractsExam: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={3}>
               <Card>
-                <CardContent textAlign="center">
+                <CardContent sx={{ textAlign: 'center' }}>
                   <Typography variant="h4" color="info.main">
                     60-90
                   </Typography>
@@ -449,7 +449,7 @@ export const ComprehensiveContractsExam: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={3}>
               <Card>
-                <CardContent textAlign="center">
+                <CardContent sx={{ textAlign: 'center' }}>
                   <Typography variant="h4" color="success.main">
                     80%+
                   </Typography>
@@ -508,7 +508,7 @@ export const ComprehensiveContractsExam: React.FC = () => {
           <Grid container spacing={3} sx={{ mt: 2 }}>
             <Grid item xs={12} md={3}>
               <Card>
-                <CardContent textAlign="center">
+                <CardContent sx={{ textAlign: 'center' }}>
                   <Typography variant="h3" color={getScoreColor(score.percentage)}>
                     {score.percentage}%
                   </Typography>
@@ -520,7 +520,7 @@ export const ComprehensiveContractsExam: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={3}>
               <Card>
-                <CardContent textAlign="center">
+                <CardContent sx={{ textAlign: 'center' }}>
                   <Typography variant="h3" color="success.main">
                     {score.correct}
                   </Typography>
@@ -532,7 +532,7 @@ export const ComprehensiveContractsExam: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={3}>
               <Card>
-                <CardContent textAlign="center">
+                <CardContent sx={{ textAlign: 'center' }}>
                   <Typography variant="h3" color="error.main">
                     {score.total - score.correct}
                   </Typography>
@@ -544,7 +544,7 @@ export const ComprehensiveContractsExam: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={3}>
               <Card>
-                <CardContent textAlign="center">
+                <CardContent sx={{ textAlign: 'center' }}>
                   <Typography variant="h3" color="info.main">
                     {formatTime(timeElapsed)}
                   </Typography>

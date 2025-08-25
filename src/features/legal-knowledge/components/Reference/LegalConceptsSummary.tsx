@@ -10,35 +10,28 @@ import {
   AccordionSummary,
   AccordionDetails,
   Chip,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+
   TextField,
   InputAdornment,
   List,
   ListItem,
   ListItemText,
-  Divider,
+
   IconButton,
   Tooltip
 } from '@mui/material';
 import {
   ExpandMore as ExpandMoreIcon,
   Search as SearchIcon,
-  Gavel as GavelIcon,
+
   MenuBook as MenuBookIcon,
   Balance as BalanceIcon,
   AccountBalance as AccountBalanceIcon,
-  Flag as FlagIcon,
+
   Description as DescriptionIcon,
   LocalPolice as LocalPoliceIcon,
   Business as BusinessIcon,
-  Group as GroupIcon,
-  Home as HomeIcon,
+
   Print as PrintIcon
 } from '@mui/icons-material';
 
@@ -284,7 +277,7 @@ export const LegalConceptsSummary: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* כותרת ראשית */}
-      <Box textAlign="center" mb={4}>
+      <Box sx={{ textAlign: 'center' }} mb={4}>
         <Typography variant="h3" component="h1" gutterBottom color="primary">
           📚 מושגים משפטיים - מדריך מקיף
         </Typography>
@@ -341,7 +334,7 @@ export const LegalConceptsSummary: React.FC = () => {
       <Grid container spacing={3} mb={4}>
         <Grid item xs={12} sm={6} md={3}>
           <Card>
-            <CardContent textAlign="center">
+            <CardContent sx={{ textAlign: 'center' }}>
               <Typography variant="h4" color="primary">
                 {legalConcepts.length}
               </Typography>
@@ -353,7 +346,7 @@ export const LegalConceptsSummary: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Card>
-            <CardContent textAlign="center">
+            <CardContent sx={{ textAlign: 'center' }}>
               <Typography variant="h4" color="success.main">
                 {legalConcepts.filter(c => c.importance === 'basic').length}
               </Typography>
@@ -365,7 +358,7 @@ export const LegalConceptsSummary: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Card>
-            <CardContent textAlign="center">
+            <CardContent sx={{ textAlign: 'center' }}>
               <Typography variant="h4" color="warning.main">
                 {legalConcepts.filter(c => c.importance === 'intermediate').length}
               </Typography>
@@ -377,7 +370,7 @@ export const LegalConceptsSummary: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Card>
-            <CardContent textAlign="center">
+            <CardContent sx={{ textAlign: 'center' }}>
               <Typography variant="h4" color="error.main">
                 {legalConcepts.filter(c => c.importance === 'advanced').length}
               </Typography>
@@ -483,7 +476,7 @@ export const LegalConceptsSummary: React.FC = () => {
       {/* הודעה אם אין תוצאות */}
       {filteredConcepts.length === 0 && (
         <Card>
-          <CardContent textAlign="center" sx={{ py: 6 }}>
+          <CardContent sx={{ textAlign: 'center', py: 6 }}>
             <Typography variant="h6" color="text.secondary" gutterBottom>
               לא נמצאו מושגים התואמים את החיפוש
             </Typography>
@@ -495,7 +488,7 @@ export const LegalConceptsSummary: React.FC = () => {
       )}
 
       {/* כותרת תחתונה */}
-      <Box textAlign="center" mt={6} pt={4} borderTop="1px solid #eee">
+      <Box sx={{ textAlign: 'center' }} mt={6} pt={4} borderTop="1px solid #eee">
         <Typography variant="body2" color="text.secondary">
           מדריך מושגים משפטיים - מערכת לימוד דיגיטלית למשפט ישראלי
         </Typography>

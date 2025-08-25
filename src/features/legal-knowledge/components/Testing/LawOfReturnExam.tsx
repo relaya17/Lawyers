@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Box } from '@mui/material';
 import { CheckCircle, Cancel as XCircle, Home, Group as Users, Balance as Scale, Book, Star } from '@mui/icons-material';
 
 interface Question {
