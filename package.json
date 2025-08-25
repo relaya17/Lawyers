@@ -5,7 +5,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vite --host --port 5174",
+        "dev": "vite --host --port 3016",
         "build": "pnpm exec tsc --noEmit && vite build",
         "build:analyze": "vite build --mode analyze",
         "build:netlify": "pnpm exec tsc --noEmit && vite build",
