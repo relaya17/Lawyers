@@ -78,7 +78,7 @@ interface LegalKnowledgeFeature {
   icon: React.ReactElement;
   color: string;
   category: 'exams' | 'learning' | 'games' | 'advanced' | 'simulation' | 'reference';
-  component: React.ComponentType;
+  component: React.ComponentType<any>;
   difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert' | 'all' | 'hard';
   estimatedTime: number;
 }
@@ -455,38 +455,20 @@ export const LegalKnowledgePage: React.FC = () => {
               {selectedFeature.title}
             </Typography>
           </Box>
-          <FeatureComponent 
-            onComplete={() => {
-              // console.log('Feature completed:', results);
-            }}
-            onStartScenario={() => {
-              // console.log('Starting scenario:', scenario);
-            }}
-            onLearnMore={() => {
-              // console.log('Learn more:', item);
-            }}
-            onViewCase={() => {
-              // console.log('View case:', caseItem);
-            }}
-            onStartChallenge={() => {
-              // console.log('Start challenge:', challenge);
-            }}
-            onExploreInteraction={(principleId: string, targetId: string) => {
-              console.log('Explore interaction:', principleId, targetId);
-            }}
-            onStartSimulation={() => {
-              // console.log('Start simulation:', scenario);
-            }}
-            onSaveAnswer={() => {
-              // console.log('Save answer:', answer);
-            }}
-            onModuleComplete={(moduleId: string, score: number) => {
-              console.log('Module complete:', moduleId, score);
-            }}
-            onStartExam={(mode: string) => {
-              console.log('Start exam:', mode);
-            }}
-          />
+          {selectedFeature.id === 'progress-dashboard' ? (
+            <FeatureComponent userProgress={{
+              totalStudyTime: 120,
+              completedLessons: 15,
+              totalLessons: 50,
+              currentStreak: 7,
+              averageScore: 85,
+              weakAreas: ['Contract Law', 'Constitutional Law'],
+              strongAreas: ['Criminal Law', 'Administrative Law'],
+              recentActivity: []
+            }} />
+          ) : (
+            <FeatureComponent />
+          )}
         </Container>
       </Box>
     );
