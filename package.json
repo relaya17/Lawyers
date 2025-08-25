@@ -103,7 +103,7 @@
         "@types/stylis": "^4.2.7",
         "@typescript-eslint/eslint-plugin": "^7.0.0",
         "@typescript-eslint/parser": "^7.0.0",
-        "@vitejs/plugin-react": "^4.1.1",
+        "@vitejs/plugin-react": "^5.0.1",
         "eslint": "^8.53.0",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.4.4",
