@@ -2,7 +2,7 @@
 # קובץ הגדרות נטליפי מתקדם לפרויקט
 
 [build]
-  command = "chmod +x netlify-build.sh && ./netlify-build.sh"
+  command = "pnpm install --frozen-lockfile && pnpm run build:netlify"
   publish = "dist"
   functions = "netlify/functions"
 

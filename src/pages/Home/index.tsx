@@ -107,33 +107,37 @@ export const HomePage: React.FC = () => {
   return (
          <Box sx={{ 
            minHeight: '100vh', 
+           width: '100%',
            py: { xs: 2, sm: 3, md: 4 },
            display: 'flex',
-           alignItems: 'center',
-           justifyContent: 'center'
+           flexDirection: 'column',
+           justifyContent: 'flex-start',
+           textAlign: 'center'
          }}>
-       <Container maxWidth="lg" sx={{ width: '100%' }}>
+               <Container maxWidth={false} sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', px: { xs: 2, sm: 3, md: 4 } }}>
          {/* Hero Section */}
-                  <Card
-            sx={{
-              textAlign: 'center',
-              mt: { xs: 2, sm: 3, md: 4 },
-              mb: { xs: 3, sm: 4, md: 5 },
-              py: { xs: 2, sm: 2.5, md: 3 },
-              px: { xs: 2, sm: 3, md: 4 },
-              background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-              borderRadius: 2,
-              boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              transition: 'all 0.3s ease-in-out',
-              cursor: 'pointer',
-              '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: '0 6px 25px rgba(0,0,0,0.12)',
-                background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
-              },
-            }}
-          >
+                                     <Card
+             sx={{
+               textAlign: 'center',
+               mt: { xs: 2, sm: 3, md: 4 },
+               mb: { xs: 3, sm: 4, md: 5 },
+               py: { xs: 2, sm: 2.5, md: 3 },
+               px: { xs: 2, sm: 3, md: 4 },
+               background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+               borderRadius: 2,
+               boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+               border: '1px solid rgba(255,255,255,0.2)',
+               transition: 'all 0.3s ease-in-out',
+               cursor: 'pointer',
+               width: '100%',
+               maxWidth: '1200px',
+               '&:hover': {
+                 transform: 'translateY(-2px)',
+                 boxShadow: '0 6px 25px rgba(0,0,0,0.12)',
+                 background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
+               },
+             }}
+           >
                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1.5 }}>
              <AutoAwesome sx={{ 
                fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }, 
@@ -156,19 +160,17 @@ export const HomePage: React.FC = () => {
                {t('home.hero.title')}
              </Typography>
            </Box>
-                     <Typography
-             variant={isSmallMobile ? 'body1' : 'h6'}
-             color="text.secondary"
-             sx={{
-               maxWidth: '800px',
-               mx: 'auto',
-               mb: 3,
-               lineHeight: 1.5,
-               fontWeight: 500,
-             }}
-           >
-             {t('home.hero.subtitle')}
-           </Typography>
+                                           <Typography
+              variant={isSmallMobile ? 'body1' : 'h6'}
+              color="text.secondary"
+              sx={{
+                mb: 3,
+                lineHeight: 1.5,
+                fontWeight: 500,
+              }}
+            >
+              {t('home.hero.subtitle')}
+            </Typography>
           <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
                          <Button
                variant="contained"
@@ -203,11 +205,13 @@ export const HomePage: React.FC = () => {
                      </Box>
          </Card>
 
-        {/* Analytics Dashboard */}
-        <AnalyticsDashboard />
+                                   {/* Analytics Dashboard */}
+          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <AnalyticsDashboard />
+          </Box>
 
-                 {/* Contract Management Button */}
-         <Box sx={{ textAlign: 'center', mb: 4 }}>
+                                                                       {/* Contract Management Button */}
+           <Box sx={{ textAlign: 'center', mb: 4, width: '100%', display: 'flex', justifyContent: 'center' }}>
            <Button
              variant="contained"
              size="large"
@@ -231,8 +235,8 @@ export const HomePage: React.FC = () => {
            </Button>
          </Box>
 
-        {/* Features Grid */}
-        <Box sx={{ mb: { xs: 4, sm: 5, md: 6 } }}>
+                                   {/* Features Grid */}
+          <Box sx={{ mb: { xs: 4, sm: 5, md: 6 }, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Typography
             variant={isSmallMobile ? 'h5' : 'h4'}
             component="h2"
@@ -246,7 +250,7 @@ export const HomePage: React.FC = () => {
             {t('home.features.title')}
           </Typography>
           
-          <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
+                                           <Grid container spacing={{ xs: 2, sm: 3, md: 4 }} sx={{ justifyContent: 'center' }}>
             {features.map((feature, index) => {
               const IconComponent = feature.icon
               return (
@@ -344,16 +348,18 @@ export const HomePage: React.FC = () => {
           </Grid>
         </Box>
 
-        {/* Stats Section */}
-        <Box
-          sx={{
-            textAlign: 'center',
-            py: { xs: 3, sm: 4, md: 5 },
-            backgroundColor: 'grey.50',
-            borderRadius: 3,
-            px: { xs: 2, sm: 3 },
-          }}
-        >
+                                   {/* Stats Section */}
+          <Box
+            sx={{
+              textAlign: 'center',
+              py: { xs: 3, sm: 4, md: 5 },
+              backgroundColor: 'grey.50',
+              borderRadius: 3,
+              px: { xs: 2, sm: 3 },
+              width: '100%',
+              maxWidth: '1200px',
+            }}
+          >
           <Typography
             variant={isSmallMobile ? 'h5' : 'h4'}
             component="h2"
@@ -458,8 +464,10 @@ export const HomePage: React.FC = () => {
         </Box>
       </Container>
       
-      {/* AI Assistant Component */}
-      <AIAssistant />
+                           {/* AI Assistant Component */}
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          <AIAssistant />
+        </Box>
     </Box>
   )
 }
