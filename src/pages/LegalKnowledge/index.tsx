@@ -70,6 +70,7 @@ import ContractFormationExam from '../../features/legal-knowledge/components/Tes
 import ContractDefectsExam from '../../features/legal-knowledge/components/Testing/ContractDefectsExam';
 import CriminalLawExam from '../../features/legal-knowledge/components/Testing/CriminalLawExam';
 import { LegalConceptsSummary } from '../../features/legal-knowledge/components/Reference/LegalConceptsSummary';
+import { ComprehensiveContractsExam } from '../../features/legal-knowledge/components/Testing/ComprehensiveContractsExam';
 
 interface LegalKnowledgeFeature {
   id: string;
@@ -260,6 +261,17 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       component: LegalConceptsSummary,
       difficulty: 'all',
       estimatedTime: 0
+    },
+    {
+      id: 'comprehensive-contracts-exam',
+      title: 'מבחן מקיף בדיני חוזים',
+      description: 'מבחן מקיף ומעמיק בכל היבטי דיני החוזים הישראליים - מיסודות החוזה ועד הפרות וסעדים',
+      icon: <DescriptionIcon />,
+      color: '#1976d2',
+      category: 'exams',
+      component: ComprehensiveContractsExam,
+      difficulty: 'hard',
+      estimatedTime: 75
     },
 
   // למידה וחקירה
