@@ -39,11 +39,7 @@ import {
   MenuItem,
   Slider,
   Switch,
-  FormControlLabel,
-  Stepper,
-  Step,
-  StepLabel,
-  StepContent
+  FormControlLabel
 } from '@mui/material';
 import { 
   ExpandMore as ExpandIcon,

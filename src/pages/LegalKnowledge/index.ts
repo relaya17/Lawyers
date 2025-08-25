@@ -1,1 +1,1 @@
-export { default as LegalKnowledgePage } from './index';
+export { LegalKnowledgePage } from './index';
