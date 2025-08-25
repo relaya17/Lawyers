@@ -39,6 +39,7 @@ import { SafeAreaContainer } from '@shared/components/ui/AdvancedComponents'
 
   const navigationItems = [
   { path: '/', label: 'navigation.home' },
+  { path: '/legal-knowledge', label: 'מקורות המשפט' },
   { path: '/contracts', label: 'navigation.contracts' },
   { path: '/crm', label: 'navigation.crm' },
   { path: '/business-intelligence', label: 'navigation.businessIntelligence' },

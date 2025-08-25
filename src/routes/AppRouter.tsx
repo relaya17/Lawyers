@@ -40,6 +40,7 @@ const ExternalIntegrationsPage = React.lazy(() => import('../pages/ExternalInteg
 const IOSNativeFeaturesPage = React.lazy(() => import('../pages/IOSNativeFeatures').then(m => ({ default: m.IOSNativeFeaturesPage })))
 const AppleWatchPage = React.lazy(() => import('../pages/AppleWatch').then(m => ({ default: m.AppleWatchPage })))
 const SiriIntegrationPage = React.lazy(() => import('../pages/SiriIntegration').then(m => ({ default: m.SiriIntegrationPage })))
+const LegalKnowledgePage = React.lazy(() => import('../pages/LegalKnowledge').then(m => ({ default: m.LegalKnowledgePage })))
 
 // רכיב טעינה משופר עבור Suspense
 const PageLoader: React.FC = () => (
@@ -93,6 +94,7 @@ export const AppRouter: React.FC = () => {
               <Route path="/ios-native-features" element={<IOSNativeFeaturesPage />} />
               <Route path="/apple-watch" element={<AppleWatchPage />} />
               <Route path="/siri-integration" element={<SiriIntegrationPage />} />
+              <Route path="/legal-knowledge" element={<LegalKnowledgePage />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
