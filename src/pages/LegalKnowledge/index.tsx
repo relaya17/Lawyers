@@ -64,7 +64,6 @@ import { VirtualCourtroomSimulator } from '../../features/legal-knowledge/compon
 import ComprehensiveLegalSourcesExam from '../../features/legal-knowledge/components/Testing/ComprehensiveLegalSourcesExam';
 import LawVsCustomQuiz from '../../features/legal-knowledge/components/Interactive/LawVsCustomQuiz';
 import ConstitutionalLawComparison from '../../features/legal-knowledge/components/Testing/ConstitutionalLawComparison';
-import LawOfReturnExam from '../../features/legal-knowledge/components/Testing/LawOfReturnExam';
 import ParliamentaryAndEqualityLawExam from '../../features/legal-knowledge/components/Testing/ParliamentaryAndEqualityLawExam';
 import ContractFormationExam from '../../features/legal-knowledge/components/Testing/ContractFormationExam';
 import ContractDefectsExam from '../../features/legal-knowledge/components/Testing/ContractDefectsExam';
@@ -78,9 +77,9 @@ interface LegalKnowledgeFeature {
   description: string;
   icon: React.ReactElement;
   color: string;
-  category: 'exams' | 'learning' | 'games' | 'advanced' | 'simulation';
+  category: 'exams' | 'learning' | 'games' | 'advanced' | 'simulation' | 'reference';
   component: React.ComponentType<any>;
-  difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert' | 'all' | 'hard';
   estimatedTime: number;
 }
 
@@ -457,29 +456,29 @@ export const LegalKnowledgePage: React.FC = () => {
             </Typography>
           </Box>
           <FeatureComponent 
-            onComplete={(results: any) => {
-              console.log('Feature completed:', results);
+            onComplete={() => {
+              // console.log('Feature completed:', results);
             }}
-            onStartScenario={(scenario: any) => {
-              console.log('Starting scenario:', scenario);
+            onStartScenario={() => {
+              // console.log('Starting scenario:', scenario);
             }}
-            onLearnMore={(item: any) => {
-              console.log('Learn more:', item);
+            onLearnMore={() => {
+              // console.log('Learn more:', item);
             }}
-            onViewCase={(caseItem: any) => {
-              console.log('View case:', caseItem);
+            onViewCase={() => {
+              // console.log('View case:', caseItem);
             }}
-            onStartChallenge={(challenge: any) => {
-              console.log('Start challenge:', challenge);
+            onStartChallenge={() => {
+              // console.log('Start challenge:', challenge);
             }}
             onExploreInteraction={(principleId: string, targetId: string) => {
               console.log('Explore interaction:', principleId, targetId);
             }}
-            onStartSimulation={(scenario: any) => {
-              console.log('Start simulation:', scenario);
+            onStartSimulation={() => {
+              // console.log('Start simulation:', scenario);
             }}
-            onSaveAnswer={(answer: any) => {
-              console.log('Save answer:', answer);
+            onSaveAnswer={() => {
+              // console.log('Save answer:', answer);
             }}
             onModuleComplete={(moduleId: string, score: number) => {
               console.log('Module complete:', moduleId, score);
