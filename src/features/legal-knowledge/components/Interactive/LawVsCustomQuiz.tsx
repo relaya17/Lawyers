@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle, XCircle, Scale, Book, Star, Building } from 'lucide-react';
+import { CheckCircle, Cancel as XCircle, Balance as Scale, Book, Star, Business as Building } from '@mui/icons-material';
 
 interface QuizScenario {
   id: number;

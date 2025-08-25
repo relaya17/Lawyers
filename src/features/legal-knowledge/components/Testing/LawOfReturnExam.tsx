@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle, XCircle, Home, Users, Scale, Book, Star } from 'lucide-react';
+import { CheckCircle, Cancel as XCircle, Home, Group as Users, Balance as Scale, Book, Star } from '@mui/icons-material';
 
 interface Question {
   id: number;
@@ -74,8 +74,7 @@ const questions: Question[] = [
     ],
     correctAnswer: 'b',
     explanation: 'בג"ץ קבע שחוק השבות הוא חוק חילוני, ויש לפרש "יהודי" לפי משמעות לאומית-תרבותית. מי שהמיר דתו אינו זכאי לעלות.',
-    precedent: 'ע"א 72/62 רופאייזן נ\' שר הפנים',
-    difficulty: 'קשה'
+    precedent: 'ע"א 72/62 רופאייזן נ\' שר הפנים'
   },
   {
     id: 5,
@@ -91,8 +90,7 @@ const questions: Question[] = [
     ],
     correctAnswer: 'b',
     explanation: 'בג"ץ קבע שהילדים יירשמו כיהודים לפי הלאום, כי הם גדלים בבית יהודי עם אב יהודי. פסיקה זו גרמה לסערה והובילה לתיקון החוק ב-1970.',
-    precedent: 'ע"א 58/68 שליט נ\' שר הפנים',
-    difficulty: 'קשה'
+    precedent: 'ע"א 58/68 שליט נ\' שר הפנים'
   },
   {
     id: 6,

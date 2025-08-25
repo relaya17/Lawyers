@@ -38,8 +38,7 @@ import {
   Lightbulb,
   Description as DescriptionIcon,
   Warning as WarningIcon,
-  LocalPolice as LocalPoliceIcon,
-  MenuBook
+  LocalPolice as LocalPoliceIcon
 } from '@mui/icons-material';
 
 // Import all the components we created
@@ -289,7 +288,7 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     id: 'legal-concepts-table',
     title: 'מילון מושגים אינטראקטיבי',
     description: 'טבלה מקיפה של מושגים משפטיים עם דוגמאות ופסיקה',
-    icon: <MenuBook />,
+    icon: <BookIcon />,
     color: '#795548',
     category: 'learning',
     component: LegalConceptsTable,

@@ -28,19 +28,13 @@ import {
   ListItemIcon,
   ListItemText,
   Avatar,
+  Tabs,
+  Tab,
+  Rating,
   Stepper,
   Step,
   StepLabel,
   StepContent,
-  Tabs,
-  Tab,
-  Rating,
-  Timeline,
-  TimelineItem,
-  TimelineSeparator,
-  TimelineConnector,
-  TimelineContent,
-  TimelineDot,
   Tooltip
 } from '@mui/material';
 import { 

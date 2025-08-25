@@ -41,7 +41,7 @@ interface Question {
   id: string;
   type: 'case-analysis' | 'true-false';
   section: string;
-  difficulty: 'medium' | 'hard';
+  difficulty: 'easy' | 'medium' | 'hard';
   question: string;
   correctAnswer: string;
   explanation: string;

@@ -68,7 +68,7 @@ interface Question {
   category: string;
   question: string;
   options?: string[];
-  correctAnswer: string | number;
+  correctAnswer: string | number | boolean;
   explanation: string;
   legalSource: string;
   relatedCases?: string[];

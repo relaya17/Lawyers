@@ -25,7 +25,7 @@ import {
   Psychology as AIIcon,
   TrendingUp as TrendingUpIcon,
   School as SchoolIcon,
-  Target as TargetIcon,
+  GpsFixed as TargetIcon,
   Lightbulb as IdeaIcon,
   Schedule as ScheduleIcon,
   Assessment as AssessmentIcon,

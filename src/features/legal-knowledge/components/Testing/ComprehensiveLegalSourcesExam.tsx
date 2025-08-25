@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle, XCircle, Clock, Trophy, BookOpen, Scale, FileText, Building } from 'lucide-react';
+import { CheckCircle, Cancel as XCircle, AccessTime as Clock, EmojiEvents as Trophy, MenuBook as BookOpen, Balance as Scale, Description as FileText, Business as Building } from '@mui/icons-material';
 
 interface Question {
   id: number;

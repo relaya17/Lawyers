@@ -26,7 +26,7 @@ import {
   Star as StarIcon,
   EmojiEvents as TrophyIcon,
   Speed as SpeedIcon,
-  Target as TargetIcon,
+  GpsFixed as TargetIcon,
   CalendarToday as CalendarIcon,
   Bookmark as BookmarkIcon,
   Download as DownloadIcon

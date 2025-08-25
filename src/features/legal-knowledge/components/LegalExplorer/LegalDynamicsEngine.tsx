@@ -40,12 +40,10 @@ import {
   Slider,
   Switch,
   FormControlLabel,
-  Timeline,
-  TimelineItem,
-  TimelineSeparator,
-  TimelineConnector,
-  TimelineContent,
-  TimelineDot
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent
 } from '@mui/material';
 import { 
   ExpandMore as ExpandIcon,
