@@ -9,7 +9,8 @@
     <meta name="author" content="חוזים מודרן עורכי דין" />
 
     <!-- Accessibility Meta Tags -->
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://contractlab.pro" />
 
     <meta name="msapplication-TileColor" content="#1565c0" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
@@ -21,7 +22,6 @@
 
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
-
     <meta name="apple-mobile-web-app-title" content="חוזים מודרן עורכי דין" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="application-name" content="חוזים מודרן עורכי דין" />
@@ -30,7 +30,6 @@
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
-
 
     <!-- Apple Pay Meta Tags -->
     <meta name="apple-pay-domain-association"
@@ -44,11 +43,48 @@
     <meta property="og:description" content="פלטפורמה מתקדמת לניהול חוזים ולמידה משפטית" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://contractlab.pro" />
+    <meta property="og:image" content="https://contractlab.pro/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="לוגו חוזים מודרן עורכי דין" />
+    <meta property="og:site_name" content="חוזים מודרן עורכי דין" />
+    <meta property="og:locale" content="he_IL" />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <!-- Fallback PNG image -->
+    <meta property="og:image:secure_url" content="https://contractlab.pro/og-image.png" />
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="חוזים מודרן עורכי דין" />
     <meta name="twitter:description" content="פלטפורמה מתקדמת לניהול חוזים ולמידה משפטית" />
+    <meta name="twitter:image" content="https://contractlab.pro/og-image.svg" />
+    <meta name="twitter:image:alt" content="לוגו חוזים מודרן עורכי דין" />
+    <meta name="twitter:site" content="@contractlab" />
+    <meta name="twitter:creator" content="@contractlab" />
+    <meta name="twitter:domain" content="contractlab.pro" />
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "חוזים מודרן עורכי דין",
+      "description": "פלטפורמה מתקדמת לניהול חוזים ולמידה משפטית",
+      "url": "https://contractlab.pro",
+      "applicationCategory": "LegalApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "ILS"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "חוזים מודרן עורכי דין"
+      },
+      "logo": "https://contractlab.pro/og-image.svg"
+    }
+    </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -59,7 +95,8 @@
 
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-152.svg" />
-
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152.svg" />
+    <link rel="icon" type="image/svg+xml" href="/apple-touch-icon-152.svg" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=6" />
     <link rel="manifest" href="/manifest.json" />
 
@@ -67,14 +104,8 @@
 </head>
 
 <body>
-
-
     <div id="root"></div>
-
-
-
     <script type="module" src="/src/main.tsx"></script>
-
     <!-- Service Worker registration is handled in src/main.tsx for PROD only -->
 </body>
 

@@ -38,7 +38,10 @@ import {
   Lightbulb,
   Description as DescriptionIcon,
   Warning as WarningIcon,
-  LocalPolice as LocalPoliceIcon
+  LocalPolice as LocalPoliceIcon,
+  Favorite,
+  Work,
+  Gavel
 } from '@mui/icons-material';
 
 // Import all the components we created
@@ -70,6 +73,10 @@ import ContractDefectsExam from '../../features/legal-knowledge/components/Testi
 import CriminalLawExam from '../../features/legal-knowledge/components/Testing/CriminalLawExam';
 import { LegalConceptsSummary } from '../../features/legal-knowledge/components/Reference/LegalConceptsSummary';
 import { ComprehensiveContractsExam } from '../../features/legal-knowledge/components/Testing/ComprehensiveContractsExam';
+import LawOfReturnExam from '../../features/legal-knowledge/components/Testing/LawOfReturnExam';
+import FamilyLawExam from '../../features/legal-knowledge/components/Testing/FamilyLawExam';
+import LaborLawExam from '../../features/legal-knowledge/components/Testing/LaborLawExam';
+import TortLawExam from '../../features/legal-knowledge/components/Testing/TortLawExam';
 
 interface LegalKnowledgeFeature {
   id: string;
@@ -271,6 +278,50 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       component: ComprehensiveContractsExam,
       difficulty: 'hard',
       estimatedTime: 75
+    },
+    {
+      id: 'law-of-return-exam',
+      title: 'מבחן חוק השבות',
+      description: 'מבחן מקיף על חוק השבות, הגדרת יהודי, זכויות בני משפחה ופסיקה מכוננת',
+      icon: <Flag />,
+      color: '#ff5722',
+      category: 'exams',
+      component: LawOfReturnExam,
+      difficulty: 'advanced',
+      estimatedTime: 60
+    },
+    {
+      id: 'family-law-exam',
+      title: 'מבחן דיני משפחה',
+      description: 'מבחן מקיף על נישואין, גירושין, מזונות, משמורת וחלוקת רכוש',
+      icon: <Favorite />,
+      color: '#e91e63',
+      category: 'exams',
+      component: FamilyLawExam,
+      difficulty: 'advanced',
+      estimatedTime: 45
+    },
+    {
+      id: 'labor-law-exam',
+      title: 'מבחן דיני עבודה',
+      description: 'מבחן מקיף על חוקי עבודה, זכויות עובדים, פיטורין ושכר',
+      icon: <Work />,
+      color: '#4caf50',
+      category: 'exams',
+      component: LaborLawExam,
+      difficulty: 'advanced',
+      estimatedTime: 40
+    },
+    {
+      id: 'tort-law-exam',
+      title: 'מבחן דיני נזיקין',
+      description: 'מבחן מקיף על עוולות, אחריות, פיצויים ורשלנות',
+      icon: <Gavel />,
+      color: '#ff9800',
+      category: 'exams',
+      component: TortLawExam,
+      difficulty: 'advanced',
+      estimatedTime: 35
     },
 
   // למידה וחקירה
