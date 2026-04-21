@@ -1,16 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 
-import { authApi } from '../services/api/authApi'
-// API services are initialized in main.tsx
-import { simulatorApi } from '../services/api/simulatorApi'
-import { riskAnalysisApi } from '../services/api/riskAnalysisApi'
-
 import authReducer from './slices/authSlice'
 import uiReducer from './slices/uiSlice'
 import themeReducer from './slices/themeSlice'
 import advancedReducer from './advancedSlice'
-import marketplaceReducer from '../features/marketplace/store/marketplaceSlice'
 
 export const store = configureStore({
     reducer: {
@@ -18,12 +12,6 @@ export const store = configureStore({
         ui: uiReducer,
         theme: themeReducer,
         advanced: advancedReducer,
-        marketplace: marketplaceReducer,
-
-        // API slices
-        [authApi.reducerPath]: authApi.reducer,
-        [simulatorApi.reducerPath]: simulatorApi.reducer,
-        [riskAnalysisApi.reducerPath]: riskAnalysisApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -32,16 +20,13 @@ export const store = configureStore({
                 ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
                 ignoredPaths: ['advanced.lastSync'],
             },
-        }).concat(
-            authApi.middleware,
-            simulatorApi.middleware,
-            riskAnalysisApi.middleware
-        ),
+        }),
 
-    devTools: import.meta.env.MODE !== 'production',
+    devTools: typeof process !== 'undefined'
+        ? process.env.NODE_ENV !== 'production'
+        : true,
 })
 
-// הגדרת listeners עבור RTK Query
 setupListeners(store.dispatch)
 
 export type RootState = ReturnType<typeof store.getState>

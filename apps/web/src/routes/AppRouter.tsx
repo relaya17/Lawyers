@@ -4,7 +4,7 @@ import { Box } from '@mui/material'
 import { Helmet } from 'react-helmet-async'
 import { PrivateRoute } from './PrivateRoute'
 import NavBar from '../widgets/Navigation/NavBar'
-import { LoadingSpinner } from '@shared/components/ui/LoadingSpinner'
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import AIAssistant from '../widgets/AIAssistant'
 import { AppFooter } from '../widgets/AppFooter'
 

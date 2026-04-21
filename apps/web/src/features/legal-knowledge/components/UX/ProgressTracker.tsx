@@ -248,7 +248,7 @@ export const ProgressTracker: React.FC<ProgressTrackerProps> = ({
               <XAxis dataKey="date" />
               <YAxis />
               <RechartsTooltip 
-                formatter={(value: any, name: string) => [
+                formatter={(value: any, name: string | number | undefined): [React.ReactNode, React.ReactNode] => [
                   name === 'points' ? `${value} נקודות` :
                   name === 'studyTime' ? `${value} דקות` :
                   name === 'accuracy' ? `${value}%` : value,

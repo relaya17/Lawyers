@@ -7,6 +7,7 @@
     "dev":          "vite --host --port 5852",
     "build":        "tsc --noEmit && vite build",
     "build:netlify":"tsc --noEmit && vite build",
+    "build:analyze":"tsc --noEmit && ANALYZE=true vite build",
     "preview":      "vite preview --host",
     "type-check":   "tsc --noEmit",
     "test":         "vitest",

@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { router as apiRouter } from './routes/index.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { connectDB } from './db.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
@@ -30,5 +31,7 @@ app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
+
+connectDB();
 
 export default app;

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '@shared/store/slices/authSlice'
 import { RootState } from '@shared/store'
-import { BiometricButton } from '@shared/components/ui/BiometricButton'
+import { BiometricButton } from '@/components/ui/BiometricButton'
 
 export const LoginPage: React.FC = () => {
   const { t } = useTranslation()

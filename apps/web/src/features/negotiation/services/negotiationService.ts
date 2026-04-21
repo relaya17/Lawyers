@@ -1,4 +1,4 @@
-import { axiosClient } from '@shared/services/api/axiosClient'
+import { axiosClient } from '@/services/api/axiosClient'
 import type {
     INegotiationRoom,
     Participant,

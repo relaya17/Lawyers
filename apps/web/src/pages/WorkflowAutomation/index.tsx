@@ -5,7 +5,7 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { AccountTree } from '@mui/icons-material'
 import { WorkflowDashboard } from '@/features/workflow-automation'
-import { PageHero } from '@shared/design/PageHero'
+import { PageHero } from '@/design/PageHero'
 
 const WorkflowAutomationPage: React.FC = () => {
   return (

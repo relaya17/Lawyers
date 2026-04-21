@@ -43,7 +43,7 @@ import {
   Work,
   Gavel
 } from '@mui/icons-material';
-import { PageHero } from '@shared/design/PageHero';
+import { PageHero } from '@/design/PageHero';
 
 // Import all the components we created
 import { ComprehensiveLegalExam } from '../../features/legal-knowledge/components/Testing/ComprehensiveLegalExam';

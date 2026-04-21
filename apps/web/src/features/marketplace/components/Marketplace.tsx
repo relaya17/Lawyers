@@ -36,8 +36,8 @@ import {
   fetchCategories,
   addToCart,
   setFilters 
-} from '@shared/features/marketplace/store/marketplaceSlice'
-import type { Product, ProductFilters, ProductCategory } from '@shared/features/marketplace/types/marketplaceTypes'
+} from '@/features/marketplace/store/marketplaceSlice'
+import type { Product, ProductFilters, ProductCategory } from '@/features/marketplace/types/marketplaceTypes'
 
 const ITEMS_PER_PAGE = 12
 

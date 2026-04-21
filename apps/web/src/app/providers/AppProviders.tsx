@@ -6,14 +6,14 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThemeProvider } from '@mui/material/styles'
 import { CssBaseline } from '@mui/material'
 import { HelmetProvider } from 'react-helmet-async'
-import { AppErrorBoundary } from '@shared/components/ui/AppErrorBoundary'
+import { AppErrorBoundary } from '@/components/ui/AppErrorBoundary'
 import { Toaster } from 'react-hot-toast'
-import { TouchGestureProvider } from '@shared/components/ui/TouchGestureProvider'
-import { AccessibilityProvider } from '@shared/components/ui/AccessibilityProvider'
+import { TouchGestureProvider } from '@/components/ui/TouchGestureProvider'
+import { AccessibilityProvider } from '@/components/ui/AccessibilityProvider'
 
 import { store } from '@shared/store'
 import { theme } from '../theme/index'
-import { I18nProvider } from '@shared/i18n/I18nProvider'
+import { I18nProvider } from '@/i18n/I18nProvider'
 import { AuthProvider } from './AuthProvider'
 
 // יצירת QueryClient עם הגדרות מותאמות

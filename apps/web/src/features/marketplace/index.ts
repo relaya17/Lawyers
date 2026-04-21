@@ -2,6 +2,6 @@
 // תכונת שוק חוזים
 
 export * from './components'
-export * from '@shared/features/marketplace/services'
-export * from '@shared/features/marketplace/store'
-export * from '@shared/features/marketplace/types'
+export * from '@/features/marketplace/services'
+export * from '@/features/marketplace/store'
+export * from '@/features/marketplace/types'

@@ -24,7 +24,7 @@ import {
   Info,
   Error
 } from '@mui/icons-material';
-import { notificationService } from '@shared/services/notifications';
+import { notificationService } from '@/services/notifications';
 
 interface Notification {
   id: string;

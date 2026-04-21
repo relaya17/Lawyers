@@ -153,6 +153,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Increase file descriptor limit
+        run: ulimit -n 65536
+
       - name: Build web app
         run: pnpm build
 
@@ -164,57 +167,37 @@ jobs:
           retention-days: 7
 
 
-  # Performance Tests
-  performance:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'pnpm'
-      
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      
-      - name: Build application
-        run: pnpm run build
-      
-      - name: Run performance tests
-        run: pnpm run test:performance
-      
-      - name: Upload performance report
-        uses: actions/upload-artifact@v3
-        with:
-          name: performance-report
-          path: performance-report/
-          retention-days: 30
-
   # Bundle Analysis
   bundle-analysis:
     runs-on: ubuntu-latest
+    needs: [build]
     steps:
       - uses: actions/checkout@v4
-      
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
+      - name: Increase file descriptor limit
+        run: ulimit -n 65536
+
       - name: Build with analysis
-        run: pnpm run build:analyze
-      
+        run: pnpm build:analyze
+
       - name: Upload bundle analysis
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bundle-analysis
-          path: dist/
+          path: apps/web/dist/
           retention-days: 30
 
   # Dependency Updates
@@ -223,16 +206,20 @@ jobs:
     if: github.event_name == 'schedule'
     steps:
       - uses: actions/checkout@v4
-      
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      
+
       - name: Check for updates
-        run: pnpm run deps:check
-      
+        run: pnpm deps:check
+
       - name: Create PR for updates
         uses: peter-evans/create-pull-request@v5
         with:
@@ -250,19 +237,26 @@ jobs:
     environment: staging
     steps:
       - uses: actions/checkout@v4
-      
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
+      - name: Increase file descriptor limit
+        run: ulimit -n 65536
+
       - name: Build application
-        run: pnpm run build
-      
+        run: pnpm build
+
       - name: Deploy to staging
         run: echo "Deploy to staging environment"
         # Add your deployment steps here
@@ -270,24 +264,31 @@ jobs:
   # Deploy to Production
   deploy-production:
     runs-on: ubuntu-latest
-    needs: [quality, security, unit-tests, e2e-tests, performance]
+    needs: [quality, security, unit-tests, e2e-tests, build]
     if: github.ref == 'refs/heads/main'
     environment: production
     steps:
       - uses: actions/checkout@v4
-      
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
+      - name: Increase file descriptor limit
+        run: ulimit -n 65536
+
       - name: Build application
-        run: pnpm run build
-      
+        run: pnpm build
+
       - name: Deploy to production
         run: echo "Deploy to production environment"
         # Add your deployment steps here

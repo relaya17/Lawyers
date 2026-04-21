@@ -36,8 +36,8 @@ import {
   ArrowForward
 } from '@mui/icons-material'
 import { motion } from 'framer-motion'
-import { PageHero } from '@shared/design/PageHero'
-import { MotionCard, fadeUp, stagger } from '@shared/design'
+import { PageHero } from '@/design/PageHero'
+import { MotionCard, fadeUp, stagger } from '@/design'
 
 const MotionGrid = motion(Grid)
 

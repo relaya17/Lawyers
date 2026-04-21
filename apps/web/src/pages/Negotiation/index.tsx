@@ -44,7 +44,7 @@ import {
   Psychology,
   Lightbulb
 } from '@mui/icons-material'
-import { PageHero } from '@shared/design/PageHero'
+import { PageHero } from '@/design/PageHero'
 
 
 interface Message {

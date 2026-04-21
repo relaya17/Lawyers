@@ -36,9 +36,9 @@ import {
   PersonalizedRecommendation,
   LearningAnalytics,
   AdaptiveQuestion
-} from '@shared/services/adaptiveLearning';
-import { PageHero } from '@shared/design/PageHero';
-import { MotionCard, fadeUp, stagger } from '@shared/design';
+} from '@/services/adaptiveLearning';
+import { PageHero } from '@/design/PageHero';
+import { MotionCard, fadeUp, stagger } from '@/design';
 import { motion } from 'framer-motion';
 
 export const AdaptiveLearningPage: React.FC = () => {

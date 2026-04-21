@@ -36,7 +36,7 @@ import { toggleMode, setLanguage } from '@shared/store/slices/themeSlice'
 import { toggleMobileMenu } from '@shared/store/slices/uiSlice'
 import { setLanguage as setI18nLanguage } from '@/app/i18n'
 import RealtimeNotifications from '../RealtimeNotifications'
-import { SafeAreaContainer } from '@shared/components/ui/AdvancedComponents'
+import { SafeAreaContainer } from '@/components/ui/AdvancedComponents'
 
 const navigationItems = [
   { path: '/', label: 'navigation.home' },

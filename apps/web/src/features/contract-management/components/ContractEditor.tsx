@@ -35,7 +35,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { logger } from '@shared/utils/logger'
-import { LoadingSpinner } from '@shared/components/ui/LoadingSpinner'
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import type { Contract, ContractTerm, ContractParty } from '../types'
 
 interface ContractEditorProps {

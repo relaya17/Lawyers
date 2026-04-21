@@ -9,6 +9,7 @@
     "types": ["node", "react", "react-dom"],
     "paths": {
       "@/*": ["./src/*"],
+      "@shared/store": ["./src/store/index"],
       "@shared/*": ["../../packages/shared/src/*"]
     }
   },

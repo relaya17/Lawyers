@@ -10,8 +10,6 @@ export type ContractType = 'rental' | 'employment' | 'partnership' | 'service' |
 
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
-// Re-export Contract and Risk types from api/types
-export type { Contract, RiskAnalysis, RiskIssue, RiskRecommendation, RiskLevel } from '../services/api/types'
 
 export type SortOrder = 'asc' | 'desc'
 

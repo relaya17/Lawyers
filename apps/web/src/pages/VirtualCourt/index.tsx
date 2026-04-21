@@ -3,7 +3,7 @@ import { Box } from '@mui/material'
 import { Gavel } from '@mui/icons-material'
 import { EnhancedVirtualCourt } from './EnhancedVirtualCourt'
 import { useTranslation } from 'react-i18next'
-import { PageHero } from '@shared/design/PageHero'
+import { PageHero } from '@/design/PageHero'
 
 export const VirtualCourtPage: React.FC = () => {
   const { t: _t } = useTranslation()

@@ -9,7 +9,7 @@ import AppRouter from './routes'
 import { store } from '@shared/store'
 import { ThemeProvider } from '@/app/providers/ThemeProvider'
 import i18n from './app/i18n'
-import { analyticsService } from '@shared/services/analytics'
+import { analyticsService } from '@/services/analytics'
 
 // Ensure initial document lang/dir match saved language (prevents "LTR flash" and mixed RTL/LTR layout on first paint)
 const initialLng = localStorage.getItem('i18nextLng') || 'he'

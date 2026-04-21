@@ -49,7 +49,7 @@ import {
   TrendingFlat
 } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
-import { versionControlService, ContractVersion, VersionHistory, VersionComparison } from '@shared/services/versionControl'
+import { versionControlService, ContractVersion, VersionHistory, VersionComparison } from '@/services/versionControl'
 import { logger } from '@shared/utils/logger'
 
 export const VersionControlPage: React.FC = () => {

@@ -10,6 +10,11 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "build:analyze": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "env": ["ANALYZE"]
+    },
     "dev": {
       "cache": false,
       "persistent": true

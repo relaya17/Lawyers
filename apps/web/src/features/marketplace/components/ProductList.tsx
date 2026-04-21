@@ -34,7 +34,7 @@ import {
   Person,
   AccessTime
 } from '@mui/icons-material'
-import type { Product } from '@shared/features/marketplace/types/marketplaceTypes'
+import type { Product } from '@/features/marketplace/types/marketplaceTypes'
 
 interface ProductListProps {
   products: Product[]

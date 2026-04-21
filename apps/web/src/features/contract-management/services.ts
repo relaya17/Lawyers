@@ -1,7 +1,7 @@
 // Contract Management Services
 // שירותים לניהול חוזים
 
-import { apiClient } from '@shared/services/api/axiosClient'
+import { apiClient } from '@/services/api/axiosClient'
 import type {
     Contract,
     ContractTemplate,

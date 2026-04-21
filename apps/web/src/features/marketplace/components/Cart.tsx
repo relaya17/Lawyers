@@ -38,7 +38,7 @@ import {
   AccountBalance,
   Security
 } from '@mui/icons-material'
-import ApplePayButton from '@shared/components/ui/ApplePayButton'
+import ApplePayButton from '@/components/ui/ApplePayButton'
 import { AppDispatch, RootState } from '@shared/store'
 import { 
   fetchCart, 
@@ -46,8 +46,8 @@ import {
   removeFromCart, 
   clearCart,
   createOrder 
-} from '@shared/features/marketplace/store/marketplaceSlice'
-import type { CartItem, PaymentDetails } from '@shared/features/marketplace/types/marketplaceTypes'
+} from '@/features/marketplace/store/marketplaceSlice'
+import type { CartItem, PaymentDetails } from '@/features/marketplace/types/marketplaceTypes'
 
 const Cart: React.FC = () => {
   const { t } = useTranslation()

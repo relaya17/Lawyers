@@ -39,7 +39,7 @@ import {
   AutoFixHigh,
   School
 } from '@mui/icons-material'
-import { PageHero } from '@shared/design/PageHero'
+import { PageHero } from '@/design/PageHero'
 
 
 interface RiskAnalysisResult {

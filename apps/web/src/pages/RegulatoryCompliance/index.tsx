@@ -20,7 +20,7 @@ import {
   Security
 } from '@mui/icons-material'
 import { RegulatoryDashboard, ComplianceAnalyzer } from '../../features/regulatory-analysis'
-import { PageHero } from '@shared/design/PageHero'
+import { PageHero } from '@/design/PageHero'
 
 interface TabPanelProps {
   children?: React.ReactNode
