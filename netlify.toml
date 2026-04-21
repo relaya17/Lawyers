@@ -2,6 +2,7 @@
 # קובץ הגדרות נטליפי מתקדם לפרויקט
 
 [build]
+  base = "/"
   # Ensure pnpm is available in Netlify build images (Node 16+ includes Corepack)
   # NODE_ENV=development ensures devDependencies (typescript, vite) are installed
   command = "corepack enable && NODE_ENV=development pnpm install --frozen-lockfile && pnpm -F @lawyers/web build:netlify"
