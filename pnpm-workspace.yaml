@@ -1,0 +1,13 @@
+packages:
+  - apps/*
+  - packages/*
+
+onlyBuiltDependencies:
+  - core-js
+  - cwebp-bin
+  - esbuild
+  - gifsicle
+  - jpegtran-bin
+  - mozjpeg
+  - optipng-bin
+  - pngquant-bin

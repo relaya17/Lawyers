@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+apps/*/dist
+apps/server/dist
 *.local
 
 # Editor directories and files
@@ -35,6 +37,7 @@ coverage
 .nyc_output
 test-results/
 playwright-report/
+.eslint-report.json
 
 # Build outputs
 build/
@@ -47,6 +50,7 @@ out/
 node_modules/.cache
 .pnpm-store
 .netlify
+vite.config.ts.timestamp-*.mjs
 
 # Temporary files
 *.tmp
@@ -65,5 +69,3 @@ Desktop.ini
 # Package manager files
 package-lock.json
 yarn.lock
-"relaya17-iq-desain/" 
-"q-desain/" 

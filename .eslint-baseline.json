@@ -1,0 +1,11 @@
+{
+  "overallWarnings": 310,
+  "coreWarnings": 142,
+  "coreGlobs": [
+    "src/shared/src/**/*.{ts,tsx}",
+    "src/pages/**/*.{ts,tsx}",
+    "src/widgets/**/*.{ts,tsx}"
+  ]
+}
+
+

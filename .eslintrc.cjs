@@ -12,7 +12,7 @@ module.exports = {
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react-refresh'],
+  plugins: ['@typescript-eslint', 'react-refresh', 'unused-imports'],
   settings: {
     react: {
       version: 'detect',
@@ -23,6 +23,15 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    // Prefer unused-imports rule (supports auto-fix) over TS rule to avoid duplicate warnings
+    '@typescript-eslint/no-unused-vars': 'off',
+    // Auto-fix unused imports with eslint --fix (helps keep repo clean)
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'warn',
+      { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_', ignoreRestSiblings: true },
+    ],
+    'prefer-const': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/ban-types': 'warn',
   },

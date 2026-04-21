@@ -350,6 +350,10 @@
 # התקנת תלויות
 pnpm install
 
+# אם pnpm מזהה אצלך workspace "עליון" (למשל ב-C:\Users\User) והוא מתקין פרויקט אחר,
+# השתמש ב:
+pnpm run install:local
+
 # הפעלת שרת פיתוח
 pnpm dev
 
@@ -401,9 +405,6 @@ pnpm lint:fix
 ### בדיקות לאייפון 📱
 
 ```bash
-# בדיקות E2E עם iOS Simulator
-pnpm test:e2e:ios
-
 # בדיקות מובייל
 pnpm test:mobile
 
@@ -417,14 +418,8 @@ pnpm test:a11y
 ### אופטימיזציה לאייפון
 
 ```bash
-# בנייה לאופטימיזציה לאייפון
-pnpm build:ios
-
 # בדיקת ביצועים
 pnpm lighthouse:mobile
-
-# בדיקת PWA
-pnpm lighthouse:pwa
 ```
 
 ### כלי פיתוח לאייפון

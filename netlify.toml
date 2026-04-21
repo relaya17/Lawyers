@@ -2,12 +2,13 @@
 # קובץ הגדרות נטליפי מתקדם לפרויקט
 
 [build]
-  command = "pnpm install --frozen-lockfile && pnpm run build:netlify"
-  publish = "dist"
-  functions = "netlify/functions"
+  # Ensure pnpm is available in Netlify build images (Node 16+ includes Corepack)
+  command = "corepack enable && pnpm install --frozen-lockfile && pnpm -F @lawyers/web build:netlify"
+  publish = "apps/web/dist"
 
 [build.environment]
   NODE_VERSION = "18"
+  PNPM_VERSION = "9.15.4"
   NPM_FLAGS = "--frozen-lockfile"
   PNPM_FLAGS = "--frozen-lockfile"
   NODE_OPTIONS = "--max-old-space-size=4096"
@@ -183,7 +184,4 @@
 [template.environment]
   NETLIFY_ANALYTICS_ID = "your-analytics-id"
 
-# 🚨 Error pages
-[[edge_handlers]]
-  path = "/404"
-  function = "notFound"
+
