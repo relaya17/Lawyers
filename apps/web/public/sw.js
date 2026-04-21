@@ -1,7 +1,7 @@
 // Service Worker for ContractLab Pro PWA
 // Service Worker עבור PWA
 
-const CACHE_NAME = "contractlab-pro-v1.0.0";
+const CACHE_NAME = "contractlab-pro-v1.0.1";
 const urlsToCache = [
   "/",
   "/index.html",
