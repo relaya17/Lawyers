@@ -51,6 +51,7 @@ node_modules/.cache
 .pnpm-store
 .netlify
 vite.config.ts.timestamp-*.mjs
+.turbo
 
 # Temporary files
 *.tmp
