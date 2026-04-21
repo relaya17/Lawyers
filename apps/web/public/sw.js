@@ -23,10 +23,8 @@ self.addEventListener("install", (event) => {
     })
   );
 
-  // Force activation for iOS
-  if (isIOS) {
-    self.skipWaiting();
-  }
+  // Force activation — take over immediately
+  self.skipWaiting();
 });
 
 // הפעלת Service Worker
@@ -44,10 +42,8 @@ self.addEventListener("activate", (event) => {
     })
   );
 
-  // Claim clients for iOS
-  if (isIOS) {
-    event.waitUntil(self.clients.claim());
-  }
+  // Claim all clients immediately
+  event.waitUntil(self.clients.claim());
 });
 
 // Intercept network requests

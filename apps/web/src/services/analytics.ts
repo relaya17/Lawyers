@@ -202,27 +202,9 @@ class AnalyticsService {
         return
     }
 
-    private async sendError(errorData: Record<string, unknown>) {
-        // Skip analytics in development mode
-        if (import.meta.env.DEV) {
-            return
-        }
-
-        if (!this.isOnline) return
-
-        try {
-            const response = await fetch('/api/analytics/error', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(errorData)
-            })
-
-            if (!response.ok) {
-                logger.warn('Analytics error endpoint not available')
-            }
-        } catch (error) {
-            logger.warn('Analytics error endpoint not available')
-        }
+    private async sendError(_errorData: Record<string, unknown>) {
+        // No backend on Netlify — no-op
+        return
     }
 
     // אחסון אירועים אופליין
@@ -234,22 +216,8 @@ class AnalyticsService {
 
     // סנכרון אירועים אופליין
     async syncOfflineEvents() {
-        const offlineEvents = JSON.parse(localStorage.getItem('analytics_offline') || '[]')
-        if (offlineEvents.length === 0) return
-
-        try {
-            const response = await fetch('/api/analytics/batch', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ events: offlineEvents })
-            })
-
-            if (response.ok) {
-                localStorage.removeItem('analytics_offline')
-            }
-        } catch (error) {
-            logger.warn('Analytics batch endpoint not available')
-        }
+        // No backend on Netlify — no-op
+        return
     }
 
     // הגדרת מאזינים
