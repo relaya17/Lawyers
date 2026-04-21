@@ -6,7 +6,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import { I18nextProvider } from 'react-i18next'
 
 import AppRouter from './routes'
-import { store } from '@shared/store'
+import { store } from '@/store'
 import { ThemeProvider } from '@/app/providers/ThemeProvider'
 import i18n from './app/i18n'
 import { analyticsService } from '@/services/analytics'
