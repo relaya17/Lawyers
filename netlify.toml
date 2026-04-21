@@ -3,7 +3,8 @@
 
 [build]
   # Ensure pnpm is available in Netlify build images (Node 16+ includes Corepack)
-  command = "corepack enable && pnpm install --frozen-lockfile && pnpm -F @lawyers/web build:netlify"
+  # NODE_ENV=development ensures devDependencies (typescript, vite) are installed
+  command = "corepack enable && NODE_ENV=development pnpm install --frozen-lockfile && pnpm -F @lawyers/web build:netlify"
   publish = "apps/web/dist"
 
 [build.environment]
