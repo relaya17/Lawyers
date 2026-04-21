@@ -7,7 +7,7 @@
   publish = "apps/web/dist"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
   PNPM_VERSION = "9.15.4"
   NPM_FLAGS = "--frozen-lockfile"
   PNPM_FLAGS = "--frozen-lockfile"
