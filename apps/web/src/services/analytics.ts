@@ -197,32 +197,9 @@ class AnalyticsService {
     }
 
     // שליחת אירועים
-    private async sendEvent(event: AnalyticsEvent) {
-        // Skip analytics in development mode
-        if (import.meta.env.DEV) {
-            return
-        }
-
-        if (!this.isOnline) {
-            this.storeOfflineEvent(event)
-            return
-        }
-
-        try {
-            // Check if analytics endpoint exists
-            const response = await fetch('/api/analytics/event', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(event)
-            })
-
-            if (!response.ok) {
-                // If endpoint doesn't exist or returns error, store offline
-                this.storeOfflineEvent(event)
-            }
-        } catch (error) {
-            logger.warn('Analytics error endpoint not available')
-        }
+    private async sendEvent(_event: AnalyticsEvent) {
+        // No backend on Netlify — analytics stored locally only
+        return
     }
 
     private async sendError(errorData: Record<string, unknown>) {

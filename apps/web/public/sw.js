@@ -52,6 +52,12 @@ self.addEventListener("activate", (event) => {
 
 // Intercept network requests
 self.addEventListener("fetch", (event) => {
+  // Skip non-http(s) requests (e.g. chrome-extension://)
+  const url = event.request.url;
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    return;
+  }
+
   // iOS Safari specific handling
   if (isIOS && event.request.method === "GET") {
     event.respondWith(
@@ -113,10 +119,12 @@ self.addEventListener("fetch", (event) => {
               return response;
             }
 
-            // שמור במטמון
+            // שמור במטמון רק אם זה http/https
             const responseToCache = response.clone();
             caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseToCache);
+              if (url.startsWith('http://') || url.startsWith('https://')) {
+                cache.put(event.request, responseToCache);
+              }
             });
 
             return response;
