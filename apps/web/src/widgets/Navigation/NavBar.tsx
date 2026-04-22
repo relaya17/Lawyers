@@ -44,12 +44,8 @@ const navigationItems = [
   { path: '/adaptive-learning', label: 'navigation.adaptiveLearning' },
   { path: '/simulator', label: 'navigation.simulator' },
   { path: '/virtual-court', label: 'navigation.virtualCourt' },
-  { path: '/risk-analysis', label: 'navigation.riskAnalysis' },
   { path: '/contracts', label: 'navigation.contractManagement' },
   { path: '/negotiation', label: 'navigation.negotiation' },
-  { path: '/regulatory-compliance', label: 'navigation.regulatoryCompliance' },
-  { path: '/workflow-automation', label: 'navigation.workflowAutomation' },
-  { path: '/services', label: 'navigation.services' },
 ]
 
 const languages = [

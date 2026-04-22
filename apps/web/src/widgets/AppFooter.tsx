@@ -2,9 +2,6 @@ import React from 'react'
 import { Box, Typography, Container, Grid, Link, Divider } from '@mui/material'
 import { 
   Description, 
-  School, 
-  Handshake, 
-  Store, 
   Email,
   Phone,
   Language
@@ -25,16 +22,16 @@ export const AppFooter: React.FC = () => {
         backgroundImage: `linear-gradient(180deg, ${alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.12 : 0.06)} 0%, transparent 70%)`,
         borderTop: 1,
         borderColor: 'divider',
-        py: 4,
+        py: { xs: 2, sm: 4 },
         // Keep footer content clear of fixed FABs on small screens
-        pb: { xs: 'calc(88px + env(safe-area-inset-bottom))', sm: 4 },
+        pb: { xs: 'calc(72px + env(safe-area-inset-bottom))', sm: 4 },
         mt: 'auto'
       }}
     >
       <Container maxWidth="lg">
-        <Grid container spacing={4} justifyContent="center" sx={{ textAlign: 'center' }}>
+        <Grid container spacing={3} justifyContent="center" sx={{ textAlign: 'center' }}>
           {/* מידע על החברה */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
               <Description sx={{ marginInlineEnd: 1, color: 'primary.main' }} />
@@ -59,33 +56,8 @@ export const AppFooter: React.FC = () => {
             </Box>
           </Grid>
 
-          {/* תכונות עיקריות */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="h6" gutterBottom>
-              {t('footer.primaryFeatures', { defaultValue: 'תכונות עיקריות' })}
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                <Description fontSize="small" color="primary" />
-                <Typography variant="body2">{t('footer.features.contracts', { defaultValue: 'ניהול חוזים חכם' })}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                <School fontSize="small" color="primary" />
-                <Typography variant="body2">{t('footer.features.simulator', { defaultValue: 'מעבדה חוזית' })}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                <Handshake fontSize="small" color="primary" />
-                <Typography variant="body2">{t('footer.features.negotiation', { defaultValue: 'מו״מ חכם' })}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                <Store fontSize="small" color="primary" />
-                <Typography variant="body2">{t('footer.features.marketplace', { defaultValue: 'שוק תבניות' })}</Typography>
-              </Box>
-            </Box>
-          </Grid>
-
           {/* קישורים מהירים */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6" gutterBottom>
               {t('footer.quickLinks', { defaultValue: 'קישורים מהירים' })}
             </Typography>

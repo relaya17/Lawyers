@@ -295,13 +295,13 @@ const principles: LegalPrinciple[] = [
 ];
 
 interface LegalSourcesMapProps {
-  onStartChallenge: (scenario: ChallengeScenario, sourceId: string) => void;
-  onLearnMore: (source: LegalSource) => void;
+  onStartChallenge?: (scenario: ChallengeScenario, sourceId: string) => void;
+  onLearnMore?: (source: LegalSource) => void;
 }
 
 export const LegalSourcesMap: React.FC<LegalSourcesMapProps> = ({
-  onStartChallenge,
-  onLearnMore
+  onStartChallenge = () => {},
+  onLearnMore = () => {}
 }) => {
   const [selectedSource, setSelectedSource] = useState<LegalSource | null>(null);
   const [selectedMode, setSelectedMode] = useState<'explore' | 'hierarchy' | 'timeline' | 'challenges'>('explore');
@@ -458,6 +458,7 @@ export const LegalSourcesMap: React.FC<LegalSourcesMapProps> = ({
                           variant="contained"
                           onClick={(e) => {
                             e.stopPropagation();
+                            setSelectedSource(source);
                             onLearnMore(source);
                           }}
                           sx={{ backgroundColor: source.color }}
@@ -470,6 +471,7 @@ export const LegalSourcesMap: React.FC<LegalSourcesMapProps> = ({
                             variant="outlined"
                             onClick={(e) => {
                               e.stopPropagation();
+                              setSelectedMode('challenges');
                               onStartChallenge(source.challengeScenarios[0], source.id);
                             }}
                             sx={{ borderColor: source.color, color: source.color }}
@@ -811,8 +813,9 @@ export const LegalSourcesMap: React.FC<LegalSourcesMapProps> = ({
                   variant="contained" 
                   startIcon={<QuizIcon />}
                   onClick={() => {
-                    onStartChallenge(selectedSource.challengeScenarios[0], selectedSource.id);
+                    setSelectedMode('challenges');
                     setSelectedSource(null);
+                    onStartChallenge(selectedSource.challengeScenarios[0], selectedSource.id);
                   }}
                   sx={{ backgroundColor: selectedSource.color }}
                 >

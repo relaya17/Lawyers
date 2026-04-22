@@ -77,14 +77,7 @@ const services: Service[] = [
     gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     tags: ['מו"מ', 'שיתוף פעולה'],
   },
-  {
-    icon: AccountTree,
-    title: 'אוטומציה',
-    desc: 'אוטומציה של תהליכים משפטיים וחוזיים. בניית תהליכי עבודה חכמים שחוסכים זמן ומונעים טעויות.',
-    route: '/workflow-automation',
-    gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-    tags: ['workflow', 'חסכון זמן'],
-  },
+
   {
     icon: Timeline,
     title: 'ניהול גרסאות',
@@ -93,14 +86,7 @@ const services: Service[] = [
     gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
     tags: ['גרסאות', 'היסטוריה'],
   },
-  {
-    icon: WorkOutline,
-    title: 'ציות רגולטורי',
-    desc: 'ניתוח ציות לחקיקה ורגולציה ישראלית ובינלאומית. התראות מותאמות ודוחות ציות.',
-    route: '/regulatory-compliance',
-    gradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
-    tags: ['ציות', 'רגולציה'],
-  },
+
 ]
 
 // ── Why us ────────────────────────────────────────────────────────────────────

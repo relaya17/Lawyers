@@ -264,6 +264,35 @@ const legalSourcesQuestions: Question[] = [
   }
 ];
 
+const getOptionBgColor = (
+  index: number,
+  correctAnswer: string | number | boolean,
+  currentAnswer: any,
+  showFeedback: boolean
+): string | undefined => {
+  if (!showFeedback) return undefined;
+  if (index === correctAnswer) return '#e8f5e9';
+  if (index === currentAnswer && currentAnswer !== correctAnswer) return '#ffebee';
+  return undefined;
+};
+
+const getTFBgColor = (
+  value: boolean,
+  correctAnswer: string | number | boolean,
+  currentAnswer: any,
+  showFeedback: boolean
+): string | undefined => {
+  if (!showFeedback) return undefined;
+  if (value === correctAnswer) return '#e8f5e9';
+  if (value === currentAnswer && currentAnswer !== correctAnswer) return '#ffebee';
+  return undefined;
+};
+
+const getExplanationSeverity = (correctAnswer: any, currentAnswer: any): 'success' | 'error' => {
+  if (currentAnswer === correctAnswer) return 'success';
+  return 'error';
+};
+
 interface ComprehensiveLegalExamProps {
   onComplete: (results: ExamResult) => void;
   examMode?: 'practice' | 'timed' | 'comprehensive';
@@ -928,7 +957,12 @@ export const ComprehensiveLegalExam: React.FC<ComprehensiveLegalExamProps> = ({
                     value={index}
                     control={<Radio />}
                     label={`${String.fromCharCode(65 + index)}. ${option}`}
-                    sx={{ mb: 1 }}
+                    sx={{
+                      mb: 1,
+                      borderRadius: 1,
+                      px: 1,
+                      backgroundColor: getOptionBgColor(index, currentQuestion.correctAnswer, currentAnswer, showExplanation)
+                    }}
                   />
                 ))}
               </RadioGroup>
@@ -941,13 +975,23 @@ export const ComprehensiveLegalExam: React.FC<ComprehensiveLegalExamProps> = ({
                   value="true"
                   control={<Radio />}
                   label="✅ נכון"
-                  sx={{ mb: 1 }}
+                  sx={{
+                    mb: 1,
+                    borderRadius: 1,
+                    px: 1,
+                    backgroundColor: getTFBgColor(true, currentQuestion.correctAnswer, currentAnswer, showExplanation)
+                  }}
                 />
                 <FormControlLabel
                   value="false"
                   control={<Radio />}
                   label="❌ לא נכון"
-                  sx={{ mb: 1 }}
+                  sx={{
+                    mb: 1,
+                    borderRadius: 1,
+                    px: 1,
+                    backgroundColor: getTFBgColor(false, currentQuestion.correctAnswer, currentAnswer, showExplanation)
+                  }}
                 />
               </RadioGroup>
             )}
@@ -955,7 +999,7 @@ export const ComprehensiveLegalExam: React.FC<ComprehensiveLegalExamProps> = ({
           
           {/* הסבר (במצב תרגול) */}
           {examSession.examMode === 'practice' && showExplanation && (
-            <Alert severity="info" sx={{ mt: 3 }}>
+            <Alert severity={getExplanationSeverity(currentQuestion.correctAnswer, currentAnswer)} sx={{ mt: 3 }}>
               <Typography variant="body2">
                 <strong>הסבר:</strong> {currentQuestion.explanation}
               </Typography>

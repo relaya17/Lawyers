@@ -385,6 +385,8 @@ export const WorkflowDashboard: React.FC = () => {
                       </ListItemIcon>
                       
                       <ListItemText
+                        primaryTypographyProps={{ component: 'div' as React.ElementType }}
+                        secondaryTypographyProps={{ component: 'div' as React.ElementType }}
                         primary={
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Typography variant="subtitle1" component="span">
@@ -399,7 +401,7 @@ export const WorkflowDashboard: React.FC = () => {
                         }
                         secondary={
                           <Box>
-                            <Typography variant="body2" color="textSecondary">
+                            <Typography variant="body2" color="textSecondary" component="span" display="block">
                               התחיל: {formatDate(workflow.startDate)}
                             </Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 1 }}>
@@ -408,7 +410,7 @@ export const WorkflowDashboard: React.FC = () => {
                                 value={workflow.progress} 
                                 sx={{ flexGrow: 1, height: 6, borderRadius: 3 }}
                               />
-                              <Typography variant="body2" color="textSecondary">
+                              <Typography variant="body2" color="textSecondary" component="span">
                                 {workflow.progress}%
                               </Typography>
                             </Box>
@@ -453,6 +455,8 @@ export const WorkflowDashboard: React.FC = () => {
                       </ListItemIcon>
                       
                       <ListItemText
+                        primaryTypographyProps={{ component: 'div' as React.ElementType }}
+                        secondaryTypographyProps={{ component: 'div' as React.ElementType }}
                         primary={
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Typography variant="subtitle1" component="span">
@@ -467,10 +471,10 @@ export const WorkflowDashboard: React.FC = () => {
                         }
                         secondary={
                           <Box>
-                            <Typography variant="body2" color="textSecondary">
+                            <Typography variant="body2" color="textSecondary" component="span" display="block">
                               {approval.description}
                             </Typography>
-                            <Typography variant="body2" color="textSecondary">
+                            <Typography variant="body2" color="textSecondary" component="span" display="block">
                               מועד אחרון: {formatDate(approval.deadline)}
                             </Typography>
                           </Box>
@@ -512,6 +516,8 @@ export const WorkflowDashboard: React.FC = () => {
                       </ListItemIcon>
                       
                       <ListItemText
+                        primaryTypographyProps={{ component: 'div' as React.ElementType }}
+                        secondaryTypographyProps={{ component: 'div' as React.ElementType }}
                         primary={
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Typography variant="subtitle1" component="span">
@@ -526,10 +532,10 @@ export const WorkflowDashboard: React.FC = () => {
                         }
                         secondary={
                           <Box>
-                            <Typography variant="body2" color="textSecondary">
+                            <Typography variant="body2" color="textSecondary" component="span" display="block">
                               מועד יעד: {workflow.estimatedEndDate ? formatDate(workflow.estimatedEndDate) : 'לא מוגדר'}
                             </Typography>
-                            <Typography variant="body2" color="textSecondary">
+                            <Typography variant="body2" color="textSecondary" component="span" display="block">
                               התקדמות: {workflow.progress}%
                             </Typography>
                           </Box>

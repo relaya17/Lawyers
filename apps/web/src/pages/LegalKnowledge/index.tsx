@@ -5,12 +5,10 @@ import {
   Typography, 
   Card, 
   CardContent, 
-  CardHeader,
   Grid,
   Tabs,
   Tab,
   Button,
-  Paper,
   Chip,
   List,
   ListItem,
@@ -61,6 +59,8 @@ import { LegalDynamicsEngine } from '../../features/legal-knowledge/components/L
 import { LegalMasterySystem } from '../../features/legal-knowledge/components/Advanced/LegalMasterySystem';
 import { LegalConceptsTable } from '../../features/legal-knowledge/components/InteractiveGlossary/LegalConceptsTable';
 import { UniversityLegalTopics } from '../../features/legal-knowledge/components/University/UniversityLegalTopics';
+import { LegalFlashcards } from '../../features/legal-knowledge/components/Flashcards/LegalFlashcards';
+import { PracticeSession } from '../../features/legal-knowledge/components/Practice/PracticeSession';
 import { CaseStudyViewer } from '../../features/legal-knowledge/components/CaseStudies/CaseStudyViewer';
 import { LawVsCustomGame } from '../../features/legal-knowledge/components/GameModes/LawVsCustom/LawVsCustomGame';
 import { ProgressDashboard } from '../../features/legal-knowledge/components/Statistics/ProgressDashboard';
@@ -77,9 +77,22 @@ import { ComprehensiveContractsExam } from '../../features/legal-knowledge/compo
 import LawOfReturnExam from '../../features/legal-knowledge/components/Testing/LawOfReturnExam';
 import FamilyLawExam from '../../features/legal-knowledge/components/Testing/FamilyLawExam';
 import LaborLawExam from '../../features/legal-knowledge/components/Testing/LaborLawExam';
+import LaborLawExam2 from '../../features/legal-knowledge/components/Testing/LaborLawExam2';
 import TortLawExam from '../../features/legal-knowledge/components/Testing/TortLawExam';
+import TortLawExam2 from '../../features/legal-knowledge/components/Testing/TortLawExam2';
 import PropertyLawExam from '../../features/legal-knowledge/components/Testing/PropertyLawExam';
+import PropertyLawExam2 from '../../features/legal-knowledge/components/Testing/PropertyLawExam2';
 import AdministrativeLawExam from '../../features/legal-knowledge/components/Testing/AdministrativeLawExam';
+import AdministrativeLawExam2 from '../../features/legal-knowledge/components/Testing/AdministrativeLawExam2';
+import LaborLawExam3 from '../../features/legal-knowledge/components/Testing/LaborLawExam3';
+import LaborLawExam4 from '../../features/legal-knowledge/components/Testing/LaborLawExam4';
+import TortLawExam3 from '../../features/legal-knowledge/components/Testing/TortLawExam3';
+import TortLawExam4 from '../../features/legal-knowledge/components/Testing/TortLawExam4';
+import PropertyLawExam3 from '../../features/legal-knowledge/components/Testing/PropertyLawExam3';
+import PropertyLawExam4 from '../../features/legal-knowledge/components/Testing/PropertyLawExam4';
+import AdministrativeLawExam3 from '../../features/legal-knowledge/components/Testing/AdministrativeLawExam3';
+import AdministrativeLawExam4 from '../../features/legal-knowledge/components/Testing/AdministrativeLawExam4';
+import MixedLegalSimulation from '../../features/legal-knowledge/components/Testing/MixedLegalSimulation';
 import InheritanceLawExam from '../../features/legal-knowledge/components/Testing/InheritanceLawExam';
 import ConsumerProtectionExam from '../../features/legal-knowledge/components/Testing/ConsumerProtectionExam';
 import PrivacyLawExam from '../../features/legal-knowledge/components/Testing/PrivacyLawExam';
@@ -97,6 +110,9 @@ interface LegalKnowledgeFeature {
   component: React.ComponentType<any>;
   difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert' | 'all' | 'hard';
   estimatedTime: number;
+  subCategory?: string;
+  hasPractice?: boolean;
+  practiceSubject?: string;
 }
 
 const legalFeatures: LegalKnowledgeFeature[] = [
@@ -110,7 +126,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     category: 'exams',
     component: ExamManager,
     difficulty: 'intermediate',
-    estimatedTime: 45
+    estimatedTime: 45,
+    subCategory: 'כללי'
   },
   {
     id: 'comprehensive-exam',
@@ -121,7 +138,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     category: 'exams',
     component: ComprehensiveLegalExam,
     difficulty: 'beginner',
-    estimatedTime: 20
+    estimatedTime: 20,
+    subCategory: 'כללי'
   },
   {
     id: 'complete-50-exam',
@@ -132,7 +150,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     category: 'exams',
     component: CompleteLegalExam50Questions,
     difficulty: 'expert',
-    estimatedTime: 120
+    estimatedTime: 120,
+    subCategory: 'כללי'
   },
   {
     id: 'essay-questions',
@@ -143,7 +162,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     category: 'exams',
     component: EssayQuestions,
     difficulty: 'advanced',
-    estimatedTime: 60
+    estimatedTime: 60,
+    subCategory: 'כללי'
   },
   {
     id: 'detailed-exam-with-answers',
@@ -154,7 +174,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     category: 'exams',
     component: DetailedLegalExamWithAnswers,
     difficulty: 'expert',
-    estimatedTime: 90
+    estimatedTime: 90,
+    subCategory: 'מקורות המשפט'
   },
   {
     id: 'foundations-israel-law',
@@ -165,7 +186,10 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     category: 'exams',
     component: FoundationsOfIsraeliLawExam,
     difficulty: 'advanced',
-    estimatedTime: 75
+    estimatedTime: 75,
+    subCategory: 'מקורות המשפט',
+    hasPractice: true,
+    practiceSubject: 'מקורות המשפט'
   },
   {
     id: 'intro-law-contracts',
@@ -176,7 +200,10 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     category: 'exams',
     component: IntroToLawAndContractsExam,
     difficulty: 'intermediate',
-    estimatedTime: 60
+    estimatedTime: 60,
+    subCategory: 'מקורות המשפט',
+    hasPractice: true,
+    practiceSubject: 'מקורות המשפט'
   },
   {
     id: 'case-analysis-tf',
@@ -187,7 +214,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     category: 'exams',
     component: CaseAnalysisAndTrueFalseExam,
     difficulty: 'expert',
-    estimatedTime: 80
+    estimatedTime: 80,
+    subCategory: 'כללי'
   },
   {
     id: 'comprehensive-legal-system',
@@ -198,7 +226,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     category: 'exams',
     component: ComprehensiveLegalSystemExam,
     difficulty: 'expert',
-    estimatedTime: 100
+    estimatedTime: 100,
+    subCategory: 'כללי'
   },
   {
     id: 'comprehensive-sources-exam',
@@ -209,7 +238,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     category: 'exams',
     component: ComprehensiveLegalSourcesExam,
     difficulty: 'expert',
-    estimatedTime: 150
+    estimatedTime: 150,
+    subCategory: 'כללי'
   },
       {
       id: 'constitutional-comparison',
@@ -220,7 +250,10 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: ConstitutionalLawComparison,
       difficulty: 'advanced',
-      estimatedTime: 45
+      estimatedTime: 45,
+      subCategory: 'חוקתי',
+      hasPractice: true,
+      practiceSubject: 'חוקתי'
     },
     {
       id: 'parliamentary-equality-exam',
@@ -231,7 +264,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: ParliamentaryAndEqualityLawExam,
       difficulty: 'advanced',
-      estimatedTime: 90
+      estimatedTime: 90,
+      subCategory: 'חוקתי'
     },
     {
       id: 'contract-formation-exam',
@@ -242,7 +276,10 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams', 
       component: ContractFormationExam,
       difficulty: 'advanced',
-      estimatedTime: 75
+      estimatedTime: 75,
+      subCategory: 'חוזים',
+      hasPractice: true,
+      practiceSubject: 'חוזים'
     },
     {
       id: 'contract-defects-exam',
@@ -253,7 +290,10 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: ContractDefectsExam,
       difficulty: 'expert',
-      estimatedTime: 80
+      estimatedTime: 80,
+      subCategory: 'חוזים',
+      hasPractice: true,
+      practiceSubject: 'חוזים'
     },
     {
       id: 'criminal-law-exam',
@@ -264,7 +304,10 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: CriminalLawExam,
       difficulty: 'expert',
-      estimatedTime: 90
+      estimatedTime: 90,
+      subCategory: 'עונשין',
+      hasPractice: true,
+      practiceSubject: 'עונשין'
     },
     {
       id: 'legal-concepts-summary',
@@ -286,7 +329,10 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: ComprehensiveContractsExam,
       difficulty: 'hard',
-      estimatedTime: 75
+      estimatedTime: 75,
+      subCategory: 'חוזים',
+      hasPractice: true,
+      practiceSubject: 'חוזים'
     },
     {
       id: 'law-of-return-exam',
@@ -297,7 +343,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: LawOfReturnExam,
       difficulty: 'advanced',
-      estimatedTime: 60
+      estimatedTime: 60,
+      subCategory: 'משפחה וירושה'
     },
     {
       id: 'family-law-exam',
@@ -308,7 +355,10 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: FamilyLawExam,
       difficulty: 'advanced',
-      estimatedTime: 45
+      estimatedTime: 45,
+      subCategory: 'משפחה וירושה',
+      hasPractice: true,
+      practiceSubject: 'משפחה'
     },
     {
       id: 'labor-law-exam',
@@ -319,7 +369,10 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: LaborLawExam,
       difficulty: 'advanced',
-      estimatedTime: 40
+      estimatedTime: 40,
+      subCategory: 'עבודה',
+      hasPractice: true,
+      practiceSubject: 'עבודה'
     },
     {
       id: 'tort-law-exam',
@@ -330,7 +383,10 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: TortLawExam,
       difficulty: 'advanced',
-      estimatedTime: 35
+      estimatedTime: 35,
+      subCategory: 'נזיקין',
+      hasPractice: true,
+      practiceSubject: 'נזיקין'
     },
     {
       id: 'property-law-exam',
@@ -341,7 +397,10 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: PropertyLawExam,
       difficulty: 'advanced',
-      estimatedTime: 40
+      estimatedTime: 40,
+      subCategory: 'קניין ומקרקעין',
+      hasPractice: true,
+      practiceSubject: 'קניין'
     },
     {
       id: 'administrative-law-exam',
@@ -352,7 +411,190 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: AdministrativeLawExam,
       difficulty: 'advanced',
-      estimatedTime: 40
+      estimatedTime: 40,
+      subCategory: 'מנהלי',
+      hasPractice: true,
+      practiceSubject: 'מנהלי'
+    },
+    {
+      id: 'labor-law-exam-2',
+      title: 'מבחן דיני עבודה — מתקדם',
+      description: 'שימוע, שכר מינימום, פיצויי פיטורין, הלנת שכר וזכויות קוגנטיות',
+      icon: <Work />,
+      color: '#388e3c',
+      category: 'exams',
+      component: LaborLawExam2,
+      difficulty: 'advanced',
+      estimatedTime: 40,
+      subCategory: 'עבודה',
+      hasPractice: true,
+      practiceSubject: 'עבודה'
+    },
+    {
+      id: 'tort-law-exam-2',
+      title: 'מבחן דיני נזיקין — מתקדם',
+      description: 'יסודות הרשלנות, אחריות שילוחית, קשר סיבתי, נזק ואשם תורם',
+      icon: <Gavel />,
+      color: '#e65100',
+      category: 'exams',
+      component: TortLawExam2,
+      difficulty: 'advanced',
+      estimatedTime: 35,
+      subCategory: 'נזיקין',
+      hasPractice: true,
+      practiceSubject: 'נזיקין'
+    },
+    {
+      id: 'property-law-exam-2',
+      title: 'מבחן קניין ומקרקעין — מתקדם',
+      description: 'חוק המקרקעין: זיקת הנאה, רישום בטאבו, משכנתא ושיתוף',
+      icon: <AccountBalance />,
+      color: '#4e342e',
+      category: 'exams',
+      component: PropertyLawExam2,
+      difficulty: 'advanced',
+      estimatedTime: 30,
+      subCategory: 'קניין ומקרקעין',
+      hasPractice: true,
+      practiceSubject: 'קניין'
+    },
+    {
+      id: 'administrative-law-exam-2',
+      title: 'מבחן משפט מנהלי — מתקדם',
+      description: 'עקרון החוקיות, שימוע, שיקולים זרים, סבירות וחופש המידע',
+      icon: <AccountBalance />,
+      color: '#283593',
+      category: 'exams',
+      component: AdministrativeLawExam2,
+      difficulty: 'advanced',
+      estimatedTime: 35,
+      subCategory: 'מנהלי',
+      hasPractice: true,
+      practiceSubject: 'מנהלי'
+    },
+    {
+      id: 'labor-law-exam-3',
+      title: 'מבחן דיני עבודה — Case Study',
+      description: 'Case Study: שימוע, התפטרות בדין מפוטר, הלנת שכר ופיטורין במחלה',
+      icon: <Work />,
+      color: '#2e7d32',
+      category: 'exams',
+      component: LaborLawExam3,
+      difficulty: 'expert',
+      estimatedTime: 40,
+      subCategory: 'עבודה',
+      hasPractice: true,
+      practiceSubject: 'עבודה'
+    },
+    {
+      id: 'labor-law-exam-4',
+      title: 'מבחן דיני עבודה — סט 3',
+      description: 'שימוע לאחר ההחלטה, הריון, פרילנסר, חוק קוגנטי והפסקות',
+      icon: <Work />,
+      color: '#1b5e20',
+      category: 'exams',
+      component: LaborLawExam4,
+      difficulty: 'expert',
+      estimatedTime: 35,
+      subCategory: 'עבודה',
+      hasPractice: true,
+      practiceSubject: 'עבודה'
+    },
+    {
+      id: 'tort-law-exam-3',
+      title: 'מבחן דיני נזיקין — סט 2',
+      description: 'רשלנות, אשם תורם, רשלנות רפואית, נזק עקיף ומטרד ליחיד',
+      icon: <Gavel />,
+      color: '#bf360c',
+      category: 'exams',
+      component: TortLawExam3,
+      difficulty: 'advanced',
+      estimatedTime: 35,
+      subCategory: 'נזיקין',
+      hasPractice: true,
+      practiceSubject: 'נזיקין'
+    },
+    {
+      id: 'tort-law-exam-4',
+      title: 'מבחן דיני נזיקין — סט 3',
+      description: 'תקיפה, res ipsa loquitur, אחריות מוחלטת ואחריות הרשות',
+      icon: <Gavel />,
+      color: '#e64a19',
+      category: 'exams',
+      component: TortLawExam4,
+      difficulty: 'expert',
+      estimatedTime: 35,
+      subCategory: 'נזיקין',
+      hasPractice: true,
+      practiceSubject: 'נזיקין'
+    },
+    {
+      id: 'property-law-exam-3',
+      title: 'מבחן קניין ומקרקעין — סט 2',
+      description: 'רישום, זיקת הנאה, פירוק שיתוף, צורת עסקה והערת אזהרה',
+      icon: <AccountBalance />,
+      color: '#3e2723',
+      category: 'exams',
+      component: PropertyLawExam3,
+      difficulty: 'advanced',
+      estimatedTime: 30,
+      subCategory: 'קניין ומקרקעין',
+      hasPractice: true,
+      practiceSubject: 'קניין'
+    },
+    {
+      id: 'property-law-exam-4',
+      title: 'מבחן קניין ומקרקעין — סט 3',
+      description: 'עסקה נוגדת, מי זוכה, פירוק שיתוף ורישום קניין',
+      icon: <AccountBalance />,
+      color: '#4a148c',
+      category: 'exams',
+      component: PropertyLawExam4,
+      difficulty: 'expert',
+      estimatedTime: 30,
+      subCategory: 'קניין ומקרקעין',
+      hasPractice: true,
+      practiceSubject: 'קניין'
+    },
+    {
+      id: 'administrative-law-exam-3',
+      title: 'מבחן משפט מנהלי — סט 2',
+      description: 'שיקולים זרים, שימוע, חופש מידע, סבירות ומידתיות',
+      icon: <AccountBalance />,
+      color: '#1a237e',
+      category: 'exams',
+      component: AdministrativeLawExam3,
+      difficulty: 'advanced',
+      estimatedTime: 35,
+      subCategory: 'מנהלי',
+      hasPractice: true,
+      practiceSubject: 'מנהלי'
+    },
+    {
+      id: 'administrative-law-exam-4',
+      title: 'מבחן משפט מנהלי — סט 3',
+      description: 'נימוק, שיקולים זרים, שיקול דעת, מידתיות ועתירה לבג"ץ',
+      icon: <AccountBalance />,
+      color: '#311b92',
+      category: 'exams',
+      component: AdministrativeLawExam4,
+      difficulty: 'expert',
+      estimatedTime: 35,
+      subCategory: 'מנהלי',
+      hasPractice: true,
+      practiceSubject: 'מנהלי'
+    },
+    {
+      id: 'mixed-legal-simulation',
+      title: 'סימולציית מבחן משולב — סגנון לשכה',
+      description: '10 שאלות משולבות: עבודה, נזיקין, קניין ומנהלי — ברמת לשכת עורכי הדין',
+      icon: <Gavel />,
+      color: '#4a4a4a',
+      category: 'exams',
+      component: MixedLegalSimulation,
+      difficulty: 'expert',
+      estimatedTime: 40,
+      subCategory: 'כללי'
     },
     {
       id: 'inheritance-law-exam',
@@ -363,7 +605,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: InheritanceLawExam,
       difficulty: 'advanced',
-      estimatedTime: 40
+      estimatedTime: 40,
+      subCategory: 'משפחה וירושה'
     },
     {
       id: 'consumer-protection-exam',
@@ -374,7 +617,10 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: ConsumerProtectionExam,
       difficulty: 'intermediate',
-      estimatedTime: 35
+      estimatedTime: 35,
+      subCategory: 'חוזים',
+      hasPractice: true,
+      practiceSubject: 'חוזים'
     },
     {
       id: 'privacy-law-exam',
@@ -385,7 +631,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: PrivacyLawExam,
       difficulty: 'advanced',
-      estimatedTime: 35
+      estimatedTime: 35,
+      subCategory: 'פרטיות וסביבה'
     },
     {
       id: 'company-law-exam',
@@ -396,7 +643,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: CompanyLawExam,
       difficulty: 'advanced',
-      estimatedTime: 45
+      estimatedTime: 45,
+      subCategory: 'חברות ופירוק'
     },
     {
       id: 'insolvency-law-exam',
@@ -407,7 +655,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: InsolvencyLawExam,
       difficulty: 'expert',
-      estimatedTime: 45
+      estimatedTime: 45,
+      subCategory: 'חברות ופירוק'
     },
     {
       id: 'environmental-law-exam',
@@ -418,7 +667,8 @@ const legalFeatures: LegalKnowledgeFeature[] = [
       category: 'exams',
       component: EnvironmentalLawExam,
       difficulty: 'advanced',
-      estimatedTime: 40
+      estimatedTime: 40,
+      subCategory: 'פרטיות וסביבה'
     },
 
   // למידה וחקירה
@@ -476,6 +726,17 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     component: UniversityLegalTopics,
     difficulty: 'intermediate',
     estimatedTime: 40
+  },
+  {
+    id: 'legal-flashcards',
+    title: 'כרטיסיות חזרה',
+    description: '46 כרטיסיות חזרה בשיטת Spaced Repetition — מושגים, עקרונות ופסיקה בכל תחומי המשפט',
+    icon: <BookIcon />,
+    color: '#e91e63',
+    category: 'learning',
+    component: LegalFlashcards,
+    difficulty: 'beginner',
+    estimatedTime: 20
   },
 
   // משחקים ותרגול
@@ -552,6 +813,7 @@ const legalFeatures: LegalKnowledgeFeature[] = [
 export const LegalKnowledgePage: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedFeature, setSelectedFeature] = useState<LegalKnowledgeFeature | null>(null);
+  const [launchMode, setLaunchMode] = useState<'exam' | 'practice'>('exam');
 
   const categories = [
     { id: 'all', label: 'הכל', icon: <ExploreIcon /> },
@@ -587,43 +849,113 @@ export const LegalKnowledgePage: React.FC = () => {
     }
   };
 
+  const subCategoryOrder = [
+    'כללי', 'מקורות המשפט', 'חוקתי', 'חוזים', 'עונשין',
+    'משפחה וירושה', 'עבודה', 'נזיקין', 'קניין ומקרקעין',
+    'מנהלי', 'חברות ופירוק', 'פרטיות וסביבה'
+  ];
+
+  const renderFeatureCard = (feature: LegalKnowledgeFeature) => (
+    <Grid item xs={12} sm={6} lg={4} key={feature.id}>
+      <Card
+        elevation={3}
+        sx={{
+          height: '100%',
+          border: `2px solid ${feature.color}20`,
+          transition: 'all 0.3s ease',
+          '&:hover': { transform: 'translateY(-4px)', boxShadow: 6, borderColor: feature.color }
+        }}
+      >
+        <CardContent>
+          <Box display="flex" alignItems="center" gap={2} mb={2}>
+            <Avatar sx={{ bgcolor: feature.color, width: 56, height: 56 }}>
+              {feature.icon}
+            </Avatar>
+            <Box flex={1}>
+              <Typography variant="h6" fontWeight="bold">{feature.title}</Typography>
+              <Box display="flex" gap={1} mt={1} flexWrap="wrap">
+                <Chip
+                  label={getDifficultyLabel(feature.difficulty)}
+                  size="small"
+                  sx={{ backgroundColor: getDifficultyColor(feature.difficulty), color: 'white' }}
+                />
+                <Chip label={`${feature.estimatedTime} דק'`} size="small" variant="outlined" />
+              </Box>
+            </Box>
+          </Box>
+          <Typography variant="body2" color="text.secondary" paragraph>
+            {feature.description}
+          </Typography>
+          <Box mt={2} display="flex" gap={1}>
+            <Button
+              variant="contained"
+              sx={{ flex: 1, backgroundColor: feature.color, '&:hover': { backgroundColor: feature.color, filter: 'brightness(0.9)' } }}
+              onClick={() => { setSelectedFeature(feature); setLaunchMode('exam'); }}
+            >
+              {feature.category === 'exams' ? 'מבחן' : 'התחל'}
+            </Button>
+            {feature.hasPractice && (
+              <Button
+                variant="outlined"
+                sx={{ borderColor: feature.color, color: feature.color }}
+                onClick={() => { setSelectedFeature(feature); setLaunchMode('practice'); }}
+              >
+                תרגול
+              </Button>
+            )}
+          </Box>
+        </CardContent>
+      </Card>
+    </Grid>
+  );
+
   if (selectedFeature) {
     const FeatureComponent = selectedFeature.component;
     return (
-      <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+      <Box sx={{ bgcolor: '#f5f5f5' }}>
         <Container maxWidth="xl" sx={{ py: 2 }}>
           <Box display="flex" alignItems="center" gap={2} mb={2}>
             <Button
               variant="outlined"
-              onClick={() => setSelectedFeature(null)}
+              onClick={() => { setSelectedFeature(null); setLaunchMode('exam'); }}
             >
               ← חזרה למקורות המשפט
             </Button>
-            <Typography variant="h5" color="primary">
+            <Typography variant="h5" color="primary" flex={1}>
               {selectedFeature.title}
             </Typography>
+            {launchMode === 'practice' && (
+              <Chip label="מצב תרגול" color="success" />
+            )}
           </Box>
-          {selectedFeature.id === 'progress-dashboard' ? (
-            <FeatureComponent userProgress={{
-              totalStudyTime: 120,
-              completedLessons: 15,
-              totalLessons: 50,
-              currentStreak: 7,
-              averageScore: 85,
-              weakAreas: ['Contract Law', 'Constitutional Law'],
-              strongAreas: ['Criminal Law', 'Administrative Law'],
-              recentActivity: []
-            }} />
-          ) : (
-            <FeatureComponent />
-          )}
+          {(() => {
+            if (launchMode === 'practice' && selectedFeature.practiceSubject) {
+              return <PracticeSession subject={selectedFeature.practiceSubject} />;
+            }
+            if (selectedFeature.id === 'progress-dashboard') {
+              return <FeatureComponent userProgress={{
+                totalStudyTime: 120,
+                completedLessons: 15,
+                totalLessons: 50,
+                currentStreak: 7,
+                averageScore: 85,
+                weakAreas: ['Contract Law', 'Constitutional Law'],
+                strongAreas: ['Criminal Law', 'Administrative Law'],
+                recentActivity: []
+              }} />;
+            }
+            if (selectedFeature.id === 'legal-sources-map') {
+              return <FeatureComponent onLearnMore={() => {}} onStartChallenge={() => {}} />;
+            }
+            return <FeatureComponent />;
+          })()}
         </Container>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+    <Box sx={{ bgcolor: '#f5f5f5' }}>
       {/* טאבים דביקים מתחת לנאב */}
       <Box
         sx={{
@@ -664,75 +996,35 @@ export const LegalKnowledgePage: React.FC = () => {
         />
 
         {/* רשת הפיצ'רים */}
-        <Grid container spacing={3}>
-          {filteredFeatures.map(feature => (
-            <Grid item xs={12} sm={6} lg={4} key={feature.id}>
-              <Card 
-                elevation={3}
-                sx={{ 
-                  height: '100%',
-                  border: `2px solid ${feature.color}20`,
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  '&:hover': { 
-                    transform: 'translateY(-4px)',
-                    boxShadow: 6,
-                    borderColor: feature.color
-                  }
-                }}
-                onClick={() => setSelectedFeature(feature)}
-              >
-                <CardContent>
-                  <Box display="flex" alignItems="center" gap={2} mb={2}>
-                    <Avatar sx={{ bgcolor: feature.color, width: 56, height: 56 }}>
-                      {feature.icon}
-                    </Avatar>
-                    <Box flex={1}>
-                      <Typography variant="h6" fontWeight="bold">
-                        {feature.title}
-                      </Typography>
-                      <Box display="flex" gap={1} mt={1}>
-                        <Chip 
-                          label={getDifficultyLabel(feature.difficulty)}
-                          size="small"
-                          sx={{ 
-                            backgroundColor: getDifficultyColor(feature.difficulty),
-                            color: 'white'
-                          }}
-                        />
-                        <Chip 
-                          label={`${feature.estimatedTime} דק'`}
-                          size="small"
-                          variant="outlined"
-                        />
-                      </Box>
-                    </Box>
+        {categories[selectedTab]?.id === 'exams' ? (() => {
+          const groups: Record<string, LegalKnowledgeFeature[]> = {};
+          filteredFeatures.forEach(f => {
+            const key = f.subCategory || 'כללי';
+            if (!groups[key]) groups[key] = [];
+            groups[key].push(f);
+          });
+          return (
+            <Box>
+              {subCategoryOrder.filter(cat => groups[cat]?.length > 0).map(cat => (
+                <Box key={cat} mb={4}>
+                  <Box display="flex" alignItems="center" gap={1} mb={2}>
+                    <Typography variant="h6" fontWeight="bold" color="primary">
+                      {cat === 'כללי' ? 'מבחנים כלליים' : `מבחנים — ${cat}`}
+                    </Typography>
+                    <Chip label={`${groups[cat].length} מבחנים`} size="small" variant="outlined" />
                   </Box>
-                  
-                  <Typography variant="body2" color="text.secondary" paragraph>
-                    {feature.description}
-                  </Typography>
-                  
-                  <Box mt={2}>
-                    <Button 
-                      variant="contained"
-                      fullWidth
-                      sx={{ 
-                        backgroundColor: feature.color,
-                        '&:hover': {
-                          backgroundColor: feature.color,
-                          filter: 'brightness(0.9)'
-                        }
-                      }}
-                    >
-                      התחל
-                    </Button>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+                  <Grid container spacing={3}>
+                    {groups[cat].map(renderFeatureCard)}
+                  </Grid>
+                </Box>
+              ))}
+            </Box>
+          );
+        })() : (
+          <Grid container spacing={3}>
+            {filteredFeatures.map(renderFeatureCard)}
+          </Grid>
+        )}
 
         {/* מידע נוסף */}
         <Card sx={{ mt: 4, bgcolor: '#f8f9fa' }}>

@@ -29,7 +29,10 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  CircularProgress,
+  Divider,
+  LinearProgress
 } from '@mui/material';
 import { 
   Close as CloseIcon,
@@ -41,8 +44,20 @@ import {
   ExpandMore as ExpandIcon,
   Lightbulb as TipIcon,
   Assessment as GradeIcon,
-  AutoAwesome as ExampleIcon
+  AutoAwesome as ExampleIcon,
+  Psychology as AIIcon,
+  Lock as LockIcon,
+  WorkspacePremium as PremiumIcon
 } from '@mui/icons-material';
+
+interface AICheckResult {
+  percentage: number;
+  totalScore: number;
+  maxScore: number;
+  criteriaResults: Array<{ aspect: string; matched: boolean; partialScore: number; maxPoints: number }>;
+  generalFeedback: string;
+  keywordsFound: string[];
+}
 
 interface EssayQuestion {
   id: string;
@@ -466,6 +481,186 @@ const essayQuestions: EssayQuestion[] = [
       'נתחי יתרונות וחסרונות',
       'תני דוגמאות ספציפיות'
     ]
+  },
+
+  {
+    id: 'essay_11',
+    difficulty: 'easy',
+    category: 'משפט חוקתי',
+    question: 'הסבר את עקרון הפרדת הרשויות בישראל ומדוע הוא חיוני לדמוקרטיה.',
+    points: 10,
+    timeEstimate: 14,
+    keyPoints: ['שלוש הרשויות', 'איזונים ובלמים', 'עצמאות שיפוטית', 'ביקורת שיפוטית', 'דוגמה מעשית'],
+    exampleAnswer: `עקרון הפרדת הרשויות מחלק את הכוח בין הרשות המחוקקת (כנסת), המבצעת (ממשלה) והשופטת (בתי משפט).
+
+מנגנון האיזונים והבלמים מבטיח שכל רשות מפקחת על האחרות — בג"ץ פוסל חוקים, הכנסת מאשרת תקציב, ועוד.
+
+דגש: הפרדה זו מונעת ריכוז כוח בידי גוף אחד ושומרת על הדמוקרטיה.`,
+    gradingCriteria: [
+      { aspect: 'שלוש הרשויות', description: 'זיהוי ותיאור הרשויות', maxPoints: 3, keywords: ['מחוקקת', 'מבצעת', 'שופטת', 'כנסת', 'ממשלה'] },
+      { aspect: 'איזונים ובלמים', description: 'הסבר מנגנון האיזונים', maxPoints: 4, keywords: ['איזונים', 'בלמים', 'פיקוח', 'עצמאות'] },
+      { aspect: 'חשיבות דמוקרטית', description: 'קשר לדמוקרטיה', maxPoints: 3, keywords: ['דמוקרטיה', 'ריכוז כוח', 'זכויות'] }
+    ],
+    legalSources: ['חוק יסוד: השפיטה', 'חוק יסוד: הממשלה'],
+    tips: ['הגדר כל רשות בנפרד', 'תן דוגמה ספציפית לאיזון', 'הסבר למה זה קריטי']
+  },
+  {
+    id: 'essay_12',
+    difficulty: 'easy',
+    category: 'משפט פלילי',
+    question: 'מהי זכות השתיקה ומה משמעותה הפרקטית?',
+    points: 10,
+    timeEstimate: 12,
+    keyPoints: ['הגדרת הזכות', 'בסיס חוקי', 'שלב החקירה', 'שימוש בשתיקה', 'הגנה מהפללה'],
+    exampleAnswer: `זכות השתיקה מקנה לנחקר/נאשם הזכות לא להשיב לשאלות חוקרים או בית משפט.
+
+היא מעוגנת בסעיף 47 לפקודת הראיות ובפסיקה ענפה של בית המשפט העליון.
+
+דגש: שתיקה אינה בהכרח ראיה לאשמה, אם כי במצבים מסוימים רשאי בית המשפט להסיק מסקנות.`,
+    gradingCriteria: [
+      { aspect: 'הגדרה', description: 'הגדרה נכונה', maxPoints: 3, keywords: ['זכות שתיקה', 'לא להשיב', 'חקירה'] },
+      { aspect: 'בסיס חוקי', description: 'ציון המקור החוקי', maxPoints: 3, keywords: ['פקודת הראיות', 'סעיף 47', 'פסיקה'] },
+      { aspect: 'השלכות', description: 'הסבר על שימוש בשתיקה', maxPoints: 4, keywords: ['ראיה', 'מסקנות', 'הפללה'] }
+    ],
+    legalSources: ['פקודת הראיות, סעיף 47'],
+    tips: ['הבדל בין שתיקה לכפירה', 'הסבר מתי ניתן להסיק מסקנות', 'זכר את הקשר לזכות הייצוג']
+  },
+  {
+    id: 'essay_13',
+    difficulty: 'medium',
+    category: 'דיני חוזים',
+    question: 'הסבר את עקרון תום הלב בדיני חוזים וכיצד הוא בא לידי ביטוי בחוק.',
+    points: 12,
+    timeEstimate: 18,
+    keyPoints: ['הגדרת תום הלב', 'סעיף 12', 'סעיף 39', 'שלב המשא ומתן', 'סעדים'],
+    exampleAnswer: `עקרון תום הלב מחייב את הצדדים לחוזה לנהוג בהגינות ויושר הן במשא ומתן והן בביצוע.
+
+סעיף 12 לחוק החוזים קובע חובת תום לב במשא ומתן; סעיף 39 — בביצוע ומימוש זכויות.
+
+דגש: הפרת חובת תום לב מקנה סעד של פיצויים — לעיתים גם ללא חוזה מחייב.`,
+    gradingCriteria: [
+      { aspect: 'הגדרה', description: 'הגדרה מדויקת', maxPoints: 4, keywords: ['תום לב', 'הגינות', 'יושר'] },
+      { aspect: 'עיגון חוקי', description: 'ציון הסעיפים', maxPoints: 4, keywords: ['סעיף 12', 'סעיף 39', 'חוק החוזים'] },
+      { aspect: 'סעדים', description: 'הסבר על סעדים', maxPoints: 4, keywords: ['פיצויים', 'הפרה', 'סעד'] }
+    ],
+    legalSources: ['חוק החוזים (חלק כללי), התשל"ג-1973, סעיפים 12, 39'],
+    relatedCases: ['ע"א 207/79 רביב נגד בית יולס'],
+    tips: ['הבדל בין שלב המשא ומתן לשלב הביצוע', 'תן דוגמה להפרת תום לב', 'הסבר את הסעדים האפשריים']
+  },
+  {
+    id: 'essay_14',
+    difficulty: 'medium',
+    category: 'דיני נזיקין',
+    question: 'מהי אחריות שילוחית ובאילו נסיבות היא חלה על מעסיק?',
+    points: 12,
+    timeEstimate: 17,
+    keyPoints: ['הגדרה', 'יחס מעסיק-עובד', 'עוולה בתפקיד', 'רציונל', 'גבולות'],
+    exampleAnswer: `אחריות שילוחית מטילה על המעסיק אחריות בנזיקין בגין עוולות שעובדיו ביצעו במסגרת תפקידם.
+
+סעיף 13 לפקודת הנזיקין: "מעביד אחראי למעשי עובדו שנעשו תוך כדי עבודתו."
+
+דגש: המעסיק חייב גם ללא אשם אישי — אם העובד פעל בתחום סמכותו.`,
+    gradingCriteria: [
+      { aspect: 'הגדרה', description: 'הגדרת אחריות שילוחית', maxPoints: 4, keywords: ['שילוחית', 'מעסיק', 'עובד', 'אחריות'] },
+      { aspect: 'תנאים', description: 'תנאי ההפעלה', maxPoints: 4, keywords: ['תפקיד', 'עבודה', 'סמכות'] },
+      { aspect: 'רציונל', description: 'הצדקת הכלל', maxPoints: 4, keywords: ['ללא אשם', 'הרתעה', 'פיצוי'] }
+    ],
+    legalSources: ['פקודת הנזיקין, סעיף 13'],
+    tips: ['הסבר מתי עובד פועל "במסגרת תפקידו"', 'תן דוגמה מעשית', 'הסבר למה זה הוגן']
+  },
+  {
+    id: 'essay_15',
+    difficulty: 'medium',
+    category: 'דיני עבודה',
+    question: 'הסבר את עקרון שוויון ההזדמנויות בעבודה — עילות האיסור ונטל הראיה.',
+    points: 13,
+    timeEstimate: 20,
+    keyPoints: ['חוק שוויון הזדמנויות', 'עילות האיסור', 'נטל הראיה', 'הפליה עקיפה', 'סעדים'],
+    exampleAnswer: `חוק שוויון הזדמנויות בעבודה, תשמ"ח-1988, אוסר הפליה בשל גיל, מין, לאום, דת, מוגבלות ועוד.
+
+נטל ההוכחה: לאחר שעובד הצביע על ראשית ראיה לאפליה, עובר הנטל למעסיק לסתור.
+
+דגש: גם "הפליה עקיפה" (מדיניות נייטרלית הפוגעת בקבוצה מסוימת) אסורה לפי החוק.`,
+    gradingCriteria: [
+      { aspect: 'מסגרת חוקית', description: 'ציון החוק ועילות', maxPoints: 5, keywords: ['חוק שוויון', 'הזדמנויות', 'מין', 'גיל'] },
+      { aspect: 'נטל הראיה', description: 'הסבר נטל הראיה', maxPoints: 4, keywords: ['נטל', 'ראשית ראיה', 'סתור'] },
+      { aspect: 'הפליה עקיפה', description: 'הכרת הפליה עקיפה', maxPoints: 4, keywords: ['עקיפה', 'נייטרלית', 'קבוצה'] }
+    ],
+    legalSources: ['חוק שוויון הזדמנויות בעבודה, התשמ"ח-1988'],
+    tips: ['הבדל בין הפליה ישירה לעקיפה', 'הסבר את מנגנון הפיכת נטל הראיה', 'תן דוגמה']
+  },
+  {
+    id: 'essay_16',
+    difficulty: 'hard',
+    category: 'משפט מנהלי',
+    question: 'נתח את עקרון המידתיות בביקורת שיפוטית — שלושת מבחני המשנה ויישומם.',
+    points: 15,
+    timeEstimate: 25,
+    keyPoints: ['הגדרת מידתיות', 'מבחן קשר רציונלי', 'מבחן פגיעה פחותה', 'מבחן יחסיות', 'יישום בפסיקה'],
+    exampleAnswer: `עקרון המידתיות בוחן האם הפגיעה בזכות יסוד מידתית ביחס למטרת הרשות.
+
+שלושה מבחני משנה:
+1. קשר רציונלי — האמצעי מגשים את המטרה
+2. פגיעה פחותה — אין אמצעי פחות פוגעני שישיג את אותה מטרה
+3. יחסיות — הפגיעה יחסית לתועלת
+
+דגש: כל שלושת המבחנים חייבים להתקיים; כישלון אחד — ההחלטה נפסלת.`,
+    gradingCriteria: [
+      { aspect: 'הגדרת מידתיות', description: 'הגדרה נכונה', maxPoints: 5, keywords: ['מידתיות', 'זכות יסוד', 'מטרה', 'אמצעי'] },
+      { aspect: 'שלושת המבחנים', description: 'פירוט שלושת המבחנים', maxPoints: 6, keywords: ['רציונלי', 'פגיעה פחותה', 'יחסיות'] },
+      { aspect: 'יישום', description: 'יישום בפסיקה', maxPoints: 4, keywords: ['פסיקה', 'נפסלת', 'פסול'] }
+    ],
+    legalSources: ['חוק יסוד: כבוד האדם וחירותו, סעיף 8', 'פסיקת בג"ץ'],
+    relatedCases: ['בג"ץ 2056/04 המועצה האזורית חוף עזה'],
+    tips: ['פרט כל מבחן בנפרד', 'הסבר מה קורה אם מבחן נכשל', 'תן דוגמה מהפסיקה']
+  },
+  {
+    id: 'essay_17',
+    difficulty: 'hard',
+    category: 'תיאוריה משפטית',
+    question: 'הסבר את תורת הפרשנות התכליתית של אהרן ברק — עקרונות ושיטה.',
+    points: 15,
+    timeEstimate: 25,
+    keyPoints: ['תכלית סובייקטיבית', 'תכלית אובייקטיבית', 'ברירת התכלית', 'שיקולי מדיניות', 'ביקורת'],
+    exampleAnswer: `פרשנות תכליתית שואפת לגלות את "תכלית החוק" — מה ביקש המחוקק להשיג.
+
+תכלית סובייקטיבית: כוונת המחוקק ההיסטורית.
+תכלית אובייקטיבית: ערכי השיטה המשפטית הרחבה.
+
+כשיש סתירה — ברק מעדיף לרוב את התכלית האובייקטיבית.
+
+דגש: גישה זו הרחיבה את כוח הפרשנות של שופטים ועוררה ביקורת על "אקטיביזם שיפוטי".`,
+    gradingCriteria: [
+      { aspect: 'הגדרת הגישה', description: 'הגדרת פרשנות תכליתית', maxPoints: 5, keywords: ['תכלית', 'ברק', 'פרשנות'] },
+      { aspect: 'שני סוגי תכלית', description: 'הבחנה בין סובייקטיבי לאובייקטיבי', maxPoints: 5, keywords: ['סובייקטיבית', 'אובייקטיבית', 'ערכי'] },
+      { aspect: 'ביקורת', description: 'הצגת הביקורת', maxPoints: 5, keywords: ['אקטיביזם', 'ביקורת', 'שופטים'] }
+    ],
+    legalSources: ['אהרן ברק, "פרשנות במשפט" (3 כרכים)', 'פסיקת בית המשפט העליון'],
+    tips: ['הבדל בין שני סוגי התכלית', 'הסבר מתי כל אחד גובר', 'הצג גם ביקורת על הגישה']
+  },
+  {
+    id: 'essay_18',
+    difficulty: 'expert',
+    category: 'תיאוריה חוקתית',
+    question: 'האם אקטיביזם שיפוטי מסכן את הדמוקרטיה? הצג שתי עמדות ונמק את עמדתך.',
+    points: 20,
+    timeEstimate: 35,
+    keyPoints: ['הגדרת אקטיביזם', 'עמדה בעד', 'עמדה נגד', 'פרדת רשויות', 'לגיטימציה דמוקרטית'],
+    exampleAnswer: `אקטיביזם שיפוטי = נכונות שופטים לפרש חוקים בצורה מרחיבה ולהתערב בהחלטות ציבוריות.
+
+בעד: מגן על מיעוטים מעריצות הרוב; מבטיח עקרונות חוקתיים; מונע פגיעה בזכויות.
+
+נגד: שופטים לא נבחרו — חסרים לגיטימציה דמוקרטית; חודרים לתפקיד המחוקק.
+
+דגש: השאלה אינה בינארית — הכל עניין של מידה ואיזון בין ביקורת שיפוטית לכיבוד הרשויות הנבחרות.`,
+    gradingCriteria: [
+      { aspect: 'הגדרה ורקע', description: 'הגדרת אקטיביזם', maxPoints: 5, keywords: ['אקטיביזם', 'שיפוטי', 'פרשנות', 'התערבות'] },
+      { aspect: 'שתי עמדות', description: 'הצגת שתי עמדות מאוזנות', maxPoints: 8, keywords: ['בעד', 'נגד', 'לגיטימציה', 'מיעוטים', 'פרדת רשויות'] },
+      { aspect: 'ניתוח ביקורתי', description: 'עמדה מנומקת', maxPoints: 7, keywords: ['איזון', 'מידה', 'עמדה', 'נמק'] }
+    ],
+    legalSources: ['פסיקת בג"ץ בעניינים חוקתיים', 'אהרן ברק — "שופט בחברה דמוקרטית"'],
+    relatedCases: ['בג"ץ 6821/93 בנק מזרחי', 'בג"ץ 3267/97 רובינשטיין'],
+    tips: ['הצג את שתי העמדות בהגינות', 'נמק בבירור את עמדתך', 'הסתמך על פסיקה']
   }
 ];
 
@@ -485,6 +680,9 @@ export const EssayQuestions: React.FC<EssayQuestionsProps> = ({
   const [selectedTab, setSelectedTab] = useState(0);
   const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
   const [autoSave, setAutoSave] = useState(true);
+  const [aiCheckResult, setAiCheckResult] = useState<AICheckResult | null>(null);
+  const [aiCheckLoading, setAiCheckLoading] = useState(false);
+  const [showPremiumDialog, setShowPremiumDialog] = useState(false);
 
   // טיימר
   useEffect(() => {
@@ -508,11 +706,41 @@ export const EssayQuestions: React.FC<EssayQuestionsProps> = ({
     }
   }, [currentAnswer, autoSave, selectedQuestion]);
 
+  // בדיקת AI חינמית
+  const runFreeAICheck = () => {
+    if (!selectedQuestion || !currentAnswer.trim()) return;
+    setAiCheckLoading(true);
+    setAiCheckResult(null);
+    setTimeout(() => {
+      const lowerAnswer = currentAnswer.toLowerCase();
+      const keywordsFound: string[] = [];
+      const criteriaResults = selectedQuestion.gradingCriteria.map(c => {
+        const matched = c.keywords.some(kw => {
+          const found = lowerAnswer.includes(kw.toLowerCase());
+          if (found && !keywordsFound.includes(kw)) keywordsFound.push(kw);
+          return found;
+        });
+        return { aspect: c.aspect, matched, partialScore: matched ? Math.floor(c.maxPoints * 0.7) : 0, maxPoints: c.maxPoints };
+      });
+      const totalScore = criteriaResults.reduce((s, c) => s + c.partialScore, 0);
+      const maxScore = selectedQuestion.gradingCriteria.reduce((s, c) => s + c.maxPoints, 0);
+      const percentage = Math.round((totalScore / maxScore) * 100);
+      let generalFeedback = '';
+      if (percentage >= 80) generalFeedback = '✅ תשובה מצוינת! כיסית את עיקר הנקודות החשובות.';
+      else if (percentage >= 60) generalFeedback = '📝 תשובה טובה, אך חסרות מספר נקודות מרכזיות.';
+      else if (percentage >= 40) generalFeedback = '⚠️ תשובה חלקית — כדאי לחזור על הנושא ולהרחיב.';
+      else generalFeedback = '❌ התשובה דורשת עבודה נוספת. בדוק את נקודות המפתח.';
+      setAiCheckResult({ percentage, totalScore, maxScore, criteriaResults, generalFeedback, keywordsFound });
+      setAiCheckLoading(false);
+    }, 1500);
+  };
+
   // פתיחת שאלה
   const openQuestion = (question: EssayQuestion) => {
     setSelectedQuestion(question);
     setStartTime(new Date());
     setTimeSpent(0);
+    setAiCheckResult(null);
     
     // טעינת תשובה שמורה אם קיימת
     const savedAnswer = savedAnswers.find(a => a.questionId === question.id);
@@ -1001,12 +1229,81 @@ export const EssayQuestions: React.FC<EssayQuestionsProps> = ({
                     {autoSave && ' | שמירה אוטומטית פעילה'}
                   </Typography>
                 </Box>
+
+                {/* תוצאות בדיקת AI */}
+                {(aiCheckLoading || aiCheckResult) && (
+                  <Box mt={2} p={2} sx={{ border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: '#f9f9fb' }}>
+                    {aiCheckLoading ? (
+                      <Box display="flex" alignItems="center" gap={2}>
+                        <CircularProgress size={20} />
+                        <Typography variant="body2">AI בודק את תשובתך...</Typography>
+                      </Box>
+                    ) : aiCheckResult && (
+                      <>
+                        <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
+                          <Box display="flex" alignItems="center" gap={1}>
+                            <AIIcon fontSize="small" color="primary" />
+                            <Typography variant="subtitle2" color="primary">בדיקת AI בסיסית</Typography>
+                          </Box>
+                          <Chip
+                            label={`${aiCheckResult.percentage}%`}
+                            color={aiCheckResult.percentage >= 70 ? 'success' : aiCheckResult.percentage >= 40 ? 'warning' : 'error'}
+                            size="small"
+                          />
+                        </Box>
+                        <LinearProgress
+                          variant="determinate"
+                          value={aiCheckResult.percentage}
+                          color={aiCheckResult.percentage >= 70 ? 'success' : 'warning'}
+                          sx={{ mb: 1.5, borderRadius: 1, height: 8 }}
+                        />
+                        <Typography variant="body2" sx={{ mb: 1.5 }}>{aiCheckResult.generalFeedback}</Typography>
+                        <Divider sx={{ mb: 1 }} />
+                        <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 0.5 }}>
+                          כיסוי קריטריונים:
+                        </Typography>
+                        {aiCheckResult.criteriaResults.map((r, i) => (
+                          <Box key={i} display="flex" alignItems="center" gap={1} mb={0.5}>
+                            {r.matched
+                              ? <CheckIcon sx={{ fontSize: 16, color: 'success.main' }} />
+                              : <CloseIcon sx={{ fontSize: 16, color: 'error.main' }} />}
+                            <Typography variant="caption" color={r.matched ? 'success.main' : 'error.main'}>
+                              {r.aspect} ({r.partialScore}/{r.maxPoints} נק')
+                            </Typography>
+                          </Box>
+                        ))}
+                        <Alert severity="info" icon={<LockIcon fontSize="small" />} sx={{ mt: 1.5 }}>
+                          <Typography variant="caption">
+                            לניתוח פסקה-פסקה, השוואה לתשובת דוגמה ומעקב התקדמות — שדרג ל-AI פרמיום ⭐
+                          </Typography>
+                        </Alert>
+                      </>
+                    )}
+                  </Box>
+                )}
               </Box>
             </DialogContent>
             
-            <DialogActions>
+            <DialogActions sx={{ flexWrap: 'wrap', gap: 1, p: 2 }}>
               <Button onClick={() => setSelectedQuestion(null)}>
                 סגור
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={aiCheckLoading ? <CircularProgress size={16} /> : <AIIcon />}
+                onClick={runFreeAICheck}
+                disabled={!currentAnswer.trim() || aiCheckLoading}
+                color="info"
+              >
+                בדיקת AI חינמית
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<PremiumIcon />}
+                onClick={() => setShowPremiumDialog(true)}
+                color="warning"
+              >
+                AI פרמיום ⭐
               </Button>
               <Button 
                 variant="contained" 
@@ -1019,6 +1316,50 @@ export const EssayQuestions: React.FC<EssayQuestionsProps> = ({
             </DialogActions>
           </>
         )}
+      </Dialog>
+
+      {/* דיאלוג AI פרמיום */}
+      <Dialog open={showPremiumDialog} onClose={() => setShowPremiumDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          <Box display="flex" alignItems="center" gap={1}>
+            <PremiumIcon sx={{ color: '#ff9800' }} />
+            <Typography variant="h6">AI פרמיום — ניתוח מעמיק</Typography>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <Alert severity="warning" sx={{ mb: 2 }}>
+            <Typography variant="body2">
+              בדיקת ה-AI החינמית מזהה מילות מפתח בלבד. AI הפרמיום מנתח את התשובה לעומק — פסקה אחר פסקה.
+            </Typography>
+          </Alert>
+          <Typography variant="subtitle1" gutterBottom fontWeight="bold">מה כולל המנוי הפרמיום?</Typography>
+          <List dense>
+            {[
+              '🔍 ניתוח מעמיק של כל משפט ופסקה',
+              '📊 השוואה מפורטת לתשובה לדוגמה — הבדלים מסומנים',
+              '💡 הצעות ניסוח ספציפיות לשיפור הכתיבה',
+              '🎯 זיהוי פערים בהבנה המשפטית ורעיונות חסרים',
+              '📈 מעקב התקדמות לאורך זמן לפי נושא',
+              '📚 המלצות קריאה ממוקדות לפי חולשות שזוהו',
+              '🏆 ניבוי ציון מבחן לשכה לפי ביצועים'
+            ].map((feature, i) => (
+              <ListItem key={i} sx={{ py: 0.5 }}>
+                <ListItemText primary={<Typography variant="body2">{feature}</Typography>} />
+              </ListItem>
+            ))}
+          </List>
+          <Divider sx={{ my: 2 }} />
+          <Box textAlign="center">
+            <Typography variant="h5" color="warning.main" fontWeight="bold">₪49 / חודש</Typography>
+            <Typography variant="caption" color="text.secondary" display="block">ביטול בכל עת ללא התחייבות</Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowPremiumDialog(false)}>לא עכשיו</Button>
+          <Button variant="contained" color="warning" startIcon={<PremiumIcon />}>
+            שדרג עכשיו
+          </Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );

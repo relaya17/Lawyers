@@ -752,6 +752,11 @@ export const DetailedLegalExamWithAnswers: React.FC = () => {
 
   // Question view
   const currentQuestion = selectedQuestions[currentQuestionIndex];
+
+  if (!currentQuestion) {
+    return null;
+  }
+
   const progress = ((currentQuestionIndex + 1) / selectedQuestions.length) * 100;
 
   return (
@@ -841,14 +846,24 @@ export const DetailedLegalExamWithAnswers: React.FC = () => {
               שאלה קודמת
             </Button>
 
-            <Button
-              variant="contained"
-              onClick={nextQuestion}
-              disabled={!answers[currentQuestion.id]}
-            >
-              {(currentSection === 'true-false' && currentQuestionIndex === selectedQuestions.length - 1) 
-                ? 'סיים מבחן' : 'שאלה הבאה'}
-            </Button>
+            <Box display="flex" gap={2}>
+              <Button
+                variant="outlined"
+                color="warning"
+                onClick={finishExam}
+              >
+                סיים עכשיו
+              </Button>
+
+              <Button
+                variant="contained"
+                onClick={nextQuestion}
+                disabled={!answers[currentQuestion.id]}
+              >
+                {(currentSection === 'true-false' && currentQuestionIndex === selectedQuestions.length - 1) 
+                  ? 'סיים מבחן' : 'שאלה הבאה'}
+              </Button>
+            </Box>
           </Box>
         </CardContent>
       </Card>
