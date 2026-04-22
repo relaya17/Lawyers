@@ -231,11 +231,11 @@ export const AnalyticsDashboard: React.FC = () => {
     return trend === 'up' ? <TrendingUp color="success" /> : <TrendingDown color="error" />;
   };
 
-  const getPerformanceColor = (value: number, threshold: number) => {
+  const getPerformanceColor = (value: number, threshold: number): 'success' | 'warning' | 'error' => {
     return value >= threshold ? 'success' : value >= threshold * 0.8 ? 'warning' : 'error';
   };
 
-  const getRiskColor = (risk: string) => {
+  const getRiskColor = (risk: string): 'success' | 'warning' | 'error' | 'default' => {
     switch (risk) {
       case 'נמוך': return 'success';
       case 'בינוני': return 'warning';
@@ -700,7 +700,7 @@ export const AnalyticsDashboard: React.FC = () => {
                   <LinearProgress 
                     variant="determinate" 
                     value={(data.performance.pageLoadTime / 3) * 100} 
-                    color={getPerformanceColor(data.performance.pageLoadTime, 2) as any}
+                    color={getPerformanceColor(data.performance.pageLoadTime, 2)}
                   />
                 </Box>
                 
@@ -712,7 +712,7 @@ export const AnalyticsDashboard: React.FC = () => {
                   <LinearProgress 
                     variant="determinate" 
                     value={(data.performance.apiResponseTime / 2) * 100} 
-                    color={getPerformanceColor(data.performance.apiResponseTime, 1) as any}
+                    color={getPerformanceColor(data.performance.apiResponseTime, 1)}
                   />
                 </Box>
                 
@@ -724,7 +724,7 @@ export const AnalyticsDashboard: React.FC = () => {
                   <LinearProgress 
                     variant="determinate" 
                     value={data.performance.errorRate} 
-                    color={getPerformanceColor(data.performance.errorRate, 1) as any}
+                    color={getPerformanceColor(data.performance.errorRate, 1)}
                   />
                 </Box>
                 
@@ -870,7 +870,7 @@ export const AnalyticsDashboard: React.FC = () => {
                       <Chip 
                         label={`${risk.percentage}%`} 
                         size="small" 
-                        color={getRiskColor(risk.risk) as any}
+                        color={getRiskColor(risk.risk)}
                       />
                     </Box>
                   </Box>

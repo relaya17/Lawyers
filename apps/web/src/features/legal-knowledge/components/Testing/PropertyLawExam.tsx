@@ -201,7 +201,7 @@ const PropertyLawExam: React.FC = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
               <Typography variant="h6">{currentQuestion.icon}</Typography>
               <Chip label={currentQuestion.category} color="primary" variant="outlined" />
-              <Chip label={currentQuestion.difficulty} color={getDifficultyColor(currentQuestion.difficulty) as any} size="small" />
+              <Chip label={currentQuestion.difficulty} color={getDifficultyColor(currentQuestion.difficulty)} size="small" />
               {currentQuestion.lawReference && (
                 <Chip label={currentQuestion.lawReference} variant="outlined" size="small" sx={{ fontSize: '0.65rem' }} />
               )}

@@ -32,7 +32,7 @@ export interface WorkflowStep {
 
 export interface WorkflowAction {
     type: 'send_notification' | 'request_approval' | 'generate_document' | 'trigger_automation' | 'update_status' | 'assign_task' | 'send_email' | 'create_reminder'
-    parameters: Record<string, any>
+    parameters: Record<string, unknown>
     conditions?: ActionCondition[]
     delay?: number // in minutes
 }
@@ -232,7 +232,7 @@ export interface UpdateWorkflowRequest {
 export interface WorkflowStepRequest {
     stepId: string
     action: 'complete' | 'skip' | 'reassign' | 'comment'
-    data?: Record<string, any>
+    data?: Record<string, unknown>
     comment?: string
     attachments?: File[]
 }

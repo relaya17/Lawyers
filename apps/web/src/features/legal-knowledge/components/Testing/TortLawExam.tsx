@@ -161,7 +161,7 @@ const TortLawExam: React.FC = () => {
     setScore(0);
   };
 
-  const getDifficultyColor = (difficulty: string) => {
+  const getDifficultyColor = (difficulty: string): 'success' | 'warning' | 'error' | 'default' => {
     switch (difficulty) {
       case 'קל': return 'success';
       case 'בינוני': return 'warning';
@@ -240,7 +240,7 @@ const TortLawExam: React.FC = () => {
               />
               <Chip 
                 label={currentQuestion.difficulty}
-                color={getDifficultyColor(currentQuestion.difficulty) as any}
+                color={getDifficultyColor(currentQuestion.difficulty)}
                 size="small"
               />
             </Box>

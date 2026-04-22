@@ -45,6 +45,8 @@ import {
 } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
 
+export type FormFieldValue = string | number | boolean | File | undefined
+
 export interface FormField {
   id: string
   type: 'text' | 'email' | 'number' | 'textarea' | 'select' | 'checkbox' | 'radio' | 'date' | 'phone' | 'file'
@@ -65,7 +67,7 @@ export interface FormField {
 interface FormBuilderProps {
   fields?: FormField[]
   onChange?: (fields: FormField[]) => void
-  onSave?: (formData: Record<string, unknown>) => void
+  onSave?: (formData: Record<string, FormFieldValue>) => void
   readOnly?: boolean
 }
 
@@ -91,7 +93,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
   const { t } = useTranslation()
   const [selectedField, setSelectedField] = useState<FormField | null>(null)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
-  const [formData, setFormData] = useState<Record<string, any>>({})
+  const [formData, setFormData] = useState<Record<string, FormFieldValue>>({})
 
   const addField = (type: FormField['type']) => {
     const newField: FormField = {
@@ -285,7 +287,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
           <FormControlLabel
             control={
               <Switch
-                checked={formData[field.id] || false}
+                checked={Boolean(formData[field.id])}
                 onChange={(e) => handleFieldChange(e.target.checked)}
               />
             }

@@ -16,8 +16,8 @@ export interface Integration {
 export interface IntegrationConfig {
     apiKey?: string
     baseUrl?: string
-    credentials?: Record<string, any>
-    settings?: Record<string, any>
+    credentials?: Record<string, unknown>
+    settings?: Record<string, unknown>
     webhooks?: WebhookConfig[]
     syncSchedule?: SyncSchedule
 }
@@ -122,7 +122,7 @@ export interface IntegrationEvent {
     id: string
     integrationId: string
     type: string
-    data: Record<string, any>
+    data: Record<string, unknown>
     status: 'pending' | 'processed' | 'failed'
     timestamp: number
     retryCount: number

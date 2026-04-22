@@ -5,6 +5,7 @@ export interface Contract {
     id: string
     title: string
     description: string
+    content?: string
     status: 'draft' | 'active' | 'expired' | 'terminated'
     type: 'employment' | 'service' | 'lease' | 'purchase' | 'nda' | 'other'
     parties: ContractParty[]

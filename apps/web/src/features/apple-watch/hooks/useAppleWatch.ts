@@ -81,7 +81,7 @@ export const useWatchComplications = () => {
         }
     }, [])
 
-    const updateComplication = useCallback(async (type: string, data: Record<string, any>) => {
+    const updateComplication = useCallback(async (type: string, data: Record<string, unknown>) => {
         try {
             await watchService.updateComplication(type as ComplicationType, data)
             await loadComplications()
@@ -159,7 +159,7 @@ export const useWatchQuickActions = () => {
         setQuickActions(actions)
     }, [])
 
-    const executeAction = useCallback(async (actionId: string, parameters?: Record<string, any>) => {
+    const executeAction = useCallback(async (actionId: string, parameters?: Record<string, unknown>) => {
         setIsLoading(true)
         try {
             const success = await watchService.executeQuickAction(actionId, parameters)

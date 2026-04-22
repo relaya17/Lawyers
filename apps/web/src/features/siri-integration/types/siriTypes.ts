@@ -33,7 +33,7 @@ export interface SiriIntent {
     id: string
     type: SiriIntentType
     title: string
-    parameters: Record<string, any>
+    parameters: Record<string, unknown>
     response?: SiriResponse
     confidence: number
     timestamp: number
@@ -53,7 +53,7 @@ export type SiriIntentType =
 
 export interface SiriResponse {
     text: string
-    data?: Record<string, any>
+    data?: Record<string, unknown>
     actions?: SiriAction[]
     followUp?: string
 }
@@ -61,7 +61,7 @@ export interface SiriResponse {
 export interface SiriAction {
     type: 'open_app' | 'show_data' | 'send_notification' | 'make_call' | 'send_message'
     target: string
-    parameters?: Record<string, any>
+    parameters?: Record<string, unknown>
 }
 
 export interface SiriVoiceSettings {
@@ -122,7 +122,7 @@ export interface SiriVoiceCommand {
 export interface SiriConversation {
     id: string
     messages: SiriMessage[]
-    context: Record<string, any>
+    context: Record<string, unknown>
     startTime: number
     endTime?: number
     isActive: boolean

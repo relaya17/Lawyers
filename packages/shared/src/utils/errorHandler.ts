@@ -7,20 +7,20 @@ export interface AppError extends Error {
     code?: string
     statusCode?: number
     isOperational?: boolean
-    context?: Record<string, any>
+    context?: Record<string, unknown>
 }
 
 export class ServiceError extends Error implements AppError {
     public code: string
     public statusCode: number
     public isOperational: boolean
-    public context?: Record<string, any>
+    public context?: Record<string, unknown>
 
     constructor(
         message: string,
         code: string = 'SERVICE_ERROR',
         statusCode: number = 500,
-        context?: Record<string, any>
+        context?: Record<string, unknown>
     ) {
         super(message)
         this.name = 'ServiceError'
@@ -32,35 +32,35 @@ export class ServiceError extends Error implements AppError {
 }
 
 export class ValidationError extends ServiceError {
-    constructor(message: string, context?: Record<string, any>) {
+    constructor(message: string, context?: Record<string, unknown>) {
         super(message, 'VALIDATION_ERROR', 400, context)
         this.name = 'ValidationError'
     }
 }
 
 export class AuthenticationError extends ServiceError {
-    constructor(message: string = 'Authentication required', context?: Record<string, any>) {
+    constructor(message: string = 'Authentication required', context?: Record<string, unknown>) {
         super(message, 'AUTHENTICATION_ERROR', 401, context)
         this.name = 'AuthenticationError'
     }
 }
 
 export class AuthorizationError extends ServiceError {
-    constructor(message: string = 'Access denied', context?: Record<string, any>) {
+    constructor(message: string = 'Access denied', context?: Record<string, unknown>) {
         super(message, 'AUTHORIZATION_ERROR', 403, context)
         this.name = 'AuthorizationError'
     }
 }
 
 export class NotFoundError extends ServiceError {
-    constructor(message: string = 'Resource not found', context?: Record<string, any>) {
+    constructor(message: string = 'Resource not found', context?: Record<string, unknown>) {
         super(message, 'NOT_FOUND_ERROR', 404, context)
         this.name = 'NotFoundError'
     }
 }
 
 export class NetworkError extends ServiceError {
-    constructor(message: string = 'Network error occurred', context?: Record<string, any>) {
+    constructor(message: string = 'Network error occurred', context?: Record<string, unknown>) {
         super(message, 'NETWORK_ERROR', 0, context)
         this.name = 'NetworkError'
     }
@@ -80,7 +80,7 @@ export class ErrorHandler {
     }
 
     // Handle errors with proper logging and user feedback
-    handleError(error: Error | AppError, context?: Record<string, any>): void {
+    handleError(error: Error | AppError, context?: Record<string, unknown>): void {
         const appError = this.normalizeError(error)
 
         // Log the error
@@ -141,7 +141,7 @@ export class ErrorHandler {
     }
 
     // Handle network errors
-    private handleNetworkError(error: AppError): void {
+    private handleNetworkError(_error: AppError): void {
         this.showUserMessage('שגיאת רשת', 'אין חיבור לאינטרנט. אנא בדוק את החיבור ונסה שוב.', 'warning')
     }
 
@@ -173,7 +173,7 @@ export class ErrorHandler {
         message: string,
         code: string = 'SERVICE_ERROR',
         statusCode: number = 500,
-        context?: Record<string, any>
+        context?: Record<string, unknown>
     ): ServiceError {
         return new ServiceError(message, code, statusCode, context)
     }
@@ -181,7 +181,7 @@ export class ErrorHandler {
     // Wrap async functions with error handling
     async withErrorHandling<T>(
         fn: () => Promise<T>,
-        context?: Record<string, any>
+        context?: Record<string, unknown>
     ): Promise<T> {
         try {
             return await fn()
@@ -200,5 +200,5 @@ export const createServiceError = (
     message: string,
     code?: string,
     statusCode?: number,
-    context?: Record<string, any>
+    context?: Record<string, unknown>
 ) => errorHandler.createError(message, code, statusCode, context)

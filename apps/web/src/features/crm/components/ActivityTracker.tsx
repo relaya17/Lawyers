@@ -295,12 +295,12 @@ const ActivityTracker: React.FC<ActivityTrackerProps> = ({
                   </Typography>
                   <Chip
                     label={getStatusLabel(activity.status)}
-                    color={getStatusColor(activity.status) as any}
+                    color={getStatusColor(activity.status)}
                     size="small"
                   />
                   <Chip
                     label={t(`activities.priorities.${activity.priority}`)}
-                    color={getPriorityColor(activity.priority) as any}
+                    color={getPriorityColor(activity.priority)}
                     size="small"
                     variant="outlined"
                   />
@@ -398,7 +398,7 @@ const ActivityTracker: React.FC<ActivityTrackerProps> = ({
               </Typography>
               <Chip
                 label={getStatusLabel(activity.status)}
-                color={getStatusColor(activity.status) as any}
+                color={getStatusColor(activity.status)}
                 size="small"
               />
             </Box>

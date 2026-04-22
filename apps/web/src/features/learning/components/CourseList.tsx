@@ -311,7 +311,7 @@ const CourseList: React.FC<CourseListProps> = ({
                 <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
                   <Chip
                     label={t(`learning.levels.${course.level}`)}
-                    color={getLevelColor(course.level) as any}
+                    color={getLevelColor(course.level)}
                     size="small"
                   />
                   <Chip

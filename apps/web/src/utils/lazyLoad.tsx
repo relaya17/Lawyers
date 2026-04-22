@@ -70,6 +70,7 @@ class LazyErrorBoundary extends React.Component<
 }
 
 // Enhanced lazy loading with retry mechanism
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createLazyComponent<T extends ComponentType<any>>(
   importFunc: () => Promise<{ default: T }>,
   retries = 3,
@@ -94,6 +95,7 @@ export function createLazyComponent<T extends ComponentType<any>>(
 }
 
 // Lazy component wrapper with error boundary
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function withLazyLoading<T extends ComponentType<any>>(
   Component: React.LazyExoticComponent<T>,
   fallback?: React.ReactNode
@@ -108,6 +110,7 @@ export function withLazyLoading<T extends ComponentType<any>>(
 }
 
 // Preload utility for critical components
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function preloadComponent<T extends ComponentType<any>>(
   importFunc: () => Promise<{ default: T }>
 ): void {

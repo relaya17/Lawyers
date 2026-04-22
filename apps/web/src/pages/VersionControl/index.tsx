@@ -173,13 +173,13 @@ export const VersionControlPage: React.FC = () => {
     }
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): 'success' | 'warning' | 'info' | 'grey' => {
     switch (status) {
       case 'approved': return 'success'
       case 'review': return 'warning'
       case 'draft': return 'info'
-      case 'archived': return 'default'
-      default: return 'default'
+      case 'archived': return 'grey'
+      default: return 'grey'
     }
   }
 
@@ -315,7 +315,7 @@ export const VersionControlPage: React.FC = () => {
                          {version.createdAt ? new Date(version.createdAt).toLocaleDateString('he-IL') : 'לא מוגדר'}
                        </TimelineOppositeContent>
                       <TimelineSeparator>
-                                                 <TimelineDot color={getStatusColor(version.status || 'draft') as any}>
+                                                 <TimelineDot color={getStatusColor(version.status || 'draft')}>
                            {getStatusIcon(version.status || 'draft')}
                          </TimelineDot>
                                                  {index < (versionHistory.versions?.length || 0) - 1 && <TimelineConnector />}

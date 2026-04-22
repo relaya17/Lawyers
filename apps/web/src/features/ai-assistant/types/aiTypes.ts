@@ -2,7 +2,7 @@ export interface AIRequest {
     id: string
     type: AIRequestType
     content: string
-    context?: Record<string, any>
+    context?: Record<string, unknown>
     metadata?: AIMetadata
     timestamp: number
 }
@@ -85,7 +85,7 @@ export interface AIChat {
     id: string
     title: string
     messages: AIChatMessage[]
-    context: Record<string, any>
+    context: Record<string, unknown>
     metadata: AIMetadata
     createdAt: number
     updatedAt: number
@@ -104,7 +104,7 @@ export interface AIAnalysisResult {
     id: string
     type: AIRequestType
     summary: string
-    details: Record<string, any>
+    details: Record<string, unknown>
     risks: AIRiskItem[]
     suggestions: AISuggestion[]
     confidence: number

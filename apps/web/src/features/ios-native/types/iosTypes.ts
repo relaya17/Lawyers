@@ -24,7 +24,7 @@ export interface IOSNotification {
     body: string
     badge?: number
     sound?: string
-    data?: Record<string, any>
+    data?: Record<string, unknown>
     scheduledTime?: number
     repeated?: boolean
 }

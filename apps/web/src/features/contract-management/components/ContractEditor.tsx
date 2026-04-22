@@ -271,7 +271,7 @@ export const ContractEditor: React.FC<ContractEditorProps> = ({
                 <InputLabel>{t('contracts.type')}</InputLabel>
                 <Select
                   value={contract.type}
-                  onChange={(e) => setContract(prev => ({ ...prev, type: e.target.value as any }))}
+                  onChange={(e) => setContract(prev => ({ ...prev, type: e.target.value as Contract['type'] }))}
                 >
                   <MenuItem value="employment">{t('contracts.types.employment')}</MenuItem>
                   <MenuItem value="service">{t('contracts.types.service')}</MenuItem>
@@ -286,7 +286,7 @@ export const ContractEditor: React.FC<ContractEditorProps> = ({
                 <InputLabel>{t('contracts.status')}</InputLabel>
                 <Select
                   value={contract.status}
-                  onChange={(e) => setContract(prev => ({ ...prev, status: e.target.value as any }))}
+                  onChange={(e) => setContract(prev => ({ ...prev, status: e.target.value as Contract['status'] }))}
                 >
                   <MenuItem value="draft">{t('contracts.statuses.draft')}</MenuItem>
                   <MenuItem value="active">{t('contracts.statuses.active')}</MenuItem>
@@ -354,7 +354,7 @@ export const ContractEditor: React.FC<ContractEditorProps> = ({
                         <InputLabel>{t('contracts.party.type')}</InputLabel>
                         <Select
                           value={party.type}
-                          onChange={(e) => handleUpdateParty(index, { type: e.target.value as any })}
+                          onChange={(e) => handleUpdateParty(index, { type: e.target.value as ContractParty['type'] })}
                         >
                           <MenuItem value="individual">{t('contracts.party.types.individual')}</MenuItem>
                           <MenuItem value="company">{t('contracts.party.types.company')}</MenuItem>
@@ -366,7 +366,7 @@ export const ContractEditor: React.FC<ContractEditorProps> = ({
                         <InputLabel>{t('contracts.party.role')}</InputLabel>
                         <Select
                           value={party.role}
-                          onChange={(e) => handleUpdateParty(index, { role: e.target.value as any })}
+                          onChange={(e) => handleUpdateParty(index, { role: e.target.value as ContractParty['role'] })}
                         >
                           <MenuItem value="client">{t('contracts.party.roles.client')}</MenuItem>
                           <MenuItem value="vendor">{t('contracts.party.roles.vendor')}</MenuItem>
@@ -424,7 +424,7 @@ export const ContractEditor: React.FC<ContractEditorProps> = ({
                         <InputLabel>{t('contracts.term.category')}</InputLabel>
                         <Select
                           value={term.category}
-                          onChange={(e) => handleUpdateTerm(index, { category: e.target.value as any })}
+                          onChange={(e) => handleUpdateTerm(index, { category: e.target.value as ContractTerm['category'] })}
                         >
                           <MenuItem value="payment">{t('contracts.term.categories.payment')}</MenuItem>
                           <MenuItem value="delivery">{t('contracts.term.categories.delivery')}</MenuItem>
@@ -440,7 +440,7 @@ export const ContractEditor: React.FC<ContractEditorProps> = ({
                         <InputLabel>{t('contracts.term.riskLevel')}</InputLabel>
                         <Select
                           value={term.riskLevel}
-                          onChange={(e) => handleUpdateTerm(index, { riskLevel: e.target.value as any })}
+                          onChange={(e) => handleUpdateTerm(index, { riskLevel: e.target.value as ContractTerm['riskLevel'] })}
                         >
                           <MenuItem value="low">{t('contracts.term.riskLevels.low')}</MenuItem>
                           <MenuItem value="medium">{t('contracts.term.riskLevels.medium')}</MenuItem>
@@ -484,7 +484,7 @@ export const ContractEditor: React.FC<ContractEditorProps> = ({
               multiline
               rows={10}
               label={t('contracts.content')}
-              value={(contract as any).content || ''}
+              value={contract.content || ''}
               onChange={(e) => setContract(prev => ({ ...prev, content: e.target.value }))}
               placeholder={t('contracts.contentPlaceholder')}
             />
@@ -511,7 +511,7 @@ export const ContractEditor: React.FC<ContractEditorProps> = ({
               {contract.description}
             </Typography>
             <Divider sx={{ my: 2 }} />
-            <div dangerouslySetInnerHTML={{ __html: (contract as any).content || '' }} />
+            <div dangerouslySetInnerHTML={{ __html: contract.content || '' }} />
           </Box>
         </DialogContent>
         <DialogActions>

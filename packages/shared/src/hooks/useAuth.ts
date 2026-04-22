@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useCallback } from 'react'
-import { RootState } from '../store'
+import { RootState, AppDispatch } from '../store'
 import { login, register, logout } from '../store/slices/authSlice'
 
 export interface UseAuthResult {
@@ -17,15 +17,15 @@ export interface UseAuthResult {
 }
 
 export const useAuth = (): UseAuthResult => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<AppDispatch>()
     const auth = useSelector((state: RootState) => state.auth)
 
     const handleLogin = useCallback(async (credentials: { email: string; password: string }) => {
-        await dispatch(login(credentials) as any).unwrap()
+        await dispatch(login(credentials)).unwrap()
     }, [dispatch])
 
     const handleRegister = useCallback(async (credentials: { email: string; password: string; firstName: string; lastName: string; phone?: string; company?: string }) => {
-        await dispatch(register(credentials) as any).unwrap()
+        await dispatch(register(credentials)).unwrap()
     }, [dispatch])
 
     const handleLogout = useCallback(() => {

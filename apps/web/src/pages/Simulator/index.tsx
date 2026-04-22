@@ -556,7 +556,7 @@ export const SimulatorPage: React.FC = () => {
                   <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
                     <Chip 
                       label={simulation.difficulty} 
-                      color={getDifficultyColor(simulation.difficulty) as any}
+                      color={getDifficultyColor(simulation.difficulty)}
                       size="small"
                     />
                     <Chip 

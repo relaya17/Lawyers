@@ -148,7 +148,7 @@ class SiriService {
 
         let type: SiriIntentType = 'get_status'
         let confidence = 0.5
-        const parameters: Record<string, any> = {}
+        const parameters: Record<string, unknown> = {}
 
         // Contract management
         if (lowerPhrase.includes('חוזה') || lowerPhrase.includes('contract')) {

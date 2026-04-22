@@ -64,7 +64,7 @@ interface ExamSession {
   startTime: Date;
   endTime?: Date;
   questions: Question[];
-  userAnswers: Map<string, any>;
+  userAnswers: Map<string, string | number | boolean>;
   currentQuestionIndex: number;
   timeLimit?: number; // in minutes
   examMode: 'practice' | 'timed' | 'comprehensive';
@@ -264,10 +264,12 @@ const legalSourcesQuestions: Question[] = [
   }
 ];
 
+type AnswerValue = string | number | boolean;
+
 const getOptionBgColor = (
   index: number,
-  correctAnswer: string | number | boolean,
-  currentAnswer: any,
+  correctAnswer: AnswerValue,
+  currentAnswer: AnswerValue,
   showFeedback: boolean
 ): string | undefined => {
   if (!showFeedback) return undefined;
@@ -278,8 +280,8 @@ const getOptionBgColor = (
 
 const getTFBgColor = (
   value: boolean,
-  correctAnswer: string | number | boolean,
-  currentAnswer: any,
+  correctAnswer: AnswerValue,
+  currentAnswer: AnswerValue,
   showFeedback: boolean
 ): string | undefined => {
   if (!showFeedback) return undefined;
@@ -288,7 +290,7 @@ const getTFBgColor = (
   return undefined;
 };
 
-const getExplanationSeverity = (correctAnswer: any, currentAnswer: any): 'success' | 'error' => {
+const getExplanationSeverity = (correctAnswer: AnswerValue, currentAnswer: AnswerValue): 'success' | 'error' => {
   if (currentAnswer === correctAnswer) return 'success';
   return 'error';
 };
@@ -305,7 +307,7 @@ export const ComprehensiveLegalExam: React.FC<ComprehensiveLegalExamProps> = ({
   timeLimit = 60
 }) => {
   const [examSession, setExamSession] = useState<ExamSession | null>(null);
-  const [currentAnswer, setCurrentAnswer] = useState<any>('');
+  const [currentAnswer, setCurrentAnswer] = useState<AnswerValue>('');
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [showExplanation, setShowExplanation] = useState(false);
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());

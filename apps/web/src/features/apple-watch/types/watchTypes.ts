@@ -14,7 +14,7 @@ export interface WatchComplication {
     type: ComplicationType
     family: ComplicationFamily
     displayName: string
-    data: Record<string, any>
+    data: Record<string, unknown>
     updateFrequency: number
     isActive: boolean
 }
@@ -135,7 +135,7 @@ export interface WatchQuickAction {
     title: string
     icon: string
     action: string
-    parameters?: Record<string, any>
+    parameters?: Record<string, unknown>
     requiresAuth?: boolean
     isEnabled: boolean
 }
@@ -144,7 +144,7 @@ export interface WatchVoiceCommand {
     id: string
     phrase: string
     action: string
-    parameters?: Record<string, any>
+    parameters?: Record<string, unknown>
     language: string
     isEnabled: boolean
 }

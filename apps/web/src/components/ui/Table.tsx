@@ -166,10 +166,10 @@ export const Table: React.FC<TableProps> = ({
   const [rowsPerPage, setRowsPerPage] = useState(pageSize)
   const [orderBy, setOrderBy] = useState<string>('')
   const [order, setOrder] = useState<'asc' | 'desc'>('asc')
-  const [selected, setSelected] = useState<any[]>([])
+  const [selected, setSelected] = useState<Record<string, unknown>[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [activeRow, setActiveRow] = useState<any>(null)
+  const [activeRow, setActiveRow] = useState<Record<string, unknown> | null>(null)
 
   // Filter and sort data
   const processedData = useMemo(() => {
@@ -457,7 +457,7 @@ export const Table: React.FC<TableProps> = ({
           <MenuItem
             key={index}
             onClick={() => handleActionClick(action)}
-            disabled={action.disabled?.(activeRow)}
+            disabled={activeRow ? action.disabled?.(activeRow) : false}
           >
             {action.icon}
             <Box sx={{ ml: 1 }}>{action.label}</Box>

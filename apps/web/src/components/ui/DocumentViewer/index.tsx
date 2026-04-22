@@ -135,11 +135,11 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
   }
 
   const handleFullscreen = () => {
-    if (!(document as any).fullscreenElement) {
+    if (!window.document.fullscreenElement) {
       containerRef.current?.requestFullscreen()
       setIsFullscreen(true)
     } else {
-      (document as any).exitFullscreen()
+      window.document.exitFullscreen()
       setIsFullscreen(false)
     }
   }

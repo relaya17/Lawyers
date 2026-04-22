@@ -40,7 +40,7 @@ class AIService {
         }
     }
 
-    async generateLegalAdvice(query: string, context?: Record<string, any>): Promise<AIResponse> {
+    async generateLegalAdvice(query: string, context?: Record<string, unknown>): Promise<AIResponse> {
         const request: AIRequest = {
             id: this.generateId(),
             type: 'legal_advice',

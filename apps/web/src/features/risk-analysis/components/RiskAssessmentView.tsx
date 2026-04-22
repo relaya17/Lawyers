@@ -296,7 +296,7 @@ const RiskAssessmentView: React.FC<RiskAssessmentViewProps> = ({
               <Chip
                 icon={getRiskLevelIcon(assessment.riskLevel)}
                 label={t(`riskAnalysis.levels.${assessment.riskLevel}`)}
-                color={getRiskLevelColor(assessment.riskLevel) as any}
+                color={getRiskLevelColor(assessment.riskLevel)}
               />
               <Chip
                 label={t(`riskAnalysis.status.${assessment.status}`)}
@@ -534,7 +534,7 @@ const RiskAssessmentView: React.FC<RiskAssessmentViewProps> = ({
                               <Chip
                                 icon={getRiskLevelIcon(risk.severity)}
                                 label={t(`riskAnalysis.levels.${risk.severity}`)}
-                                color={getRiskLevelColor(risk.severity) as any}
+                                color={getRiskLevelColor(risk.severity)}
                                 size="small"
                               />
                             </TableCell>
@@ -550,7 +550,7 @@ const RiskAssessmentView: React.FC<RiskAssessmentViewProps> = ({
                               <Chip
                                 icon={getStatusIcon(risk.status)}
                                 label={t(`riskAnalysis.riskStatus.${risk.status}`)}
-                                color={getStatusColor(risk.status) as any}
+                                color={getStatusColor(risk.status)}
                                 size="small"
                               />
                             </TableCell>

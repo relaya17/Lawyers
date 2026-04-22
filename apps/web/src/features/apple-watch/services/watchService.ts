@@ -79,7 +79,7 @@ class WatchService {
     }
 
     // Complications Management
-    async updateComplication(type: ComplicationType, data: Record<string, any>): Promise<void> {
+    async updateComplication(type: ComplicationType, data: Record<string, unknown>): Promise<void> {
         if (!this.isConnected || !this.watchApp) {
             throw new Error('Watch not connected')
         }
@@ -258,7 +258,7 @@ class WatchService {
         ]
     }
 
-    async executeQuickAction(actionId: string, parameters?: Record<string, any>): Promise<boolean> {
+    async executeQuickAction(actionId: string, parameters?: Record<string, unknown>): Promise<boolean> {
         if (!this.isConnected) {
             throw new Error('Watch not connected')
         }

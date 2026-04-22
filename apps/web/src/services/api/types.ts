@@ -10,7 +10,7 @@ export interface ApiResponse<T = unknown> {
 export interface ApiError {
   code: string
   message: string
-  details?: Record<string, any>
+  details?: Record<string, unknown>
   timestamp: string
 }
 
@@ -147,7 +147,7 @@ export interface ContractMetadata {
   fileSize?: number
   checksum?: string
   templateId?: string
-  customFields?: Record<string, any>
+  customFields?: Record<string, unknown>
 }
 
 // Risk Analysis Types
@@ -330,7 +330,7 @@ export interface NegotiationEvent {
   description: string
   timestamp: string
   userId?: string
-  data?: Record<string, any>
+  data?: Record<string, unknown>
 }
 
 // Marketplace Types
@@ -393,7 +393,7 @@ export interface TemplateMetadata {
   wordCount: number
   lastUpdated: string
   compatibility: string[]
-  customFields?: Record<string, any>
+  customFields?: Record<string, unknown>
 }
 
 export interface TemplateReview {
@@ -527,7 +527,7 @@ export interface Notification {
   type: NotificationType
   title: string
   message: string
-  data?: Record<string, any>
+  data?: Record<string, unknown>
   read: boolean
   createdAt: string
   expiresAt?: string
@@ -547,5 +547,5 @@ export interface NotificationAction {
   label: string
   action: string
   url?: string
-  data?: Record<string, any>
+  data?: Record<string, unknown>
 }

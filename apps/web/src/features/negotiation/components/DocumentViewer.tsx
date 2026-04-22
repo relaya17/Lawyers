@@ -292,7 +292,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
       if (!isFullscreen) {
         viewerRef.current.requestFullscreen()
       } else {
-        (document as any).exitFullscreen()
+        window.document.exitFullscreen()
       }
       setIsFullscreen(!isFullscreen)
     }
@@ -310,7 +310,9 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
     }
   }
 
-  const getDocumentColor = (type: string) => {
+  type MuiColor = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'
+
+  const getDocumentColor = (type: string): MuiColor => {
     switch (type) {
       case 'pdf': return 'error'
       case 'doc':
@@ -322,7 +324,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
     }
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): MuiColor => {
     switch (status) {
       case 'approved': return 'success'
       case 'review': return 'warning'
@@ -443,7 +445,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
                       color={doc.isStarred ? 'warning' : 'default'}
                       badgeContent={doc.isStarred ? <Star sx={{ fontSize: 12 }} /> : null}
                     >
-                      <Avatar color={getDocumentColor(doc.type) as any}>
+                      <Avatar color={getDocumentColor(doc.type)}>
                         {getDocumentIcon(doc.type)}
                       </Avatar>
                     </Badge>
@@ -459,7 +461,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
                           <Chip
                             label={doc.status}
                             size="small"
-                            color={getStatusColor(doc.status) as any}
+                            color={getStatusColor(doc.status)}
                           />
                           {doc.isLocked && <Lock sx={{ fontSize: 12 }} />}
                         </Box>
@@ -484,7 +486,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
                     <CardContent sx={{ p: 1, textAlign: 'center' }}>
                       <Avatar
                         sx={{ width: 40, height: 40, mx: 'auto', mb: 1 }}
-                        color={getDocumentColor(doc.type) as any}
+                        color={getDocumentColor(doc.type)}
                       >
                         {getDocumentIcon(doc.type)}
                       </Avatar>
@@ -494,7 +496,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
                       <Chip
                         label={doc.status}
                         size="small"
-                        color={getStatusColor(doc.status) as any}
+                        color={getStatusColor(doc.status)}
                         sx={{ mt: 0.5 }}
                       />
                     </CardContent>
@@ -587,7 +589,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
                     <Box sx={{ textAlign: 'center' }}>
                       <Avatar
                         sx={{ width: 80, height: 80, mx: 'auto', mb: 2 }}
-                        color={getDocumentColor(selectedDocument.type) as any}
+                        color={getDocumentColor(selectedDocument.type)}
                       >
                         {getDocumentIcon(selectedDocument.type)}
                       </Avatar>

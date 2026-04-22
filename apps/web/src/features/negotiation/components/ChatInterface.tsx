@@ -381,7 +381,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <IconButton 
                         size="small" 
-                        color={getFileColor(message.fileName!) as any}
+                        color={getFileColor(message.fileName!)}
                       >
                         {getFileIcon(message.fileName!)}
                       </IconButton>
@@ -546,7 +546,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         {selectedFile && (
           <Box sx={{ mt: 1, p: 1, backgroundColor: 'grey.50', borderRadius: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <IconButton size="small" color={getFileColor(selectedFile.name) as any}>
+              <IconButton size="small" color={getFileColor(selectedFile.name)}>
                 {getFileIcon(selectedFile.name)}
               </IconButton>
               <Box sx={{ flex: 1 }}>

@@ -406,7 +406,7 @@ export const CRMPage: React.FC = () => {
                     <TableCell>
                       <Chip
                         label={t(`crm.statuses.${client.status}`)}
-                        color={getStatusColor(client.status) as any}
+                        color={getStatusColor(client.status)}
                         size="small"
                       />
                     </TableCell>
@@ -460,7 +460,7 @@ export const CRMPage: React.FC = () => {
                     <TableCell>
                       <Chip
                         label={t(`crm.leadStatuses.${lead.status}`)}
-                        color={getStatusColor(lead.status) as any}
+                        color={getStatusColor(lead.status)}
                         size="small"
                       />
                     </TableCell>

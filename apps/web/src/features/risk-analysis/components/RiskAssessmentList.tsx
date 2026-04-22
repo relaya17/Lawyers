@@ -412,18 +412,18 @@ const RiskAssessmentList: React.FC<RiskAssessmentListProps> = ({
                   <Chip
                     icon={getStatusIcon(assessment.status)}
                     label={t(`riskAnalysis.status.${assessment.status}`)}
-                    color={getStatusColor(assessment.status) as any}
+                    color={getStatusColor(assessment.status)}
                     size="small"
                   />
                   <Chip
                     icon={getRiskLevelIcon(assessment.riskLevel)}
                     label={t(`riskAnalysis.levels.${assessment.riskLevel}`)}
-                    color={getRiskLevelColor(assessment.riskLevel) as any}
+                    color={getRiskLevelColor(assessment.riskLevel)}
                     size="small"
                   />
                   <Chip
                     label={t(`riskAnalysis.priority.${assessment.priority}`)}
-                    color={getPriorityColor(assessment.priority) as any}
+                    color={getPriorityColor(assessment.priority)}
                     size="small"
                     variant="outlined"
                   />

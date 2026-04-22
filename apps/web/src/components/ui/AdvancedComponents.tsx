@@ -166,7 +166,7 @@ export const ProgressCard: React.FC<ProgressCardProps> = ({
           <LinearProgress
             variant="determinate"
             value={progress}
-            color={getProgressColor() as any}
+            color={getProgressColor()}
             sx={{ height: 8, borderRadius: 4 }}
           />
           

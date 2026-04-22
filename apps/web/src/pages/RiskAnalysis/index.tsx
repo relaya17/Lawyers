@@ -346,7 +346,7 @@ export const RiskAnalysisPage: React.FC = () => {
                       </Typography>
                                              <Chip 
                          label={getRiskLabel(analysisResult.overallRisk)}
-                         color={getRiskColor(analysisResult.overallRisk) as any}
+                         color={getRiskColor(analysisResult.overallRisk)}
                          size="medium"
                          sx={{ mt: 1 }}
                        />

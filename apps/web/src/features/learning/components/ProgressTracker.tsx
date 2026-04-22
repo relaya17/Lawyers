@@ -289,7 +289,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
                       </Typography>
                       <Chip
                         label={t(`learning.difficulty.${course.difficulty}`)}
-                        color={getDifficultyColor(course.difficulty) as any}
+                        color={getDifficultyColor(course.difficulty)}
                         size="small"
                       />
                       {course.certificate && (
@@ -336,7 +336,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
                   <LinearProgress
                     variant="determinate"
                     value={course.overallProgress}
-                    color={getProgressColor(course.overallProgress) as any}
+                    color={getProgressColor(course.overallProgress)}
                     sx={{ width: 100, height: 8, borderRadius: 4 }}
                   />
                   <Box sx={{ display: 'flex', gap: 1 }}>

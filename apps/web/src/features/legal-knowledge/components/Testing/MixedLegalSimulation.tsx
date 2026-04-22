@@ -250,7 +250,7 @@ const MixedLegalSimulation: React.FC = () => {
               <Typography variant="h6">{currentQuestion.icon}</Typography>
               <Chip label={currentQuestion.area} size="small" sx={{ backgroundColor: getAreaColor(currentQuestion.area), color: 'white' }} />
               <Chip label={currentQuestion.category} color="primary" variant="outlined" size="small" />
-              <Chip label={currentQuestion.difficulty} color={getDifficultyColor(currentQuestion.difficulty) as any} size="small" />
+              <Chip label={currentQuestion.difficulty} color={getDifficultyColor(currentQuestion.difficulty)} size="small" />
             </Box>
             <Typography variant="h6" paragraph>{currentQuestion.question}</Typography>
             <FormControl component="fieldset" fullWidth>

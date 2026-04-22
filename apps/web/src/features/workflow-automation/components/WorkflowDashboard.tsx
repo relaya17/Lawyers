@@ -395,7 +395,7 @@ export const WorkflowDashboard: React.FC = () => {
                             <Chip 
                               label={workflow.status} 
                               size="small" 
-                              color={getStatusColor(workflow.status) as any}
+                              color={getStatusColor(workflow.status)}
                             />
                           </Box>
                         }
@@ -465,7 +465,7 @@ export const WorkflowDashboard: React.FC = () => {
                             <Chip 
                               label={approval.status} 
                               size="small" 
-                              color={getApprovalStatusColor(approval.status) as any}
+                              color={getApprovalStatusColor(approval.status)}
                             />
                           </Box>
                         }
