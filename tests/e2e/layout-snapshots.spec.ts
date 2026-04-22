@@ -14,7 +14,7 @@ test.describe('Layout snapshots (manual triage aid)', () => {
 
       // Core landmarks exist
       await expect(page.getByRole('banner')).toBeVisible();
-      await expect(page.getByRole('main')).toBeVisible();
+      await expect(page.locator('main').first()).toBeVisible();
 
       // Wait for main hero content to render (language-agnostic)
       await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible({ timeout: 15000 });
@@ -31,7 +31,7 @@ test.describe('Layout snapshots (manual triage aid)', () => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto('/contracts', { waitUntil: 'domcontentloaded' });
       await expect(page.getByRole('banner')).toBeVisible();
-      await expect(page.getByRole('main')).toBeVisible();
+      await expect(page.locator('main').first()).toBeVisible();
       await expect(page.locator('h1, h2').first()).toBeVisible({ timeout: 15000 });
       await page.screenshot({ path: `test-results/layout-contracts-${vp.name}.png`, fullPage: true });
     });
@@ -40,7 +40,7 @@ test.describe('Layout snapshots (manual triage aid)', () => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto('/crm', { waitUntil: 'domcontentloaded' });
       await expect(page.getByRole('banner')).toBeVisible();
-      await expect(page.getByRole('main')).toBeVisible();
+      await expect(page.locator('main').first()).toBeVisible();
       await expect(page.locator('h1, h2').first()).toBeVisible({ timeout: 15000 });
       await page.screenshot({ path: `test-results/layout-crm-${vp.name}.png`, fullPage: true });
     });
@@ -49,7 +49,7 @@ test.describe('Layout snapshots (manual triage aid)', () => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto('/contract-templates', { waitUntil: 'domcontentloaded' });
       await expect(page.getByRole('banner')).toBeVisible();
-      await expect(page.getByRole('main')).toBeVisible();
+      await expect(page.locator('main').first()).toBeVisible();
       await expect(page.locator('h1, h2').first()).toBeVisible({ timeout: 15000 });
       await page.screenshot({ path: `test-results/layout-contract-templates-${vp.name}.png`, fullPage: true });
     });
@@ -58,7 +58,7 @@ test.describe('Layout snapshots (manual triage aid)', () => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto('/contract-templates/1', { waitUntil: 'domcontentloaded' });
       await expect(page.getByRole('banner')).toBeVisible();
-      await expect(page.getByRole('main')).toBeVisible();
+      await expect(page.locator('main').first()).toBeVisible();
       await expect(page.locator('h1').first()).toBeVisible({ timeout: 15000 });
       await page.screenshot({ path: `test-results/layout-contract-template-details-${vp.name}.png`, fullPage: true });
     });

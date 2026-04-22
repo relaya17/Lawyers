@@ -15,10 +15,15 @@ interface LogConfig {
 }
 
 class Logger {
+    private readonly isDev =
+        typeof process !== 'undefined'
+            ? process.env.NODE_ENV !== 'production'
+            : false
+
     private config: LogConfig = {
-        level: import.meta.env.DEV ? LogLevel.DEBUG : LogLevel.ERROR,
-        enableConsole: import.meta.env.DEV,
-        enableRemote: !import.meta.env.DEV
+        level: this.isDev ? LogLevel.DEBUG : LogLevel.ERROR,
+        enableConsole: this.isDev,
+        enableRemote: !this.isDev
     }
 
     private shouldLog(level: LogLevel): boolean {

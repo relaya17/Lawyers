@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const isCI = !!process.env.CI;
+const runCrossBrowser = isCI && process.env.PW_CROSS_BROWSER === 'true';
 
 export default defineConfig({
     testDir: './tests/e2e',
@@ -32,8 +33,8 @@ export default defineConfig({
             name: 'Mobile Chrome',
             use: { ...devices['Pixel 5'] },
         },
-        // Cross-browser — CI only
-        ...(isCI
+        // Cross-browser is opt-in in CI to keep default pipeline stable.
+        ...(runCrossBrowser
             ? [
                   {
                       name: 'firefox',

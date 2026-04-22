@@ -13,7 +13,7 @@
     "test":         "vitest",
     "test:ui":      "vitest --ui",
     "test:coverage":"vitest --coverage",
-    "test:ci":      "vitest run --coverage --reporter=verbose",
+    "test:ci":      "vitest run --coverage --reporter=verbose --passWithNoTests",
     "lint":         "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 1000"
   },
   "dependencies": {

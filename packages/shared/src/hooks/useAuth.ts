@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useCallback } from 'react'
-import { RootState } from '@shared/store'
-import { login, register, logout } from '@shared/store/slices/authSlice'
+import { RootState } from '../store'
+import { login, register, logout } from '../store/slices/authSlice'
 
 export interface UseAuthResult {
     user: { id: string; email: string; role: string; firstName: string; lastName: string } | null

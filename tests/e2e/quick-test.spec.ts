@@ -12,10 +12,14 @@ test('Quick test - verify app loads', async ({ page }) => {
 
   // Check call-to-action buttons exist (allow localized labels)
   await expect(
-    page.getByRole('button', { name: /Get Started|התחל עכשיו|ابدأ الآن/i })
+    page.getByRole('button', {
+      name: /Get Started|התחל עכשיו|התחל ללמוד|התחל עכשיו\s*בחינם|ابدأ الآن/i
+    }).first()
   ).toBeVisible();
   await expect(
-    page.getByRole('button', { name: /Try Simulation|נסה סימולציה|جرّب المحاكاة/i })
+    page.getByRole('button', {
+      name: /Try Simulation|נסה סימולציה|נסה את הסימולטור|סימולטור|جرّب المحاكاة/i
+    }).first()
   ).toBeVisible();
 
   console.log('✅ App loaded successfully!');

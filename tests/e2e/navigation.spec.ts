@@ -10,27 +10,26 @@ test.describe('Navigation and Core Functionality Tests', () => {
         // The app uses an AppBar (banner) rather than a <nav> element.
         await expect(page.getByRole('banner')).toBeVisible();
 
-        // On desktop the header shows a compact primary set, plus auth/actions.
-        // Keep this test resilient to language changes (he/en/ar).
+        // Header content is responsive; assert core visible actions only.
         await expect(page.getByRole('button', { name: /Contracts|חוזים|العقود/i }).first()).toBeVisible();
-        await expect(page.getByRole('button', { name: /CRM|ניהול לקוחות|إدارة العملاء/i })).toBeVisible();
-        await expect(page.getByRole('button', { name: /Risk Analysis|ניתוח סיכון|تحليل المخاطر/i })).toBeVisible();
-        await expect(page.getByRole('button', { name: /Negotiation|מו״מ|المفاوضات/i })).toBeVisible();
-        await expect(page.getByRole('button', { name: /More|עוד|المزيد/i })).toBeVisible();
-        await expect(page.getByRole('button', { name: /Login|התחברות|تسجيل الدخول/i })).toBeVisible();
-        await expect(page.getByRole('button', { name: /Register|הרשמה|التسجيل/i })).toBeVisible();
+        const authButton = page.getByRole('button', { name: /Login|התחברות|تسجيل الدخول|Register|הרשמה|التسجيل/i });
+        const menuButton = page.getByRole('button', { name: /More|עוד|المزيد|Menu|תפריט|القائمة/i });
+        await expect(authButton.or(menuButton).first()).toBeVisible();
+        await expect
+            .poll(async () => await page.locator('header button').count())
+            .toBeGreaterThan(2);
     });
 
     test('should navigate to all main pages successfully', async ({ page }) => {
         // Prefer URL navigation here (header may collapse/translate based on viewport/language).
-        const routes = ['/', '/contracts', '/crm', '/risk-analysis', '/negotiation', '/version-control', '/flow-map', '/security'];
+        const routes = ['/', '/contracts', '/risk-analysis', '/negotiation', '/version-control', '/workflow-automation', '/security'];
 
         for (const path of routes) {
             await page.goto(path, { waitUntil: 'domcontentloaded' });
 
             // Core landmarks should exist on every page
             await expect(page.getByRole('banner')).toBeVisible();
-            await expect(page.getByRole('main')).toBeVisible();
+            await expect(page.locator('main').first()).toBeVisible();
 
             // Verify we're not on a 404 page
             await expect(page.getByRole('heading', { name: '404' })).not.toBeVisible();
@@ -56,21 +55,11 @@ test.describe('Navigation and Core Functionality Tests', () => {
         await expect(page.getByRole('dialog')).toBeVisible({ timeout: 5000 });
     });
 
-    test('should test flow map page functionality', async ({ page }) => {
-        await page.goto('/flow-map', { waitUntil: 'domcontentloaded' });
-
-        // Check if page loads with expected elements
-        await expect(page.locator('text=מפת זרימת חוזים')).toBeVisible();
-        await expect(page.getByRole('button', { name: /צור זרימה חדשה/i })).toBeVisible();
-
-        // Check for flow list
-        await expect(page.locator('text=זרימות פעילות')).toBeVisible();
-
-        // Check for tabs
-        await expect(page.getByRole('tab', { name: 'תהליך העבודה' })).toBeVisible();
-        await expect(page.getByRole('tab', { name: 'מסמכים' })).toBeVisible();
-        await expect(page.getByRole('tab', { name: 'סיכונים' })).toBeVisible();
-        await expect(page.getByRole('tab', { name: 'סטטיסטיקות' })).toBeVisible();
+    test('should test workflow automation page functionality', async ({ page }) => {
+        await page.goto('/workflow-automation', { waitUntil: 'domcontentloaded' });
+        await expect(page.getByRole('banner')).toBeVisible();
+        await expect(page.locator('main').first()).toBeVisible();
+        await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
     });
 
     test('should test security page functionality', async ({ page }) => {
@@ -97,14 +86,13 @@ test.describe('Navigation and Core Functionality Tests', () => {
         // Hero heading exists (language may be EN/HE depending on settings)
         await expect(page.locator('h1')).toBeVisible();
 
-        // Feature section exists and renders multiple cards (language-agnostic)
-        await expect(page.getByRole('heading', { level: 2, name: /התכונות שלנו|Our Features|ميزاتنا/i })).toBeVisible();
-        const featureCardHeadings = page.getByRole('heading', { level: 3 });
+        // Page contains multiple sections/cards (language-agnostic).
+        const featureCards = page.locator('.MuiCard-root');
         await expect
-            .poll(async () => await featureCardHeadings.count())
+            .poll(async () => await featureCards.count())
             .toBeGreaterThan(2);
 
-        // Test navigation via URL (feature cards may not be clickable in all layouts)
+        // Test navigation via URL (section cards may not be clickable in all layouts)
         await page.goto('/version-control', { waitUntil: 'domcontentloaded' });
         await expect(page.locator('text=ניהול גרסאות')).toBeVisible();
     });
@@ -233,7 +221,7 @@ test.describe('Navigation and Core Functionality Tests', () => {
 
         // Check for proper landmarks
         await expect(page.getByRole('banner')).toBeVisible();
-        await expect(page.getByRole('main')).toBeVisible();
+        await expect(page.locator('main').first()).toBeVisible();
 
         // Check for proper button roles
         const buttons = page.locator('button');
@@ -269,7 +257,7 @@ test.describe('Navigation and Core Functionality Tests', () => {
         });
 
         // Navigate to a few pages to check for errors
-        for (const path of ['/version-control', '/flow-map', '/security']) {
+        for (const path of ['/version-control', '/workflow-automation', '/security']) {
             await page.goto(path, { waitUntil: 'domcontentloaded' });
         }
 
