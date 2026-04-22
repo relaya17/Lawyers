@@ -10,12 +10,14 @@ import { Box, Card } from '@mui/material'
 export const MotionBox = motion(Box)
 export const MotionCard = motion(Card)
 
+const easeOut = [0.22, 1, 0.36, 1] as const
+
 export const fadeUp = {
   hidden: { opacity: 0, y: 32 },
   visible: (i: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] as number[] },
+    transition: { duration: 0.55, delay: i * 0.1, ease: easeOut },
   }),
 }
 

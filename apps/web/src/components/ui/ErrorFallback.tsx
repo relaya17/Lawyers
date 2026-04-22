@@ -46,7 +46,7 @@ export const ErrorFallbackComponent: React.FC<FallbackProps> = ({ error, resetEr
                 maxHeight: 200,
               }}
             >
-              {error.message}
+              {error instanceof Error ? error.message : String(error)}
             </Box>
           )}
           

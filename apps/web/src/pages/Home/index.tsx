@@ -40,12 +40,14 @@ import { useNavigate } from 'react-router-dom'
 const MotionBox = motion(Box)
 const MotionCard = motion(Card)
 
+const easeOut = [0.22, 1, 0.36, 1] as const
+
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   visible: (i: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] as number[] },
+    transition: { duration: 0.6, delay: i * 0.12, ease: easeOut },
   }),
 }
 
@@ -374,7 +376,7 @@ export const HomePage: React.FC = () => {
             {/* floating cards visual */}
             {!isMobile && (
               <Grid item md={5} sx={{ display: { xs: 'none', md: 'block' } }}>
-                <MotionBox initial={{ opacity: 0, x: 60, scale: 0.94 }} animate={{ opacity: 1, x: 0, scale: 1 }} transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] as number[] }} aria-hidden="true" sx={{ position: 'relative', height: 420 }}>
+                <MotionBox initial={{ opacity: 0, x: 60, scale: 0.94 }} animate={{ opacity: 1, x: 0, scale: 1 }} transition={{ duration: 0.9, delay: 0.3, ease: easeOut }} aria-hidden="true" sx={{ position: 'relative', height: 420 }}>
                   {/* exam result card */}
                   <Box sx={{ position: 'absolute', top: 0, right: 0, width: 280, p: 2.5, borderRadius: 3, background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.12)', boxShadow: '0 20px 60px rgba(0,0,0,0.4)' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>

@@ -26,12 +26,14 @@ import { Helmet } from 'react-helmet-async'
 
 const MotionBox = motion(Box)
 
+const easeOut = [0.22, 1, 0.36, 1] as const
+
 const fadeUp = {
   hidden: { opacity: 0, y: 36 },
   visible: (i: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] as number[] },
+    transition: { duration: 0.55, delay: i * 0.1, ease: easeOut },
   }),
 }
 
