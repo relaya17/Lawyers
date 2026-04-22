@@ -87,6 +87,8 @@ jobs:
         run: pnpm test:ci
 
       - name: Upload coverage
+        if: hashFiles('apps/web/coverage/lcov.info') != ''
+        continue-on-error: true
         uses: codecov/codecov-action@v4
         with:
           file: ./apps/web/coverage/lcov.info
