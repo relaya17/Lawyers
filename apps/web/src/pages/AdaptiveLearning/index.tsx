@@ -38,8 +38,6 @@ import {
   AdaptiveQuestion
 } from '@/services/adaptiveLearning';
 import { PageHero } from '@/design/PageHero';
-import { MotionCard, fadeUp, stagger } from '@/design';
-import { motion } from 'framer-motion';
 
 export const AdaptiveLearningPage: React.FC = () => {
   const { t: _t } = useTranslation();

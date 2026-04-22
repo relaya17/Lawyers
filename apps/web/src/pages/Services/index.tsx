@@ -14,13 +14,11 @@ import {
   Description,
   LibraryBooks,
   Handshake,
-  AccountTree,
   Timeline,
   ArrowForward,
   CheckCircleOutline,
   VerifiedUser,
   SupportAgent,
-  WorkOutline,
 } from '@mui/icons-material'
 import { motion, useInView } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
