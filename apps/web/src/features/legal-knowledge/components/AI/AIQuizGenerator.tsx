@@ -351,7 +351,7 @@ export const AIQuizGenerator: React.FC<AIQuizGeneratorProps> = ({
                     value={config.difficulty}
                     onChange={(e) => setConfig(prev => ({ 
                       ...prev, 
-                      difficulty: e.target.value as any 
+                      difficulty: e.target.value as 'easy' | 'medium' | 'hard' | 'very-hard' 
                     }))}
                   >
                     {Object.entries(difficultyLabels).map(([key, label]) => (

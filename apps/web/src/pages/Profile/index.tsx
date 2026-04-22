@@ -192,7 +192,7 @@ export const ProfilePage: React.FC = () => {
       preferences: {
         ...prev.preferences,
         [section]: {
-          ...(prev.preferences as any)[section],
+          ...((prev.preferences as unknown) as Record<string, Record<string, unknown>>)[section],
           [field]: event.target.checked
         }
       }

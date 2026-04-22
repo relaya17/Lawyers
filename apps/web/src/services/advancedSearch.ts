@@ -283,7 +283,7 @@ class AdvancedSearchService {
         // סינון לפי טקסט
         if (query.text) {
             return mockData.filter(item =>
-                (item as any).title?.toLowerCase().includes(query.text!.toLowerCase())
+                (item as { title?: string }).title?.toLowerCase().includes(query.text!.toLowerCase())
             )
         }
 

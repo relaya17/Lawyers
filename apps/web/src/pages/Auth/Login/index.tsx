@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '@shared/store/slices/authSlice'
-import { RootState } from '@shared/store'
+import { RootState, AppDispatch } from '@shared/store'
 import { BiometricButton } from '@/components/ui/BiometricButton'
 
 export const LoginPage: React.FC = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   
   const { isLoading: loading, error } = useSelector((state: RootState) => state.auth)
   
@@ -66,7 +66,7 @@ export const LoginPage: React.FC = () => {
     }
     
     try {
-      await dispatch(login(formData) as any)
+      await dispatch(login(formData))
       navigate('/dashboard')
     } catch (error) {
       console.error('Login failed:', error)

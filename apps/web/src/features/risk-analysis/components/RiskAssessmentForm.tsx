@@ -123,7 +123,7 @@ const RiskAssessmentForm: React.FC<RiskAssessmentFormProps> = ({
               <InputLabel>{t('riskAnalysis.analysisDepth')}</InputLabel>
               <Select
                 value={formData.analysisDepth}
-                onChange={(e) => setFormData(prev => ({ ...prev, analysisDepth: e.target.value as any }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, analysisDepth: e.target.value as 'basic' | 'standard' | 'comprehensive' }))}
                 label={t('riskAnalysis.analysisDepth')}
               >
                 <MenuItem value="basic">{t('riskAnalysis.depth.basic')}</MenuItem>

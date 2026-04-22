@@ -127,7 +127,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
       // Convert AIResponse to AIAnalysisResult
       const analysisResult: AIAnalysisResult = {
         id: result.id,
-        type: result.type as any,
+        type: result.type as AIAnalysisResult['type'],
         summary: result.content,
         details: {},
         risks: [],

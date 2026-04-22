@@ -42,7 +42,7 @@ global.IntersectionObserver = class IntersectionObserver {
     rootMargin = ''
     thresholds = []
     takeRecords = () => []
-} as any
+} as unknown as typeof IntersectionObserver
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {

@@ -61,7 +61,7 @@ interface AIInsight {
   id: string;
   category: 'performance' | 'pattern' | 'prediction' | 'opportunity';
   message: string;
-  data: any;
+  data: Record<string, unknown>;
   actionable: boolean;
   timestamp: Date;
 }
@@ -76,7 +76,7 @@ interface LearningPattern {
 
 interface AIPersonalAssistantProps {
   userProfile: UserProfile;
-  recentActivity: any[];
+  recentActivity: Array<Record<string, unknown>>;
   onRecommendationAccept: (recommendation: AIRecommendation) => void;
 }
 
@@ -236,7 +236,7 @@ export const AIPersonalAssistant: React.FC<AIPersonalAssistantProps> = ({
     }
   };
 
-  const TabPanel = ({ children, value, index }: any) => (
+  const TabPanel = ({ children, value, index }: { children: React.ReactNode; value: number; index: number }) => (
     <div hidden={value !== index}>
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>

@@ -111,7 +111,7 @@ const AdvancedContractManager: React.FC = () => {
 
   // Handlers
   const handleViewContract = (contract: Record<string, unknown>) => {
-    dispatch(setSelectedContract(contract as any));
+    dispatch(setSelectedContract(contract as unknown as Parameters<typeof setSelectedContract>[0]));
     dispatch(addNotification({
       type: 'info',
       title: 'חוזה נבחר',

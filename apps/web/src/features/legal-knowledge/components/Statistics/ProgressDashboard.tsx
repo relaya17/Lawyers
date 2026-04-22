@@ -71,7 +71,7 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({ userProgre
     color: COLORS[index % COLORS.length]
   }));
 
-  const getMasteryColor = (level: string) => {
+  const getMasteryColor = (level: string): 'success' | 'info' | 'warning' | 'default' => {
     switch (level) {
       case 'expert': return 'success';
       case 'advanced': return 'info';
@@ -226,7 +226,7 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({ userProgre
                     <Chip 
                       size="small" 
                       label={getMasteryLabel(userProgress.categoryProgress[area]?.masteryLevel || 'beginner')}
-                      color={getMasteryColor(userProgress.categoryProgress[area]?.masteryLevel || 'beginner') as any}
+                      color={getMasteryColor(userProgress.categoryProgress[area]?.masteryLevel || 'beginner')}
                     />
                   </ListItem>
                 ))}

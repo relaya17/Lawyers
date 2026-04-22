@@ -104,7 +104,7 @@ export class MarketplaceService {
     }
 
     // Apple Pay specific methods
-    static async validateApplePayMerchant(validationURL: string): Promise<any> {
+    static async validateApplePayMerchant(validationURL: string): Promise<unknown> {
         const response = await axiosClient.post('/marketplace/apple-pay/validate-merchant', { validationURL })
         return response.data
     }

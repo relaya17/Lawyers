@@ -244,7 +244,15 @@ export const ExamManager: React.FC<ExamManagerProps> = ({ onStartExam }) => {
   };
 
   // השלמת מבחן
-  const handleExamComplete = (results: any) => {
+  const handleExamComplete = (results: {
+    score: number;
+    percentage: number;
+    totalQuestions: number;
+    correctAnswers: number;
+    timeSpent: number;
+    categoryBreakdown: ExamHistory['categoryBreakdown'];
+    difficultyBreakdown: ExamHistory['difficultyBreakdown'];
+  }) => {
     const newExam: ExamHistory = {
       id: `exam_${Date.now()}`,
       date: new Date(),

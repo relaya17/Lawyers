@@ -144,7 +144,7 @@ const InsolvencyLawExam: React.FC = () => {
     setCurrentQuestionIndex(0); setSelectedAnswers({}); setExamCompleted(false); setScore(0);
   };
 
-  const getDC = (d: string) => { switch (d) { case 'קל': return 'success'; case 'בינוני': return 'warning'; default: return 'error'; } };
+  const getDC = (d: string): 'success' | 'warning' | 'error' => { switch (d) { case 'קל': return 'success'; case 'בינוני': return 'warning'; default: return 'error'; } };
 
   if (examCompleted) {
     const pct = Math.round((score / questions.length) * 100);
@@ -177,7 +177,7 @@ const InsolvencyLawExam: React.FC = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
             <Typography variant="h6">{currentQuestion.icon}</Typography>
             <Chip label={currentQuestion.category} color="primary" variant="outlined" />
-            <Chip label={currentQuestion.difficulty} color={getDC(currentQuestion.difficulty) as any} size="small" />
+            <Chip label={currentQuestion.difficulty} color={getDC(currentQuestion.difficulty)} size="small" />
             {currentQuestion.lawReference && (
               <Chip label={currentQuestion.lawReference} variant="outlined" size="small" sx={{ fontSize: '0.65rem' }} />
             )}

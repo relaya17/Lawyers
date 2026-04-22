@@ -234,7 +234,7 @@ export const VirtualCourtroomSimulator: React.FC<VirtualCourtroomSimulatorProps>
     }
   };
 
-  const getDifficultyColor = (difficulty: string) => {
+  const getDifficultyColor = (difficulty: string): 'success' | 'warning' | 'error' | 'default' => {
     switch (difficulty) {
       case 'easy': return 'success';
       case 'medium': return 'warning'; 
@@ -346,7 +346,7 @@ export const VirtualCourtroomSimulator: React.FC<VirtualCourtroomSimulatorProps>
                 label={currentCaseData.difficulty === 'very-hard' ? 'קשה מאוד' : 
                       currentCaseData.difficulty === 'hard' ? 'קשה' :
                       currentCaseData.difficulty === 'medium' ? 'בינוני' : 'קל'}
-                color={getDifficultyColor(currentCaseData.difficulty) as any}
+                color={getDifficultyColor(currentCaseData.difficulty)}
               />
             </Box>
           }

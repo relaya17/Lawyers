@@ -363,7 +363,7 @@ export const VersionControlPage: React.FC = () => {
                                   setTimeout(() => {
                                     if (detailsRef.current) {
                                       detailsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                                      try { (detailsRef.current as any).focus?.() } catch { /* ignore focus errors */ }
+                                      try { (detailsRef.current as HTMLElement).focus?.() } catch { /* ignore focus errors */ }
                                     }
                                   }, 50)
                                 }}

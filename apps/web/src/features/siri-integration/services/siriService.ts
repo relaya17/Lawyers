@@ -374,7 +374,10 @@ class SiriService {
             return
         }
 
-        const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition
+        type SpeechRecognitionCtor = new () => SpeechRecognitionInterface
+        const w = window as unknown as { webkitSpeechRecognition?: SpeechRecognitionCtor; SpeechRecognition?: SpeechRecognitionCtor }
+        const SpeechRecognition = w.webkitSpeechRecognition || w.SpeechRecognition
+        if (!SpeechRecognition) return
         const recognition = new SpeechRecognition()
 
         recognition.continuous = false

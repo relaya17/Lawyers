@@ -142,7 +142,7 @@ export const ProgressTracker: React.FC<ProgressTrackerProps> = ({
     return hours > 0 ? `${hours}ש ${mins}ד` : `${mins}ד`;
   };
 
-  const TabPanel = ({ children, value, index }: any) => (
+  const TabPanel = ({ children, value, index }: { children: React.ReactNode; value: number; index: number }) => (
     <div hidden={value !== index}>
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
@@ -248,7 +248,7 @@ export const ProgressTracker: React.FC<ProgressTrackerProps> = ({
               <XAxis dataKey="date" />
               <YAxis />
               <RechartsTooltip 
-                formatter={(value: any, name: string | number | undefined): [React.ReactNode, React.ReactNode] => [
+                formatter={(value: number | string | readonly (number | string)[] | undefined, name: string | number | undefined): [React.ReactNode, React.ReactNode] => [
                   name === 'points' ? `${value} נקודות` :
                   name === 'studyTime' ? `${value} דקות` :
                   name === 'accuracy' ? `${value}%` : value,

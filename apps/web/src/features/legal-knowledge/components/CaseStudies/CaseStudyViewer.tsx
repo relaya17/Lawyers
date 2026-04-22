@@ -44,7 +44,7 @@ const getLegalIcon = (type: LegalBasis['type']) => {
   }
 };
 
-const getDifficultyColor = (difficulty: string) => {
+const getDifficultyColor = (difficulty: string): 'success' | 'warning' | 'error' | 'default' => {
   switch (difficulty) {
     case 'easy': return 'success';
     case 'medium': return 'warning';
@@ -90,7 +90,7 @@ export const CaseStudyViewer: React.FC<CaseStudyViewerProps> = ({
             label={legalCase.difficulty === 'very-hard' ? 'קשה מאוד' : 
                   legalCase.difficulty === 'hard' ? 'קשה' :
                   legalCase.difficulty === 'medium' ? 'בינוני' : 'קל'}
-            color={getDifficultyColor(legalCase.difficulty) as any}
+            color={getDifficultyColor(legalCase.difficulty)}
             variant="outlined"
           />
         }

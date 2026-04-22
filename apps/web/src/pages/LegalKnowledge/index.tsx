@@ -107,6 +107,7 @@ interface LegalKnowledgeFeature {
   icon: React.ReactElement;
   color: string;
   category: 'exams' | 'learning' | 'games' | 'advanced' | 'simulation' | 'reference';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: React.ComponentType<any>;
   difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert' | 'all' | 'hard';
   estimatedTime: number;

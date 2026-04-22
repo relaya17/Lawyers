@@ -56,7 +56,7 @@ export const QuickActionsWidget: React.FC<QuickActionsWidgetProps> = ({
   const actions = data.data;
 
   const getIconComponent = (iconName: string) => {
-    const iconMap: Record<string, React.ComponentType<any>> = {
+    const iconMap: Record<string, React.ComponentType<{ sx?: Record<string, unknown> }>> = {
       Description,
       Assessment,
       Gavel,

@@ -411,7 +411,14 @@ class WatchService {
     }
 
     // Health & Fitness Integration
-    async getHealthData(): Promise<any> {
+    async getHealthData(): Promise<{
+        heartRate: number
+        steps: number
+        activeEnergy: number
+        workoutMinutes: number
+        standHours: number
+        timestamp: number
+    } | null> {
         if (!this.isConnected) return null
 
         // Simulate health data from HealthKit

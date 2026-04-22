@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { register } from '@shared/store/slices/authSlice'
-import { RootState } from '@shared/store'
+import { RootState, AppDispatch } from '@shared/store'
 
 export const RegisterPage: React.FC = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   
   const { isLoading: loading, error } = useSelector((state: RootState) => state.auth)
   
@@ -95,7 +95,7 @@ export const RegisterPage: React.FC = () => {
     }
     
     try {
-      await dispatch(register(formData) as any)
+      await dispatch(register(formData))
       navigate('/dashboard')
     } catch (error) {
       console.error('Registration failed:', error)

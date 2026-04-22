@@ -270,7 +270,7 @@ export const useWatchMetrics = () => {
 }
 
 export const useWatchHealth = () => {
-    const [healthData, setHealthData] = useState<any>(null)
+    const [healthData, setHealthData] = useState<Awaited<ReturnType<typeof watchService.getHealthData>>>(null)
     const [isLoading, setIsLoading] = useState(false)
 
     const fetchHealthData = useCallback(async () => {

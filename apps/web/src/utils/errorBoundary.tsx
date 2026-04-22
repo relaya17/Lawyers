@@ -205,7 +205,7 @@ export function useErrorHandler() {
 }
 
 // Async error boundary for async operations
-export function withAsyncErrorBoundary<T extends any[], R>(
+export function withAsyncErrorBoundary<T extends unknown[], R>(
   asyncFn: (...args: T) => Promise<R>
 ) {
   return async (...args: T): Promise<R> => {

@@ -556,7 +556,7 @@ export const AdvancedLegalConcepts: React.FC<AdvancedLegalConceptsProps> = ({
     }
   };
 
-  const TabPanel = ({ children, value, index }: any) => (
+  const TabPanel = ({ children, value, index }: { children: React.ReactNode; value: number; index: number }) => (
     <div hidden={value !== index}>
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
