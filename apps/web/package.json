@@ -65,7 +65,7 @@
     "@types/react-dom": "^18.2.15",
     "@types/stylis": "^4.2.7",
     "@vitejs/plugin-react": "^5.2.0",
-    "jsdom": "^23.0.1",
+    "jsdom": "^29.0.2",
     "lighthouse": "^13.1.0",
     "rollup-plugin-visualizer": "^6.0.3",
     "stylis": "^4.3.0",
