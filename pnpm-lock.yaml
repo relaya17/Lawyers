@@ -237,8 +237,8 @@ importers:
         specifier: ^13.5.0
         version: 13.5.0(i18next@26.0.6(typescript@5.9.3))(react-dom@18.3.1(react@18.2.0))(react-native@0.76.5(@babel/core@7.29.0)(@babel/preset-env@7.29.2(@babel/core@7.29.0))(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0)
       react-intersection-observer:
-        specifier: ^9.5.3
-        version: 9.16.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
+        specifier: ^10.0.3
+        version: 10.0.3(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
       react-markdown:
         specifier: ^9.0.1
         version: 9.1.0(@types/react@18.2.79)(react@18.2.0)
@@ -1505,7 +1505,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {'0': node >=0.10.0}
+    engines: {node: '>=0.10.0'}
 
   '@expo/cli@0.22.28':
     resolution: {integrity: sha512-lvt72KNitGuixYD2l3SZmRKVu2G4zJpmg5V7WfUBNpmUU5oODBw/6qmiJ6kSLAlfDozscUk+BBGknBBzxUrwrA==}
@@ -7474,8 +7474,8 @@ packages:
       react-native:
         optional: true
 
-  react-intersection-observer@9.16.0:
-    resolution: {integrity: sha512-w9nJSEp+DrW9KmQmeWHQyfaP6b03v+TdXynaoA964Wxt7mdR3An11z4NNCQgL4gKSK7y1ver2Fq+JKH6CWEzUA==}
+  react-intersection-observer@10.0.3:
+    resolution: {integrity: sha512-luICLMbs0zxTO/70Zy7K5jOXkABPEVSAF8T3FdZUlctsrIaPLmx8TZe2SSA+CY2HGWfz2INyNTnp82pxNNsShA==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -17605,7 +17605,7 @@ snapshots:
       react-dom: 18.3.1(react@18.2.0)
       react-native: 0.76.5(@babel/core@7.29.0)(@babel/preset-env@7.29.2(@babel/core@7.29.0))(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0)
 
-  react-intersection-observer@9.16.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0):
+  react-intersection-observer@10.0.3(react-dom@18.3.1(react@18.2.0))(react@18.2.0):
     dependencies:
       react: 18.2.0
     optionalDependencies:
