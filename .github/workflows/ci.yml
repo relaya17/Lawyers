@@ -93,7 +93,7 @@ jobs:
       - name: Upload coverage
         if: hashFiles('apps/web/coverage/lcov.info') != ''
         continue-on-error: true
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         with:
           file: ./apps/web/coverage/lcov.info
 
