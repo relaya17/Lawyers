@@ -684,6 +684,59 @@
 		}
 	}
 	,
+	"virtualCourtApp": {
+		"badge": "Learning game",
+		"headline": "Virtual Courtroom",
+		"strapline": "An in-app simulation: Magistrate, District, or Supreme — AI judge, precedents, fictional case. Not legal advice.",
+		"quote": "“Justice, justice shalt thou pursue.” — learning anchor.",
+		"intro": "Goal: teach procedure and argument. Participants are students; AI plays the bench. Later: invites and auto rooms.",
+		"diagramTitle": "Who participates (skeleton)",
+		"inviteHint": "Later: plaintiff counsel will invite other parties. Here: role flow only.",
+		"inviteCta": "Invite participant",
+		"inviteSoon": "Coming soon",
+		"levelsSectionTitle": "Which forum? (expand)",
+		"levelsSub": "Tap to read typical scope and study focus.",
+		"levels": {
+			"peace": {
+				"title": "Magistrate / local court (Of peace)",
+				"desc": "Common small/mid civil claims; pleadings, evidence, short submissions."
+			},
+			"district": {
+				"title": "District court",
+				"desc": "Deeper file; appeals from magistrate, or some first-instance work."
+			},
+			"supreme": {
+				"title": "Supreme court",
+				"desc": "Selected appeals, principles, key precedents — step-by-step."
+			}
+		},
+		"comingMultiplayer": "Next: auto rooms as more students join.",
+		"nav": { "clerk": "Clerk desk (outcomes, mail, appeals) — demo", "rankings": "Learner ranking — demo" },
+		"clerk": {
+			"title": "Clerk desk (demo)",
+			"intro": "Net-law–style list: result, delay, message — not sent to real email.",
+			"mockRow1": "Civ 12345/00 – rejected (filing gap)",
+			"mockRow2": "Crim 999/00 – appeal filed (demo)",
+			"mockRow3": "Email reminder (demo) – not real"
+		},
+		"rankings": {
+			"title": "Learner scoreboard (demo)",
+			"intro": "For motivation only, not a professional score.",
+			"colName": "Name / alias",
+			"colScore": "Points (demo)"
+		},
+		"diagram": {
+			"plaintiff": "Plaintiff / counsel",
+			"plaintiffSub": "Starts; future invites",
+			"defendant": "Defendant / counsel",
+			"defendantSub": "Responds; invited or join",
+			"judge": "Judge (AI)",
+			"judgeSub": "Runs procedure (learning law)",
+			"clerk": "Clerk (logistics)",
+			"clerkSub": "Outcomes, rejections, mail (demo)",
+			"chip": "Invites – later"
+		}
+	},
 	"aiAssistant": {
 		"cta": "AI Assistant"
 	}

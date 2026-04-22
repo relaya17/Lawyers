@@ -83,7 +83,7 @@ export const AppRouter: React.FC = () => {
                 <Route path="/legal-knowledge" element={<LegalKnowledgePage />} />
                 <Route path="/adaptive-learning" element={<AdaptiveLearningPage />} />
                 <Route path="/simulator" element={<SimulatorPage />} />
-                <Route path="/virtual-court" element={<VirtualCourtPage />} />
+                <Route path="/virtual-court/*" element={<VirtualCourtPage />} />
                 <Route path="/risk-analysis" element={<RiskAnalysisPage />} />
                 <Route path="/regulatory-compliance" element={<RegulatoryCompliancePage />} />
                 <Route path="/contract-templates" element={<ContractTemplatesPage />} />

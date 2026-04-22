@@ -195,7 +195,7 @@ class WidgetService {
                 description: 'תביעה אזרחית - מועד: 14:00',
                 timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
                 status: 'pending',
-                route: '/virtual-court/session/3'
+                route: '/virtual-court'
             },
             {
                 id: '4',

@@ -64,7 +64,6 @@ import { PracticeSession } from '../../features/legal-knowledge/components/Pract
 import { CaseStudyViewer } from '../../features/legal-knowledge/components/CaseStudies/CaseStudyViewer';
 import { LawVsCustomGame } from '../../features/legal-knowledge/components/GameModes/LawVsCustom/LawVsCustomGame';
 import { ProgressDashboard } from '../../features/legal-knowledge/components/Statistics/ProgressDashboard';
-import { VirtualCourtroomSimulator } from '../../features/legal-knowledge/components/CourtRoom1/VirtualCourtroomSimulator';
 import ComprehensiveLegalSourcesExam from '../../features/legal-knowledge/components/Testing/ComprehensiveLegalSourcesExam';
 import LawVsCustomQuiz from '../../features/legal-knowledge/components/Interactive/LawVsCustomQuiz';
 import ConstitutionalLawComparison from '../../features/legal-knowledge/components/Testing/ConstitutionalLawComparison';
@@ -774,18 +773,6 @@ const legalFeatures: LegalKnowledgeFeature[] = [
     difficulty: 'intermediate',
     estimatedTime: 25
   },
-  {
-    id: 'virtual-courtroom',
-    title: 'אולם בית משפט וירטואלי',
-    description: 'סימולציה של דיון משפטי עם קבלת החלטות בזמן אמת',
-    icon: <CourtIcon />,
-    color: '#8bc34a',
-    category: 'simulation',
-    component: VirtualCourtroomSimulator,
-    difficulty: 'expert',
-    estimatedTime: 60
-  },
-
   // מערכות מתקדמות
   {
     id: 'mastery-system',
