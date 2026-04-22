@@ -557,7 +557,7 @@ const LeadManager: React.FC<LeadManagerProps> = ({
                     <Box sx={{ display: 'flex', gap: 0.5 }}>
                       <Tooltip title={t('common.view')}>
                         <IconButton
-                          size="small"
+                          aria-label={t('common.view')} size="small"
                           onClick={() => onViewLead?.(lead)}
                         >
                           <Visibility />
@@ -566,7 +566,7 @@ const LeadManager: React.FC<LeadManagerProps> = ({
 
                       <Tooltip title={t('common.delete')}>
                         <IconButton
-                          size="small"
+                          aria-label={t('common.delete')} size="small"
                           color="error"
                           onClick={() => {
                             setSelectedLead(lead)

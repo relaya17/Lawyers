@@ -154,13 +154,13 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           }}
         >
           <Tooltip title="חזור">
-            <IconButton size="small" onClick={() => execCommand('undo')} disabled={readOnly}>
+            <IconButton aria-label="חזור" size="small" onClick={() => execCommand('undo')} disabled={readOnly}>
               <Undo />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="חזור על">
-            <IconButton size="small" onClick={() => execCommand('redo')} disabled={readOnly}>
+            <IconButton aria-label="חזור על" size="small" onClick={() => execCommand('redo')} disabled={readOnly}>
               <Redo />
             </IconButton>
           </Tooltip>
@@ -168,25 +168,25 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
           
           <Tooltip title="מודגש">
-            <IconButton size="small" onClick={() => execCommand('bold')} disabled={readOnly}>
+            <IconButton aria-label="מודגש" size="small" onClick={() => execCommand('bold')} disabled={readOnly}>
               <FormatBold />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="נטוי">
-            <IconButton size="small" onClick={() => execCommand('italic')} disabled={readOnly}>
+            <IconButton aria-label="נטוי" size="small" onClick={() => execCommand('italic')} disabled={readOnly}>
               <FormatItalic />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="קו תחתון">
-            <IconButton size="small" onClick={() => execCommand('underline')} disabled={readOnly}>
+            <IconButton aria-label="קו תחתון" size="small" onClick={() => execCommand('underline')} disabled={readOnly}>
                               <FormatUnderlined />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="קו חוצה">
-            <IconButton size="small" onClick={() => execCommand('strikeThrough')} disabled={readOnly}>
+            <IconButton aria-label="קו חוצה" size="small" onClick={() => execCommand('strikeThrough')} disabled={readOnly}>
               <FormatStrikethrough />
             </IconButton>
           </Tooltip>
@@ -194,19 +194,19 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
           
           <Tooltip title="רשימה עם נקודות">
-            <IconButton size="small" onClick={() => execCommand('insertUnorderedList')} disabled={readOnly}>
+            <IconButton aria-label="רשימה עם נקודות" size="small" onClick={() => execCommand('insertUnorderedList')} disabled={readOnly}>
               <FormatListBulleted />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="רשימה ממוספרת">
-            <IconButton size="small" onClick={() => execCommand('insertOrderedList')} disabled={readOnly}>
+            <IconButton aria-label="רשימה ממוספרת" size="small" onClick={() => execCommand('insertOrderedList')} disabled={readOnly}>
               <FormatListNumbered />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="ציטוט">
-            <IconButton size="small" onClick={() => execCommand('formatBlock', '<blockquote>')} disabled={readOnly}>
+            <IconButton aria-label="ציטוט" size="small" onClick={() => execCommand('formatBlock', '<blockquote>')} disabled={readOnly}>
               <FormatQuote />
             </IconButton>
           </Tooltip>
@@ -214,25 +214,25 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
           
           <Tooltip title="יישור לשמאל">
-            <IconButton size="small" onClick={() => execCommand('justifyLeft')} disabled={readOnly}>
+            <IconButton aria-label="יישור לשמאל" size="small" onClick={() => execCommand('justifyLeft')} disabled={readOnly}>
               <FormatAlignLeft />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="יישור למרכז">
-            <IconButton size="small" onClick={() => execCommand('justifyCenter')} disabled={readOnly}>
+            <IconButton aria-label="יישור למרכז" size="small" onClick={() => execCommand('justifyCenter')} disabled={readOnly}>
               <FormatAlignCenter />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="יישור לימין">
-            <IconButton size="small" onClick={() => execCommand('justifyRight')} disabled={readOnly}>
+            <IconButton aria-label="יישור לימין" size="small" onClick={() => execCommand('justifyRight')} disabled={readOnly}>
               <FormatAlignRight />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="יישור לשתי הצדדים">
-            <IconButton size="small" onClick={() => execCommand('justifyFull')} disabled={readOnly}>
+            <IconButton aria-label="יישור לשתי הצדדים" size="small" onClick={() => execCommand('justifyFull')} disabled={readOnly}>
               <FormatAlignJustify />
             </IconButton>
           </Tooltip>
@@ -240,25 +240,25 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
           
           <Tooltip title="קישור">
-            <IconButton size="small" onClick={insertLink} disabled={readOnly}>
+            <IconButton aria-label="קישור" size="small" onClick={insertLink} disabled={readOnly}>
               <Link />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="תמונה">
-            <IconButton size="small" onClick={insertImage} disabled={readOnly}>
+            <IconButton aria-label="תמונה" size="small" onClick={insertImage} disabled={readOnly}>
               <Image />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="טבלה">
-            <IconButton size="small" onClick={insertTable} disabled={readOnly}>
+            <IconButton aria-label="טבלה" size="small" onClick={insertTable} disabled={readOnly}>
               <TableChart />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="קוד">
-            <IconButton size="small" onClick={() => execCommand('formatBlock', '<pre>')} disabled={readOnly}>
+            <IconButton aria-label="קוד" size="small" onClick={() => execCommand('formatBlock', '<pre>')} disabled={readOnly}>
               <Code />
             </IconButton>
           </Tooltip>

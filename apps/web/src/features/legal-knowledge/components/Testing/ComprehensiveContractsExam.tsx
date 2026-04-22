@@ -570,7 +570,7 @@ export const ComprehensiveContractsExam: React.FC = () => {
               שאלות פתוחות
             </Button>
             <Tooltip title="הדפסת תוצאות">
-              <IconButton onClick={() => window.print()}>
+              <IconButton aria-label="הדפסת תוצאות" onClick={() => window.print()}>
                 <PrintIcon />
               </IconButton>
             </Tooltip>

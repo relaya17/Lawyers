@@ -453,7 +453,7 @@ const ClientList: React.FC<ClientListProps> = ({
                     <Box sx={{ display: 'flex', gap: 0.5 }}>
                       <Tooltip title={t('common.view')}>
                         <IconButton
-                          size="small"
+                          aria-label={t('common.view')} size="small"
                           onClick={() => onViewClient?.(client)}
                         >
                           <Visibility />
@@ -462,7 +462,7 @@ const ClientList: React.FC<ClientListProps> = ({
 
                       <Tooltip title={t('common.delete')}>
                         <IconButton
-                          size="small"
+                          aria-label={t('common.delete')} size="small"
                           color="error"
                           onClick={() => {
                             setSelectedClient(client)

@@ -354,12 +354,12 @@ export const NegotiationPage: React.FC = () => {
                     </Box>
                     <Box sx={{ display: 'flex', gap: 1 }}>
                       <Tooltip title="היסטוריית מו״מ">
-                        <IconButton size="small">
+                        <IconButton aria-label="היסטוריית מו״מ" size="small">
                           <History />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="ניתוח מו״מ">
-                        <IconButton size="small">
+                        <IconButton aria-label="ניתוח מו״מ" size="small">
                           <Assessment />
                         </IconButton>
                       </Tooltip>

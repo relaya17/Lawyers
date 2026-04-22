@@ -568,18 +568,18 @@ const RiskAssessmentView: React.FC<RiskAssessmentViewProps> = ({
                             </TableCell>
                             <TableCell>
                               <Tooltip title={t('common.view')}>
-                                <IconButton size="small">
+                                <IconButton aria-label={t('common.view')} size="small">
                                   <Visibility />
                                 </IconButton>
                               </Tooltip>
                               <Tooltip title={t('common.comment')}>
-                                <IconButton size="small">
+                                <IconButton aria-label={t('common.comment')} size="small">
                                   <Comment />
                                 </IconButton>
                               </Tooltip>
                               {risk.attachments && risk.attachments.length > 0 && (
                                 <Tooltip title={t('common.attachments')}>
-                                  <IconButton size="small">
+                                  <IconButton aria-label={t('common.attachments')} size="small">
                                     <AttachFile />
                                   </IconButton>
                                 </Tooltip>

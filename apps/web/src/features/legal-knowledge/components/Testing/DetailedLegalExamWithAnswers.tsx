@@ -777,7 +777,7 @@ export const DetailedLegalExamWithAnswers: React.FC = () => {
               />
               <Tooltip title={bookmarkedQuestions.has(currentQuestion.id) ? 'הסר מסימניות' : 'הוסף לסימניות'}>
                 <IconButton
-                  onClick={() => toggleBookmark(currentQuestion.id)}
+                  aria-label={bookmarkedQuestions.has(currentQuestion.id) ? 'הסר מסימניות' : 'הוסף לסימניות'} onClick={() => toggleBookmark(currentQuestion.id)}
                   color={bookmarkedQuestions.has(currentQuestion.id) ? 'primary' : 'default'}
                 >
                   {bookmarkedQuestions.has(currentQuestion.id) ? <Bookmark /> : <BookmarkBorder />}

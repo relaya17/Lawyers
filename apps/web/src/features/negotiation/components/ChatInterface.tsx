@@ -521,13 +521,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           />
           
           <Tooltip title="צרף קובץ">
-            <IconButton onClick={() => fileInputRef.current?.click()}>
+            <IconButton aria-label="צרף קובץ" onClick={() => fileInputRef.current?.click()}>
               <AttachFile />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="אימוג'י">
-            <IconButton onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+            <IconButton aria-label="אימוג'י" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
               <EmojiEmotions />
             </IconButton>
           </Tooltip>

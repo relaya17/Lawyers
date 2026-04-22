@@ -419,7 +419,7 @@ const ContractTemplatesPage: React.FC = () => {
         </Box>
         <Box>
           <Tooltip title="ערוך">
-            <IconButton size="small" onClick={() => handleEditTemplate(template)}>
+            <IconButton aria-label="ערוך" size="small" onClick={() => handleEditTemplate(template)}>
               <EditIcon />
             </IconButton>
           </Tooltip>
@@ -429,17 +429,17 @@ const ContractTemplatesPage: React.FC = () => {
             </IconButton>
           </Tooltip>
           <Tooltip title="העתק">
-            <IconButton size="small" onClick={() => handleCopyTemplate(template)}>
+            <IconButton aria-label="העתק" size="small" onClick={() => handleCopyTemplate(template)}>
               <ContentCopyIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="שתף">
-            <IconButton size="small" onClick={() => handleShareTemplate(template)}>
+            <IconButton aria-label="שתף" size="small" onClick={() => handleShareTemplate(template)}>
               <ShareIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="מחק">
-            <IconButton size="small" onClick={() => handleDeleteTemplate(template)} color="error">
+            <IconButton aria-label="מחק" size="small" onClick={() => handleDeleteTemplate(template)} color="error">
               <DeleteIcon />
             </IconButton>
           </Tooltip>

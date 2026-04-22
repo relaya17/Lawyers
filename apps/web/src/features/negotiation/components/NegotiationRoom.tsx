@@ -275,7 +275,7 @@ const NegotiationRoom: React.FC<NegotiationRoomProps> = ({ roomId: propRoomId })
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <Tooltip title="הקלטה">
                   <IconButton 
-                    color={isRecording ? 'error' : 'default'}
+                    aria-label="הקלטה" color={isRecording ? 'error' : 'default'}
                     onClick={() => setIsRecording(!isRecording)}
                   >
                     {isRecording ? <Stop /> : <RecordVoiceOver />}
@@ -284,7 +284,7 @@ const NegotiationRoom: React.FC<NegotiationRoomProps> = ({ roomId: propRoomId })
                 
                 <Tooltip title="שיתוף מסך">
                   <IconButton 
-                    color={isScreenSharing ? 'primary' : 'default'}
+                    aria-label="שיתוף מסך" color={isScreenSharing ? 'primary' : 'default'}
                     onClick={() => setIsScreenSharing(!isScreenSharing)}
                   >
                     {isScreenSharing ? <StopScreenShare /> : <ScreenShare />}
@@ -292,7 +292,7 @@ const NegotiationRoom: React.FC<NegotiationRoomProps> = ({ roomId: propRoomId })
                 </Tooltip>
                 
                 <Tooltip title="הגדרות">
-                  <IconButton onClick={() => setShowSettings(true)}>
+                  <IconButton aria-label="הגדרות" onClick={() => setShowSettings(true)}>
                     <Settings />
                   </IconButton>
                 </Tooltip>
@@ -423,7 +423,7 @@ const NegotiationRoom: React.FC<NegotiationRoomProps> = ({ roomId: propRoomId })
                       />
                       
                       <Tooltip title="צרף קובץ">
-                        <IconButton onClick={() => fileInputRef.current?.click()}>
+                        <IconButton aria-label="צרף קובץ" onClick={() => fileInputRef.current?.click()}>
                           <AttachFile />
                         </IconButton>
                       </Tooltip>

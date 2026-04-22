@@ -346,7 +346,7 @@ const ActivityTracker: React.FC<ActivityTrackerProps> = ({
               <Box sx={{ display: 'flex', gap: 0.5 }}>
                 <Tooltip title={t('common.view')}>
                   <IconButton
-                    size="small"
+                    aria-label={t('common.view')} size="small"
                     onClick={() => onViewActivity?.(activity)}
                   >
                     <Visibility />
@@ -354,7 +354,7 @@ const ActivityTracker: React.FC<ActivityTrackerProps> = ({
                 </Tooltip>
                 <Tooltip title={t('common.edit')}>
                   <IconButton
-                    size="small"
+                    aria-label={t('common.edit')} size="small"
                     onClick={() => {
                       setSelectedActivity(activity)
                       setShowEditDialog(true)
@@ -365,7 +365,7 @@ const ActivityTracker: React.FC<ActivityTrackerProps> = ({
                 </Tooltip>
                 <Tooltip title={t('common.delete')}>
                   <IconButton
-                    size="small"
+                    aria-label={t('common.delete')} size="small"
                     color="error"
                     onClick={() => {
                       setSelectedActivity(activity)

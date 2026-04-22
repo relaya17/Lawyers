@@ -249,7 +249,7 @@ export const LegalFlashcards: React.FC = () => {
         </Box>
         <Box sx={{ ml: 'auto', display: 'flex', gap: 1 }}>
           <Tooltip title="ערבב מחדש">
-            <IconButton onClick={handleReshuffle}><ShuffleIcon /></IconButton>
+            <IconButton aria-label="ערבב מחדש" onClick={handleReshuffle}><ShuffleIcon /></IconButton>
           </Tooltip>
         </Box>
       </Box>

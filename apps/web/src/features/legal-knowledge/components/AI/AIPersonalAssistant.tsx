@@ -271,7 +271,7 @@ export const AIPersonalAssistant: React.FC<AIPersonalAssistantProps> = ({
                 עודכן לאחרונה: {lastUpdate.toLocaleTimeString('he-IL')}
               </Typography>
               <Tooltip title="רענן ניתוח">
-                <IconButton onClick={refreshAnalysis} sx={{ color: 'white' }}>
+                <IconButton aria-label="רענן ניתוח" onClick={refreshAnalysis} sx={{ color: 'white' }}>
                   <RefreshIcon />
                 </IconButton>
               </Tooltip>

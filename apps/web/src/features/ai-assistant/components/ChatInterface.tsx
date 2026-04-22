@@ -349,7 +349,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 <Box sx={{ display: 'flex', gap: 0.5, mt: 1 }}>
                   <Tooltip title={t('ai.thumbsUp')}>
                     <IconButton
-                      size="small"
+                      aria-label={t('ai.thumbsUp')} size="small"
                       onClick={() => onReact(message.id, 'thumbsUp')}
                       sx={{ color: isUser ? 'primary.contrastText' : 'text.secondary' }}
                     >
@@ -358,7 +358,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   </Tooltip>
                   <Tooltip title={t('ai.thumbsDown')}>
                     <IconButton
-                      size="small"
+                      aria-label={t('ai.thumbsDown')} size="small"
                       onClick={() => onReact(message.id, 'thumbsDown')}
                       sx={{ color: isUser ? 'primary.contrastText' : 'text.secondary' }}
                     >
@@ -367,7 +367,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   </Tooltip>
                   <Tooltip title={t('common.copy')}>
                     <IconButton
-                      size="small"
+                      aria-label={t('common.copy')} size="small"
                       onClick={() => onCopy(message.id)}
                       sx={{ color: isUser ? 'primary.contrastText' : 'text.secondary' }}
                     >
@@ -434,14 +434,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 <Box sx={{ display: 'flex', gap: 0.5 }}>
                   <Tooltip title={t('ai.attachFile')}>
                     <IconButton
-                      size="small"
+                      aria-label={t('ai.attachFile')} size="small"
                       onClick={() => fileInputRef.current?.click()}
                     >
                       <AttachFile />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title={t('ai.emoji')}>
-                    <IconButton size="small">
+                    <IconButton aria-label={t('ai.emoji')} size="small">
                       <EmojiEmotions />
                     </IconButton>
                   </Tooltip>

@@ -589,25 +589,25 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
           <Box sx={{ flexGrow: 1 }} />
           
           <Tooltip title="פעולות מהירות">
-            <IconButton onClick={() => setShowQuickActions(!showQuickActions)}>
+            <IconButton aria-label="פעולות מהירות" onClick={() => setShowQuickActions(!showQuickActions)}>
               <AutoAwesome />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="הגדרות">
-            <IconButton onClick={() => setShowSettings(!showSettings)}>
+            <IconButton aria-label="הגדרות" onClick={() => setShowSettings(!showSettings)}>
               <Settings />
             </IconButton>
           </Tooltip>
           
           <Tooltip title="מזער">
-            <IconButton onClick={() => setIsMinimized(!isMinimized)}>
+            <IconButton aria-label="מזער" onClick={() => setIsMinimized(!isMinimized)}>
               {isMinimized ? <Maximize /> : <Minimize />}
             </IconButton>
           </Tooltip>
           
           <Tooltip title="סגור">
-            <IconButton onClick={() => onToggle?.(false)}>
+            <IconButton aria-label="סגור" onClick={() => onToggle?.(false)}>
               <Close />
             </IconButton>
           </Tooltip>
@@ -703,7 +703,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
               <Tooltip title="העלה קובץ">
                 <IconButton 
-                  size="small"
+                  aria-label="העלה קובץ" size="small"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <FileUpload />
@@ -713,7 +713,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
               {voiceEnabled && (
                 <Tooltip title={isRecording ? "עצור הקלטה" : "הקלטה קולית"}>
                   <IconButton 
-                    size="small"
+                    aria-label={isRecording ? "עצור הקלטה" : "הקלטה קולית"} size="small"
                     onClick={handleVoiceToggle}
                     color={isRecording ? 'error' : 'default'}
                   >
@@ -724,7 +724,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
               
               <Tooltip title="שלח">
                 <IconButton 
-                  size="small"
+                  aria-label="שלח" size="small"
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || isLoading}
                   color="primary"

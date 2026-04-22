@@ -295,27 +295,27 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
 
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Tooltip title={t('documentViewer.search')}>
-            <IconButton onClick={() => setShowSearchDialog(true)}>
+            <IconButton aria-label={t('documentViewer.search')} onClick={() => setShowSearchDialog(true)}>
               <Search />
             </IconButton>
           </Tooltip>
 
           {!readOnly && (
             <Tooltip title={t('documentViewer.edit')}>
-              <IconButton onClick={() => onEdit?.(document.id)}>
+              <IconButton aria-label={t('documentViewer.edit')} onClick={() => onEdit?.(document.id)}>
                 <Edit />
               </IconButton>
             </Tooltip>
           )}
 
           <Tooltip title={t('documentViewer.comment')}>
-            <IconButton onClick={() => onComment?.(document.id, '')}>
+            <IconButton aria-label={t('documentViewer.comment')} onClick={() => onComment?.(document.id, '')}>
               <Comment />
             </IconButton>
           </Tooltip>
 
           <Tooltip title={t('documentViewer.share')}>
-            <IconButton onClick={() => onShare?.(document.id)}>
+            <IconButton aria-label={t('documentViewer.share')} onClick={() => onShare?.(document.id)}>
               <Share />
             </IconButton>
           </Tooltip>
@@ -333,7 +333,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
           </Tooltip>
 
           <Tooltip title={isFullscreen ? t('documentViewer.exitFullscreen') : t('documentViewer.fullscreen')}>
-            <IconButton onClick={handleFullscreen}>
+            <IconButton aria-label={isFullscreen ? t('documentViewer.exitFullscreen') : t('documentViewer.fullscreen')} onClick={handleFullscreen}>
               {isFullscreen ? <FullscreenExit /> : <Fullscreen />}
             </IconButton>
           </Tooltip>
@@ -344,13 +344,13 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
       <Toolbar variant="dense" sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1 }}>
           <Tooltip title={t('documentViewer.firstPage')}>
-            <IconButton onClick={handleFirstPage} disabled={currentPage === 1}>
+            <IconButton aria-label={t('documentViewer.firstPage')} onClick={handleFirstPage} disabled={currentPage === 1}>
               <FirstPage />
             </IconButton>
           </Tooltip>
 
           <Tooltip title={t('documentViewer.previousPage')}>
-            <IconButton onClick={handlePrevPage} disabled={currentPage === 1}>
+            <IconButton aria-label={t('documentViewer.previousPage')} onClick={handlePrevPage} disabled={currentPage === 1}>
               <ChevronLeft />
             </IconButton>
           </Tooltip>
@@ -360,13 +360,13 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
           </Typography>
 
           <Tooltip title={t('documentViewer.nextPage')}>
-            <IconButton onClick={handleNextPage} disabled={currentPage === totalPages}>
+            <IconButton aria-label={t('documentViewer.nextPage')} onClick={handleNextPage} disabled={currentPage === totalPages}>
               <ChevronRight />
             </IconButton>
           </Tooltip>
 
           <Tooltip title={t('documentViewer.lastPage')}>
-            <IconButton onClick={handleLastPage} disabled={currentPage === totalPages}>
+            <IconButton aria-label={t('documentViewer.lastPage')} onClick={handleLastPage} disabled={currentPage === totalPages}>
               <LastPage />
             </IconButton>
           </Tooltip>
@@ -374,7 +374,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Tooltip title={t('documentViewer.zoomOut')}>
-            <IconButton onClick={handleZoomOut}>
+            <IconButton aria-label={t('documentViewer.zoomOut')} onClick={handleZoomOut}>
               <ZoomOut />
             </IconButton>
           </Tooltip>
@@ -384,19 +384,19 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
           </Typography>
 
           <Tooltip title={t('documentViewer.zoomIn')}>
-            <IconButton onClick={handleZoomIn}>
+            <IconButton aria-label={t('documentViewer.zoomIn')} onClick={handleZoomIn}>
               <ZoomIn />
             </IconButton>
           </Tooltip>
 
           <Tooltip title={t('documentViewer.rotateLeft')}>
-            <IconButton onClick={handleRotateLeft}>
+            <IconButton aria-label={t('documentViewer.rotateLeft')} onClick={handleRotateLeft}>
               <RotateLeft />
             </IconButton>
           </Tooltip>
 
           <Tooltip title={t('documentViewer.rotateRight')}>
-            <IconButton onClick={handleRotateRight}>
+            <IconButton aria-label={t('documentViewer.rotateRight')} onClick={handleRotateRight}>
               <RotateRight />
             </IconButton>
           </Tooltip>

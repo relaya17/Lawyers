@@ -753,7 +753,7 @@ export const LegalConceptsSummary: React.FC = () => {
         
         {/* כפתור הדפסה */}
         <Tooltip title="הדפסת המדריך">
-          <IconButton onClick={handlePrint} color="primary" size="large">
+          <IconButton aria-label="הדפסת המדריך" onClick={handlePrint} color="primary" size="large">
             <PrintIcon />
           </IconButton>
         </Tooltip>

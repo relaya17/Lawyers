@@ -307,31 +307,31 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
       {!readOnly && (
         <Box sx={{ mt: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
           <Tooltip title={t('signature.clear')}>
-            <IconButton onClick={clearCanvas} color="error">
+            <IconButton aria-label={t('signature.clear')} onClick={clearCanvas} color="error">
               <Clear />
             </IconButton>
           </Tooltip>
           
           <Tooltip title={t('signature.undo')}>
-            <IconButton onClick={undo} disabled={undoStack.length === 0}>
+            <IconButton aria-label={t('signature.undo')} onClick={undo} disabled={undoStack.length === 0}>
               <Undo />
             </IconButton>
           </Tooltip>
           
           <Tooltip title={t('signature.redo')}>
-            <IconButton onClick={redo} disabled={redoStack.length === 0}>
+            <IconButton aria-label={t('signature.redo')} onClick={redo} disabled={redoStack.length === 0}>
               <Redo />
             </IconButton>
           </Tooltip>
           
           <Tooltip title={t('signature.download')}>
-            <IconButton onClick={downloadSignature} disabled={!hasSignature}>
+            <IconButton aria-label={t('signature.download')} onClick={downloadSignature} disabled={!hasSignature}>
               <Download />
             </IconButton>
           </Tooltip>
           
           <Tooltip title={t('signature.upload')}>
-            <IconButton component="label" disabled={readOnly}>
+            <IconButton aria-label={t('signature.upload')} component="label" disabled={readOnly}>
               <Upload />
               <input
                 type="file"

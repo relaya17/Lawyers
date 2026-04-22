@@ -162,7 +162,7 @@ const SuggestionPanel: React.FC<SuggestionPanelProps> = ({
           </Box>
           <Box sx={{ display: 'flex', gap: 1 }}>
             <Tooltip title={t('ai.refreshSuggestions')}>
-              <IconButton size="small" onClick={onRefresh}>
+              <IconButton aria-label={t('ai.refreshSuggestions')} size="small" onClick={onRefresh}>
                 <Refresh />
               </IconButton>
             </Tooltip>
@@ -308,7 +308,7 @@ const SuggestionPanel: React.FC<SuggestionPanelProps> = ({
                   <Box sx={{ display: 'flex', gap: 0.5 }}>
                     <Tooltip title={suggestion.isFavorite ? t('ai.removeFromFavorites') : t('ai.addToFavorites')}>
                       <IconButton
-                        size="small"
+                        aria-label={suggestion.isFavorite ? t('ai.removeFromFavorites') : t('ai.addToFavorites')} size="small"
                         onClick={(e) => {
                           e.stopPropagation()
                           onFavorite(suggestion.id)
@@ -320,7 +320,7 @@ const SuggestionPanel: React.FC<SuggestionPanelProps> = ({
                     </Tooltip>
                     <Tooltip title={t('common.copy')}>
                       <IconButton
-                        size="small"
+                        aria-label={t('common.copy')} size="small"
                         onClick={(e) => {
                           e.stopPropagation()
                           onCopy(suggestion.id)
@@ -331,7 +331,7 @@ const SuggestionPanel: React.FC<SuggestionPanelProps> = ({
                     </Tooltip>
                     <Tooltip title={t('common.share')}>
                       <IconButton
-                        size="small"
+                        aria-label={t('common.share')} size="small"
                         onClick={(e) => {
                           e.stopPropagation()
                           onShare(suggestion.id)

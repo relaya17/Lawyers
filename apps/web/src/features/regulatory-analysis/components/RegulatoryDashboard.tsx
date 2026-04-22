@@ -141,7 +141,7 @@ export const RegulatoryDashboard: React.FC = () => {
         </Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Tooltip title="רענן נתונים">
-            <IconButton onClick={loadDashboardData}>
+            <IconButton aria-label="רענן נתונים" onClick={loadDashboardData}>
               <Refresh />
             </IconButton>
           </Tooltip>

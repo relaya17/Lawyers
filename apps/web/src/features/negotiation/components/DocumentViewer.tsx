@@ -522,32 +522,32 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
                   </Box>
                   <Box sx={{ display: 'flex', gap: 1 }}>
                     <Tooltip title="הגדל">
-                      <IconButton onClick={handleZoomIn}>
+                      <IconButton aria-label="הגדל" onClick={handleZoomIn}>
                         <ZoomIn />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="הקטן">
-                      <IconButton onClick={handleZoomOut}>
+                      <IconButton aria-label="הקטן" onClick={handleZoomOut}>
                         <ZoomOut />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="סובב שמאלה">
-                      <IconButton onClick={() => handleRotate('left')}>
+                      <IconButton aria-label="סובב שמאלה" onClick={() => handleRotate('left')}>
                         <RotateLeft />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="סובב ימינה">
-                      <IconButton onClick={() => handleRotate('right')}>
+                      <IconButton aria-label="סובב ימינה" onClick={() => handleRotate('right')}>
                         <RotateRight />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="מסך מלא">
-                      <IconButton onClick={toggleFullscreen}>
+                      <IconButton aria-label="מסך מלא" onClick={toggleFullscreen}>
                         {isFullscreen ? <FullscreenExit /> : <Fullscreen />}
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="הוסף הערה">
-                      <IconButton onClick={() => setShowCommentDialog(true)}>
+                      <IconButton aria-label="הוסף הערה" onClick={() => setShowCommentDialog(true)}>
                         <Comment />
                       </IconButton>
                     </Tooltip>
