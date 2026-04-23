@@ -4,9 +4,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { I18nextProvider } from 'react-i18next'
-import { QueryClient } from '@tanstack/react-query'
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 
 import AppRouter from './routes'
@@ -24,35 +22,14 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
-      // Keep the cached data alive for 24 hours so offline navigation works
-      // even after a long gap. gcTime must be >= the persister maxAge.
       staleTime: 5 * 60 * 1000,
-      gcTime: 24 * 60 * 60 * 1000,
-      // Avoid refetch-on-reconnect storms that could overwrite offline edits
       refetchOnReconnect: 'always',
-      networkMode: 'offlineFirst',
     },
     mutations: {
       retry: false,
-      // Offline mutations are paused by React Query and auto-resume on reconnect.
-      networkMode: 'offlineFirst',
     },
   },
 })
-
-const persister = createSyncStoragePersister({
-  storage: typeof window === 'undefined' ? undefined : window.localStorage,
-  key: 'lexstudy-query-cache-v1',
-  throttleTime: 1000,
-})
-
-/**
- * Query keys that must NEVER be read from disk (security-sensitive or time-sensitive):
- *  - 'auth'     — session / user state
- *  - 'billing'  — entitlement flags (could grant stale premium access if persisted)
- *  - 'csrf'     — tokens
- */
-const SENSITIVE_KEY_PREFIXES = ['auth', 'billing', 'csrf', 'stripe']
 
 // Ensure initial document lang/dir match saved language (prevents "LTR flash" and mixed RTL/LTR layout on first paint)
 const initialLng = localStorage.getItem('i18nextLng') || 'he'
@@ -76,24 +53,45 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
 // הפעלת אנליטיקה
 analyticsService.trackEvent('app', 'start', 'Application Started')
 
+class RootErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { error: Error | null }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props)
+    this.state = { error: null }
+  }
+  static getDerivedStateFromError(error: Error) {
+    return { error }
+  }
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error('[RootErrorBoundary] Caught error:', error, info.componentStack)
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div style={{ padding: 32, fontFamily: 'monospace', direction: 'ltr' }}>
+          <h2 style={{ color: 'red' }}>Application Error</h2>
+          <pre style={{ background: '#fee', padding: 16, borderRadius: 8, overflow: 'auto' }}>
+            {this.state.error.message}
+            {'\n\n'}
+            {this.state.error.stack}
+          </pre>
+          <button onClick={() => window.location.reload()} style={{ marginTop: 16, padding: '8px 16px' }}>
+            Reload
+          </button>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <RootErrorBoundary>
     <Provider store={store}>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{
-          persister,
-          maxAge: 24 * 60 * 60 * 1000,
-          buster: import.meta.env.VITE_APP_VERSION ?? '1.0.0',
-          dehydrateOptions: {
-            shouldDehydrateQuery: (query) => {
-              if (query.state.status !== 'success') return false
-              const firstKey = String(query.queryKey[0] ?? '')
-              return !SENSITIVE_KEY_PREFIXES.includes(firstKey)
-            },
-          },
-        }}
-      >
+      <QueryClientProvider client={queryClient}>
         <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ''}>
             <SessionAuthProvider>
@@ -113,7 +111,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             </SessionAuthProvider>
           </GoogleOAuthProvider>
         </BrowserRouter>
-      </PersistQueryClientProvider>
+      </QueryClientProvider>
     </Provider>
+    </RootErrorBoundary>
   </React.StrictMode>
 )
