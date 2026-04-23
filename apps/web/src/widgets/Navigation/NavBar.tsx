@@ -42,10 +42,11 @@ const navigationItems = [
   { path: '/', label: 'navigation.home' },
   { path: '/legal-knowledge', label: 'navigation.legalKnowledge' },
   { path: '/adaptive-learning', label: 'navigation.adaptiveLearning' },
-  { path: '/virtual-court', label: 'navigation.virtualCourt' },
   { path: '/virtual-court-2', label: 'navigation.virtualCourt2' },
   { path: '/courtroom', label: 'navigation.courtroom' },
+  { path: '/pleadings-game', label: 'navigation.pleadingsGame' },
   { path: '/contracts', label: 'navigation.contractManagement' },
+  { path: '/virtual-court', label: 'navigation.virtualCourt' },
   { path: '/services', label: 'navigation.services' },
   { path: '/pricing', label: 'navigation.pricing' },
 ]
@@ -139,8 +140,14 @@ export const NavBar: React.FC<NavBarProps> = () => {
 
   // const currentLanguage = languages.find(lang => lang.code === language)
 
-  // Keep the top bar clean: show a small "primary" set and move the rest into a "More" menu.
-  const primaryNavPaths = new Set(['/legal-knowledge', '/adaptive-learning', '/contracts', '/services'])
+  // Primary items shown directly in the nav bar; secondary go into "More ⋮"
+  const primaryNavPaths = new Set([
+    '/legal-knowledge',
+    '/adaptive-learning',
+    '/virtual-court-2',
+    '/courtroom',
+    '/pleadings-game',
+  ])
   const primaryNavItems = navigationItems.filter((i) => primaryNavPaths.has(i.path))
   const moreNavItems = navigationItems.filter((i) => i.path !== '/' && !primaryNavPaths.has(i.path))
 
