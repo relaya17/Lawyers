@@ -2,16 +2,35 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSessionAuth } from '@/features/auth/providers/SessionAuthProvider'
 import { getSocket, type AppSocket } from '@/features/realtime/socketClient'
 import type { CourtroomSession, ProtocolLine } from '../types'
-import { getSession } from '../api/courtroomApi'
+import { getSession, getCapabilities, type CourtroomCapabilities } from '../api/courtroomApi'
 
 export interface UseLiveCourtroomResult {
   connected: boolean
   session: CourtroomSession | null
+  capabilities: CourtroomCapabilities | null
   loading: boolean
   error: string | null
   currentSpeakerUserId: string | null
   refresh: () => Promise<void>
   emitSpeaking: (isSpeaking: boolean) => void
+}
+
+const DEFAULT_CAPABILITIES: CourtroomCapabilities = {
+  role: null,
+  isJudicial: false,
+  isProsecution: false,
+  isDefense: false,
+  isTestimony: false,
+  canStart: false,
+  canEnd: false,
+  canChangeMode: false,
+  canAddProtocol: false,
+  canEditAnyProtocol: false,
+  canDeleteProtocol: false,
+  canAddEvidence: false,
+  canPresentAny: false,
+  canSuggestAiLine: false,
+  canTranscribe: false,
 }
 
 /**
@@ -24,6 +43,7 @@ export function useLiveCourtroom(sessionId: string | null | undefined): UseLiveC
 
   const [connected, setConnected] = useState(false)
   const [session, setSession] = useState<CourtroomSession | null>(null)
+  const [capabilities, setCapabilities] = useState<CourtroomCapabilities | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [currentSpeakerUserId, setCurrentSpeakerUserId] = useState<string | null>(null)
@@ -35,8 +55,12 @@ export function useLiveCourtroom(sessionId: string | null | undefined): UseLiveC
     setLoading(true)
     setError(null)
     try {
-      const s = await getSession(sessionId)
+      const [s, caps] = await Promise.all([
+        getSession(sessionId),
+        getCapabilities(sessionId).catch(() => DEFAULT_CAPABILITIES),
+      ])
       setSession(s)
+      setCapabilities(caps)
       setCurrentSpeakerUserId(s.currentSpeakerUserId ?? null)
     } catch (e) {
       const err = e as { message?: string }
@@ -169,6 +193,7 @@ export function useLiveCourtroom(sessionId: string | null | undefined): UseLiveC
   return {
     connected,
     session,
+    capabilities,
     loading,
     error,
     currentSpeakerUserId,

@@ -1,7 +1,6 @@
 // שירות אנליטיקה מתקדם - ContractLab Pro
 // מעקב ביצועים, נגישות ומדדי משתמש
 
-import { logger } from '@shared/utils/logger'
 
 export interface AnalyticsEvent {
     event: string

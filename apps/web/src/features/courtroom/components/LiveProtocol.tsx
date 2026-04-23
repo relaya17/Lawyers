@@ -37,6 +37,10 @@ interface Props {
   participants: SessionParticipant[]
   myUserId?: string
   canEdit: boolean
+  /** כפתור הצעת AI זמין רק לשופט/מזכיר */
+  canSuggestAi?: boolean
+  /** כפתור הקלטת מיקרופון */
+  canTranscribe?: boolean
   onChange?: () => void
 }
 
@@ -56,6 +60,8 @@ export const LiveProtocol: React.FC<Props> = ({
   participants,
   myUserId,
   canEdit,
+  canSuggestAi = false,
+  canTranscribe = true,
   onChange,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -154,8 +160,8 @@ export const LiveProtocol: React.FC<Props> = ({
         <Typography variant="h6" sx={{ flex: 1 }}>
           פרוטוקול חי
         </Typography>
-        {canEdit && (
-          <Tooltip title="הצעת AI לשורה הבאה">
+        {canSuggestAi && (
+          <Tooltip title="הצעת AI לשורה הבאה (זמין לשופט/מזכיר)">
             <span>
               <IconButton color="secondary" disabled={aiLoading} onClick={handleAiSuggest}>
                 <AutoAwesomeIcon />
@@ -314,26 +320,28 @@ export const LiveProtocol: React.FC<Props> = ({
                 }
               }}
             />
-            <Tooltip
-              title={
-                recorder.status === 'recording'
-                  ? `עצור הקלטה (${Math.floor(recorder.durationMs / 1000)} שנ׳)`
-                  : 'הקלט ותמלל ל-Whisper'
-              }
-            >
-              <span>
-                <IconButton
-                  color={recorder.status === 'recording' ? 'error' : 'primary'}
-                  disabled={transcribing || recorder.status === 'stopping'}
-                  onClick={handleRecordToggle}
-                  sx={{
-                    bgcolor: recorder.status === 'recording' ? 'error.light' : 'action.hover',
-                  }}
-                >
-                  {recorder.status === 'recording' ? <StopIcon /> : <MicIcon />}
-                </IconButton>
-              </span>
-            </Tooltip>
+            {canTranscribe && (
+              <Tooltip
+                title={
+                  recorder.status === 'recording'
+                    ? `עצור הקלטה (${Math.floor(recorder.durationMs / 1000)} שנ׳)`
+                    : 'הקלט ותמלל ל-Whisper'
+                }
+              >
+                <span>
+                  <IconButton
+                    color={recorder.status === 'recording' ? 'error' : 'primary'}
+                    disabled={transcribing || recorder.status === 'stopping'}
+                    onClick={handleRecordToggle}
+                    sx={{
+                      bgcolor: recorder.status === 'recording' ? 'error.light' : 'action.hover',
+                    }}
+                  >
+                    {recorder.status === 'recording' ? <StopIcon /> : <MicIcon />}
+                  </IconButton>
+                </span>
+              </Tooltip>
+            )}
             <Button
               variant="contained"
               startIcon={<SendIcon />}

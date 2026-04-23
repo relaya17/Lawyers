@@ -27,6 +27,14 @@ import {
   transcribeAudio,
 } from '../courtroom/courtroomAIService.js';
 import {
+  assertPermission,
+  computeCapabilities,
+  CourtroomForbiddenError,
+  type CourtroomRole,
+  type SessionLike,
+  type SessionMode,
+} from '../courtroom/rbac.js';
+import {
   broadcastProtocolLine,
   broadcastProtocolEdit,
   broadcastEvidencePresent,
@@ -76,12 +84,13 @@ interface RawSession {
  * מחיל בקרת גישה על סשן לפי המשתמש המחובר:
  *  - closed_doors: רק סגל משפטי רואה את הפרוטוקול/ראיות; אחרים מקבלים רשימות ריקות.
  *  - ראיות מוגבלות (judges_only / prosecution_only / defense_only) — מסונן לפי תפקיד המשתמש.
+ * מחזיר גם `capabilities` — פירוט מה המשתמש רשאי לעשות (לעיגון UI).
  * לא מבצעים blocking: תמיד מחזירים את המטא-דאטה של הסשן, רק מסתירים תוכן.
  */
 async function filterSessionForViewer(
   rawDoc: unknown,
   authHeader?: string,
-): Promise<RawSession> {
+): Promise<RawSession & { capabilities: ReturnType<typeof computeCapabilities> }> {
   const session = rawDoc as RawSession;
   let userId: string | undefined;
   try {
@@ -99,11 +108,15 @@ async function filterSessionForViewer(
   const prosec = isProsecution(viewerRole);
   const defense = isDefense(viewerRole);
 
+  const sessionLike = session as unknown as SessionLike;
+  const capabilities = computeCapabilities(sessionLike, userId);
+
   if (mode === 'closed_doors' && !judicial && !prosec && !defense) {
     return {
       ...session,
       protocol: [],
       evidence: [],
+      capabilities,
     };
   }
 
@@ -116,7 +129,16 @@ async function filterSessionForViewer(
     return true;
   });
 
-  return { ...session, evidence: filteredEvidence };
+  return { ...session, evidence: filteredEvidence, capabilities };
+}
+
+/**
+ * ממיר מסמך Mongoose (Document או lean) ל-SessionLike עבור בדיקת הרשאות.
+ */
+function toSessionLike(doc: unknown): SessionLike {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const raw = (doc as any)?.toObject?.() ?? doc;
+  return raw as SessionLike;
 }
 
 const ParticipantRoleEnum = z.enum([
@@ -248,7 +270,6 @@ courtroomRouter.post(
       }
       const body = JoinSchema.parse(req.body);
       const user = req.authUser!;
-      const color = getColorForRole(body.role);
 
       const session = await CourtroomSession.findById(req.params.id);
       if (!session) {
@@ -256,6 +277,14 @@ courtroomRouter.post(
         return;
       }
 
+      assertPermission({
+        action: 'session:join',
+        userId: user.id,
+        session: toSessionLike(session),
+        payload: { requestedRole: body.role as CourtroomRole },
+      });
+
+      const color = getColorForRole(body.role);
       const participants = session.participants as Array<{ userId: string; role?: string }>;
       const existingIdx = participants.findIndex((p) => p.userId === user.id);
       const entry = {
@@ -327,6 +356,17 @@ courtroomRouter.post(
         res.status(503).json({ error: 'Database not connected' });
         return;
       }
+      const user = req.authUser!;
+      const existing = await CourtroomSession.findById(req.params.id).lean();
+      if (!existing) {
+        res.status(404).json({ error: 'Session not found' });
+        return;
+      }
+      assertPermission({
+        action: 'session:start',
+        userId: user.id,
+        session: toSessionLike(existing),
+      });
       const session = await CourtroomSession.findByIdAndUpdate(
         req.params.id,
         { status: 'live', startedAt: new Date() },
@@ -353,6 +393,17 @@ courtroomRouter.post(
         res.status(503).json({ error: 'Database not connected' });
         return;
       }
+      const user = req.authUser!;
+      const existing = await CourtroomSession.findById(req.params.id).lean();
+      if (!existing) {
+        res.status(404).json({ error: 'Session not found' });
+        return;
+      }
+      assertPermission({
+        action: 'session:end',
+        userId: user.id,
+        session: toSessionLike(existing),
+      });
       const session = await CourtroomSession.findByIdAndUpdate(
         req.params.id,
         { status: 'ended', endedAt: new Date() },
@@ -363,6 +414,45 @@ courtroomRouter.post(
         return;
       }
       broadcastHearingEnd(String(req.params.id));
+      res.json(session);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+// ---------- Change mode (judge/mediator only) ----------
+const ChangeModeSchema = z.object({
+  mode: z.enum(['open', 'closed_doors', 'appeal', 'mediation']),
+});
+
+courtroomRouter.patch(
+  '/sessions/:id/mode',
+  requireAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!dbReady()) {
+        res.status(503).json({ error: 'Database not connected' });
+        return;
+      }
+      const body = ChangeModeSchema.parse(req.body);
+      const user = req.authUser!;
+      const existing = await CourtroomSession.findById(req.params.id).lean();
+      if (!existing) {
+        res.status(404).json({ error: 'Session not found' });
+        return;
+      }
+      assertPermission({
+        action: 'session:change_mode',
+        userId: user.id,
+        session: toSessionLike(existing),
+        payload: { requestedMode: body.mode as SessionMode },
+      });
+      const session = await CourtroomSession.findByIdAndUpdate(
+        req.params.id,
+        { mode: body.mode },
+        { new: true },
+      ).lean();
       res.json(session);
     } catch (e) {
       next(e);
@@ -400,6 +490,13 @@ courtroomRouter.post(
         res.status(404).json({ error: 'Session not found' });
         return;
       }
+
+      assertPermission({
+        action: 'protocol:add',
+        userId: user.id,
+        session: toSessionLike(session),
+        payload: { targetSpeakerUserId: body.speakerUserId },
+      });
 
       const participants = session.participants as Array<{
         userId: string;
@@ -462,6 +559,8 @@ courtroomRouter.patch(
       const lines = session.protocol as Array<{
         lineId: string;
         text: string;
+        ts?: Date;
+        speakerUserId?: string;
         editedBy?: string;
         editedAt?: Date;
         verifiedBySecretary?: boolean;
@@ -471,6 +570,15 @@ courtroomRouter.patch(
         res.status(404).json({ error: 'Line not found' });
         return;
       }
+      assertPermission({
+        action: 'protocol:edit',
+        userId: user.id,
+        session: toSessionLike(session),
+        payload: {
+          targetLineAuthorId: line.speakerUserId,
+          targetLineCreatedAt: line.ts,
+        },
+      });
       line.text = body.text;
       line.editedBy = user.id;
       line.editedAt = new Date();
@@ -518,6 +626,12 @@ courtroomRouter.post(
         res.status(404).json({ error: 'Session not found' });
         return;
       }
+      assertPermission({
+        action: 'evidence:add',
+        userId: user.id,
+        session: toSessionLike(session),
+        payload: { evidenceAccessLevel: body.accessLevel as 'all' | 'judges_only' | 'prosecution_only' | 'defense_only' },
+      });
       const evidence = {
         evidenceId: uid('ev'),
         kind: body.kind,
@@ -547,18 +661,32 @@ courtroomRouter.post(
         res.status(503).json({ error: 'Database not connected' });
         return;
       }
+      const user = req.authUser!;
       const session = await CourtroomSession.findById(req.params.id);
       if (!session) {
         res.status(404).json({ error: 'Session not found' });
         return;
       }
-      const ev = (session.evidence as Array<{ evidenceId: string; currentlyPresented: boolean }>).find(
-        (e) => e.evidenceId === req.params.eid,
-      );
+      const ev = (
+        session.evidence as Array<{
+          evidenceId: string;
+          currentlyPresented: boolean;
+          accessLevel?: string;
+          submittedByUserId?: string;
+        }>
+      ).find((e) => e.evidenceId === req.params.eid);
       if (!ev) {
         res.status(404).json({ error: 'Evidence not found' });
         return;
       }
+      assertPermission({
+        action: 'evidence:present',
+        userId: user.id,
+        session: toSessionLike(session),
+        payload: {
+          evidenceAccessLevelExisting: (ev.accessLevel ?? 'all') as 'all' | 'judges_only' | 'prosecution_only' | 'defense_only',
+        },
+      });
       ev.currentlyPresented = true;
       await session.save();
       broadcastEvidencePresent(String(session._id), req.params.eid);
@@ -578,18 +706,29 @@ courtroomRouter.post(
         res.status(503).json({ error: 'Database not connected' });
         return;
       }
+      const user = req.authUser!;
       const session = await CourtroomSession.findById(req.params.id);
       if (!session) {
         res.status(404).json({ error: 'Session not found' });
         return;
       }
-      const ev = (session.evidence as Array<{ evidenceId: string; currentlyPresented: boolean }>).find(
-        (e) => e.evidenceId === req.params.eid,
-      );
+      const ev = (
+        session.evidence as Array<{
+          evidenceId: string;
+          currentlyPresented: boolean;
+          submittedByUserId?: string;
+        }>
+      ).find((e) => e.evidenceId === req.params.eid);
       if (!ev) {
         res.status(404).json({ error: 'Evidence not found' });
         return;
       }
+      assertPermission({
+        action: 'evidence:hide',
+        userId: user.id,
+        session: toSessionLike(session),
+        payload: { evidenceSubmittedBy: ev.submittedByUserId },
+      });
       ev.currentlyPresented = false;
       await session.save();
       broadcastEvidenceHide(String(session._id), req.params.eid);
@@ -612,6 +751,19 @@ courtroomRouter.post(
         res.status(400).json({ error: 'Empty audio body' });
         return;
       }
+      const user = req.authUser!;
+      // Need session to check role; if DB is down we allow transcription
+      // (the audio is already captured — blocking it is UX-harmful).
+      if (dbReady()) {
+        const existing = await CourtroomSession.findById(req.params.id).lean();
+        if (existing) {
+          assertPermission({
+            action: 'ai:transcribe',
+            userId: user.id,
+            session: toSessionLike(existing),
+          });
+        }
+      }
       const filename =
         (typeof req.query.filename === 'string' && req.query.filename) || 'audio.webm';
       const language = typeof req.query.lang === 'string' ? req.query.lang : 'he';
@@ -633,11 +785,17 @@ courtroomRouter.post(
         res.status(503).json({ error: 'Database not connected' });
         return;
       }
+      const user = req.authUser!;
       const session = await CourtroomSession.findById(req.params.id).lean();
       if (!session) {
         res.status(404).json({ error: 'Session not found' });
         return;
       }
+      assertPermission({
+        action: 'ai:suggest',
+        userId: user.id,
+        session: toSessionLike(session),
+      });
       const s = session as unknown as {
         title: string;
         courtLevel: string;
@@ -656,6 +814,35 @@ courtroomRouter.post(
         recentLines: recent,
       });
       res.json(suggestion);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+// ---------- Capabilities snapshot (for UI gating) ----------
+courtroomRouter.get(
+  '/sessions/:id/capabilities',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!dbReady()) {
+        res.status(503).json({ error: 'Database not connected' });
+        return;
+      }
+      const session = await CourtroomSession.findById(req.params.id).lean();
+      if (!session) {
+        res.status(404).json({ error: 'Session not found' });
+        return;
+      }
+      let userId: string | undefined;
+      try {
+        const user = await getUserFromBearer(req.headers.authorization);
+        userId = user.id;
+      } catch {
+        userId = undefined;
+      }
+      const caps = computeCapabilities(toSessionLike(session), userId);
+      res.json(caps);
     } catch (e) {
       next(e);
     }

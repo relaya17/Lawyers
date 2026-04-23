@@ -137,71 +137,121 @@ export type ConsumeAiResult =
   | { ok: false; reason: 'promo_ai_limit'; used: number; limit: number };
 
 /**
+ * Billing must degrade gracefully when the DB is down or billing tables are
+ * missing. We never want billing infra problems to crash the API or block
+ * the whole app — those errors are logged and the user is treated as a
+ * free-plan user so non-billing features (courtroom, legal, auth) keep
+ * working. Legitimate 4xx/5xx should be raised by callers explicitly.
+ */
+function logBillingFailure(op: string, userId: string, error: unknown): void {
+  const msg = error instanceof Error ? error.message : String(error);
+  console.error(`[billing] ${op} failed for user=${userId} → free-plan fallback:`, msg);
+}
+
+function freeFallbackSnapshot(): EntitlementSnapshot {
+  const base = PLANS.free.entitlements;
+  const promoActive = isPromoActive();
+  const merged = mergePromoEntitlements('free', base);
+  return {
+    plan: 'free',
+    status: 'none',
+    currentPeriodEnd: null,
+    cancelAtPeriodEnd: false,
+    entitlements: merged,
+    dailyQuestions: { used: 0, limit: merged.dailyQuestionLimit ?? null },
+    promoActive,
+    promoEndsAt: getPromoEndsAtIso(),
+    dailyAiCalls: {
+      used: 0,
+      limit: promoActive ? getPromoFreeAiDailyLimit() : 0,
+    },
+  };
+}
+
+/**
  * רישום קריאת AI אחת (בדרך כלל דרך middleware אחרי requireAuth).
  * Pro/Premium: תמיד ok. Free בלי מבצע: תשלום. Free במבצע: מונה יומי.
  */
 export async function consumeAiCallIfNeeded(userId: string): Promise<ConsumeAiResult> {
-  const row = await findActiveSubscription(userId);
-  const plan = planFromStatus(row?.status, row?.plan);
-  if (plan !== 'free') {
-    return { ok: true, used: 0, limit: null };
-  }
-  if (!isPromoActive()) {
+  try {
+    const row = await findActiveSubscription(userId);
+    const plan = planFromStatus(row?.status, row?.plan);
+    if (plan !== 'free') {
+      return { ok: true, used: 0, limit: null };
+    }
+    if (!isPromoActive()) {
+      return { ok: false, reason: 'payment_required' };
+    }
+    const limit = getPromoFreeAiDailyLimit();
+    const date = todayJerusalem();
+    const current = await getDailyAiCount(userId, date);
+    if (current >= limit) {
+      return { ok: false, reason: 'promo_ai_limit', used: current, limit };
+    }
+    const used = await incrementDailyAiCount(userId, date);
+    return { ok: true, used, limit };
+  } catch (error) {
+    // DB unavailable. During a launch-promo window we still let the user
+    // through (fail-open is the UX choice here), but we cap "used" at 0 so
+    // the client can surface a banner. Outside promo we keep the existing
+    // behaviour of requiring payment.
+    logBillingFailure('consumeAiCallIfNeeded', userId, error);
+    if (isPromoActive()) {
+      const limit = getPromoFreeAiDailyLimit();
+      return { ok: true, used: 0, limit };
+    }
     return { ok: false, reason: 'payment_required' };
   }
-  const limit = getPromoFreeAiDailyLimit();
-  const date = todayJerusalem();
-  const current = await getDailyAiCount(userId, date);
-  if (current >= limit) {
-    return { ok: false, reason: 'promo_ai_limit', used: current, limit };
-  }
-  const used = await incrementDailyAiCount(userId, date);
-  return { ok: true, used, limit };
 }
 
 /** Read current entitlements for a user (derived from DB, not Stripe). */
 export async function getEntitlements(userId: string): Promise<EntitlementSnapshot> {
-  const row = await findActiveSubscription(userId);
-  const plan = planFromStatus(row?.status, row?.plan);
-  const merged = mergePromoEntitlements(plan, PLANS[plan].entitlements);
-  const limit = merged.dailyQuestionLimit;
-  let used = 0;
-  if (limit != null) {
-    try {
-      used = await getDailyQuestionCount(userId, todayJerusalem());
-    } catch {
-      used = 0;
-    }
-  }
-
-  const promoActive = isPromoActive();
-  const promoEndsAt = getPromoEndsAtIso();
-  let aiUsed = 0;
-  let aiLimit: number | null = null;
-  if (plan === 'free') {
-    if (promoActive) {
-      aiLimit = getPromoFreeAiDailyLimit();
+  try {
+    const row = await findActiveSubscription(userId);
+    const plan = planFromStatus(row?.status, row?.plan);
+    const merged = mergePromoEntitlements(plan, PLANS[plan].entitlements);
+    const limit = merged.dailyQuestionLimit;
+    let used = 0;
+    if (limit != null) {
       try {
-        aiUsed = await getDailyAiCount(userId, todayJerusalem());
+        used = await getDailyQuestionCount(userId, todayJerusalem());
       } catch {
-        aiUsed = 0;
+        used = 0;
       }
-    } else {
-      aiLimit = 0;
     }
-  }
 
-  return {
-    plan,
-    status: row?.status ?? 'none',
-    currentPeriodEnd: row?.current_period_end ?? null,
-    cancelAtPeriodEnd: row?.cancel_at_period_end ?? false,
-    entitlements: merged,
-    dailyQuestions: { used, limit },
-    promoActive,
-    promoEndsAt,
-    dailyAiCalls: { used: aiUsed, limit: aiLimit },
-  };
+    const promoActive = isPromoActive();
+    const promoEndsAt = getPromoEndsAtIso();
+    let aiUsed = 0;
+    let aiLimit: number | null = null;
+    if (plan === 'free') {
+      if (promoActive) {
+        aiLimit = getPromoFreeAiDailyLimit();
+        try {
+          aiUsed = await getDailyAiCount(userId, todayJerusalem());
+        } catch {
+          aiUsed = 0;
+        }
+      } else {
+        aiLimit = 0;
+      }
+    }
+
+    return {
+      plan,
+      status: row?.status ?? 'none',
+      currentPeriodEnd: row?.current_period_end ?? null,
+      cancelAtPeriodEnd: row?.cancel_at_period_end ?? false,
+      entitlements: merged,
+      dailyQuestions: { used, limit },
+      promoActive,
+      promoEndsAt,
+      dailyAiCalls: { used: aiUsed, limit: aiLimit },
+    };
+  } catch (error) {
+    logBillingFailure('getEntitlements', userId, error);
+    return freeFallbackSnapshot();
+  }
 }
 
 /** רישום ניסיון שאלה אחד (מגביל רק ב-Free עם dailyQuestionLimit). */
@@ -210,20 +260,27 @@ export async function recordQuestionAttempt(userId: string): Promise<{
   used: number;
   limit: number | null;
 }> {
-  const row = await findActiveSubscription(userId);
-  const plan = planFromStatus(row?.status, row?.plan);
-  const merged = mergePromoEntitlements(plan, PLANS[plan].entitlements);
-  const limit = merged.dailyQuestionLimit;
-  const date = todayJerusalem();
+  try {
+    const row = await findActiveSubscription(userId);
+    const plan = planFromStatus(row?.status, row?.plan);
+    const merged = mergePromoEntitlements(plan, PLANS[plan].entitlements);
+    const limit = merged.dailyQuestionLimit;
+    const date = todayJerusalem();
 
-  if (limit == null) {
+    if (limit == null) {
+      return { ok: true, used: 0, limit: null };
+    }
+
+    const current = await getDailyQuestionCount(userId, date);
+    if (current >= limit) {
+      return { ok: false, used: current, limit };
+    }
+    const used = await incrementDailyQuestionCount(userId, date);
+    return { ok: true, used, limit };
+  } catch (error) {
+    // Fail-open: we never block learning flows because billing/usage counters
+    // are temporarily unavailable. The dashboard will simply show used=0.
+    logBillingFailure('recordQuestionAttempt', userId, error);
     return { ok: true, used: 0, limit: null };
   }
-
-  const current = await getDailyQuestionCount(userId, date);
-  if (current >= limit) {
-    return { ok: false, used: current, limit };
-  }
-  const used = await incrementDailyQuestionCount(userId, date);
-  return { ok: true, used, limit };
 }

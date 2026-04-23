@@ -4,12 +4,12 @@ import {
   Chip, LinearProgress, Alert, CircularProgress, Divider,
   Accordion, AccordionSummary, AccordionDetails, Tooltip,
   Dialog, DialogTitle, DialogContent, DialogActions, Paper,
-  Stepper, Step, StepLabel, Badge, IconButton, Tab, Tabs,
+  Stepper, Step, StepLabel, IconButton, Tab, Tabs,
 } from '@mui/material'
 import {
   Gavel, Balance, Security, EmojiEvents, Lightbulb,
   ExpandMore, CheckCircle, Cancel, ArrowForward, ArrowBack,
-  School, Psychology, MenuBook, Timer, Star, Info,
+  School, Psychology, MenuBook, Timer, Star,
   PlayArrow, Refresh, AutoFixHigh,
 } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'

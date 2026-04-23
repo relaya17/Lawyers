@@ -137,6 +137,36 @@ export async function transcribeAudio(
   return res.data
 }
 
+export interface CourtroomCapabilities {
+  role: string | null
+  isJudicial: boolean
+  isProsecution: boolean
+  isDefense: boolean
+  isTestimony: boolean
+  canStart: boolean
+  canEnd: boolean
+  canChangeMode: boolean
+  canAddProtocol: boolean
+  canEditAnyProtocol: boolean
+  canDeleteProtocol: boolean
+  canAddEvidence: boolean
+  canPresentAny: boolean
+  canSuggestAiLine: boolean
+  canTranscribe: boolean
+}
+
+export async function getCapabilities(id: string): Promise<CourtroomCapabilities> {
+  const res = await axiosClient.get<CourtroomCapabilities>(`${BASE}/${id}/capabilities`)
+  return res.data
+}
+
+export async function changeMode(
+  id: string,
+  mode: 'open' | 'closed_doors' | 'appeal' | 'mediation',
+): Promise<void> {
+  await axiosClient.patch(`${BASE}/${id}/mode`, { mode })
+}
+
 export async function aiSuggestNextLine(id: string): Promise<{
   speakerRole: string
   speakerName: string

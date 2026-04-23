@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
+import { CourtroomForbiddenError } from '../courtroom/rbac.js';
 
 export interface AppError extends Error {
   statusCode?: number;
@@ -18,6 +19,11 @@ export function errorHandler(
       error: typeof first === 'string' ? first : 'נתונים לא תקינים',
       details: f.fieldErrors,
     });
+    return;
+  }
+
+  if (err instanceof CourtroomForbiddenError) {
+    res.status(403).json({ error: err.message, code: err.code });
     return;
   }
 

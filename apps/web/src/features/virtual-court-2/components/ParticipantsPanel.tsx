@@ -126,7 +126,7 @@ export const ParticipantsPanel: React.FC<Props> = ({ legalCase }) => {
       const caseNow = store.getCase(legalCase.id)
       if (caseNow) {
         const allFacing = caseNow.participants.filter(isStudentFacing)
-        let recipients: Participant[] =
+        const recipients: Participant[] =
           messageTarget === 'all'
             ? allFacing
             : selectedRecipientIds

@@ -37,7 +37,7 @@ const jitsiBase = (): string =>
 
 export const LiveCourtroomPage: React.FC = () => {
   const { sessionId } = useParams<{ sessionId: string }>()
-  const { session, loading, error, currentSpeakerUserId, refresh } = useLiveCourtroom(sessionId)
+  const { session, capabilities, loading, error, currentSpeakerUserId, refresh } = useLiveCourtroom(sessionId)
   const { user } = useSessionAuth()
 
   const [rolePickerOpen, setRolePickerOpen] = useState(false)
@@ -48,16 +48,18 @@ export const LiveCourtroomPage: React.FC = () => {
     return session.participants.find((p) => p.userId === user.id && !p.leftAt)
   }, [session, user])
 
-  const isJudge = myParticipant?.role === 'judge' || myParticipant?.role === 'student_judge'
-  const isClerk = myParticipant?.role === 'clerk'
-  const isProsecution =
-    myParticipant?.role === 'prosecutor' || myParticipant?.role === 'plaintiff_lawyer'
-  const isDefense = myParticipant?.role === 'defense_lawyer'
-  const canEditProtocol = isClerk || isJudge
-  const canManageEvidence = isJudge || isProsecution || isDefense || isClerk
+  // Use server-authoritative capabilities when available, fall back to local derivation
+  const canStart = capabilities?.canStart ?? false
+  const canEnd = capabilities?.canEnd ?? false
+  const canChangeMode = capabilities?.canChangeMode ?? false
+  const canEditProtocol = capabilities?.canEditAnyProtocol ?? false
+  const canManageEvidence = capabilities?.canAddEvidence ?? false
+  const canSuggestAi = capabilities?.canSuggestAiLine ?? false
+  const canTranscribe = capabilities?.canTranscribe ?? true // fail-open for mic
 
   const isClosedDoors = session?.mode === 'closed_doors'
-  const hasCourtAccess = isJudge || isClerk || isProsecution || isDefense
+  const hasCourtAccess =
+    capabilities?.isJudicial || capabilities?.isProsecution || capabilities?.isDefense
   const blockedByClosedDoors = isClosedDoors && !hasCourtAccess
 
   const jitsiUrl = useMemo(() => {
@@ -163,7 +165,7 @@ export const LiveCourtroomPage: React.FC = () => {
                 הצטרפות לדיון
               </Button>
             )}
-            {myParticipant && session.status === 'scheduled' && isJudge && (
+            {myParticipant && session.status === 'scheduled' && canStart && (
               <Button
                 variant="contained"
                 color="success"
@@ -174,7 +176,7 @@ export const LiveCourtroomPage: React.FC = () => {
                 התחל דיון
               </Button>
             )}
-            {myParticipant && session.status === 'live' && isJudge && (
+            {myParticipant && session.status === 'live' && canEnd && (
               <Button
                 variant="contained"
                 color="warning"
@@ -228,6 +230,8 @@ export const LiveCourtroomPage: React.FC = () => {
               participants={session.participants}
               myUserId={user?.id}
               canEdit={canEditProtocol}
+              canSuggestAi={canSuggestAi}
+              canTranscribe={canTranscribe}
               onChange={refresh}
             />
           </Box>
