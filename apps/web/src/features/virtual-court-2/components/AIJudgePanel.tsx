@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import {
   Alert,
   Box,
@@ -19,6 +20,8 @@ import GavelIcon from '@mui/icons-material/Gavel'
 import type { LegalCase } from '../types'
 import { runAIJudgeAnalysis } from '../services/aiJudge'
 import { useVirtualCourt2Store } from '../store/useVirtualCourt2Store'
+import { useSessionAuth } from '@/features/auth/providers/SessionAuthProvider'
+import { useEntitlements } from '@/features/billing/providers/EntitlementsProvider'
 
 interface Props {
   legalCase: LegalCase
@@ -27,6 +30,9 @@ interface Props {
 export const AIJudgePanel: React.FC<Props> = ({ legalCase }) => {
   const addAnalysis = useVirtualCourt2Store((s) => s.addAnalysis)
   const addRuling = useVirtualCourt2Store((s) => s.addRuling)
+  const { accessToken } = useSessionAuth()
+  const { can, loading: entLoading } = useEntitlements()
+  const canLlmJudge = can('virtualCourtFull')
 
   const [issue, setIssue] = useState('')
   const [running, setRunning] = useState(false)
@@ -38,7 +44,7 @@ export const AIJudgePanel: React.FC<Props> = ({ legalCase }) => {
   const handleAnalyze = async () => {
     setRunning(true)
     try {
-      const a = await runAIJudgeAnalysis(legalCase, issue)
+      const a = await runAIJudgeAnalysis(legalCase, issue, canLlmJudge ? accessToken : null)
       addAnalysis(legalCase.id, a)
     } finally {
       setRunning(false)
@@ -74,6 +80,13 @@ export const AIJudgePanel: React.FC<Props> = ({ legalCase }) => {
         <Alert severity="info" sx={{ mb: 2 }}>
           כלי לימודי. הניתוח מבוסס על חומר התיק והמקורות המוזנים בלבד — אינו תחליף לייעוץ משפטי.
         </Alert>
+
+        {!entLoading && !canLlmJudge && (
+          <Alert severity="warning" sx={{ mb: 2 }}>
+            במסלול החינם מתבצע <strong>ניתוח מקומי</strong> בלבד (ללא LLM בשרת). לניתוח שופט AI מלא{' '}
+            <RouterLink to="/pricing">שדרגי ל-Student Pro</RouterLink>.
+          </Alert>
+        )}
 
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} sx={{ mb: 2 }}>
           <TextField

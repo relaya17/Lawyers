@@ -43,6 +43,7 @@ import {
 import type { RootState } from '../../../store'
 import { useUserProgressStore, type TopicStats } from '../store/useUserProgressStore'
 import { generateAIInsight, type ReinforcementQuestion } from '../services/aiProgressService'
+import { useTrackAnswer } from '../hooks/useTrackAnswer'
 
 // ─── ProgressBar מותאם ───────────────────────────────────────────────────────
 
@@ -85,7 +86,12 @@ function TopicBar({ stat }: { stat: TopicStats }) {
 interface DrillDialogProps {
   questions: ReinforcementQuestion[]
   onClose: () => void
-  onAnswered: (questionId: string, topic: string, subTopic: string, correct: boolean) => void
+  onAnswered: (
+    questionId: string,
+    topic: string,
+    subTopic: string,
+    correct: boolean,
+  ) => void | Promise<void>
 }
 
 function DrillDialog({ questions, onClose, onAnswered }: DrillDialogProps) {
@@ -97,11 +103,11 @@ function DrillDialog({ questions, onClose, onAnswered }: DrillDialogProps) {
 
   const q = questions[idx]
 
-  function handleConfirm() {
+  async function handleConfirm() {
     if (!selected || !q) return
     const correct = selected === q.correctId
     if (correct) setScore(s => s + 1)
-    onAnswered(q.id, q.topic, q.subTopic, correct)
+    await onAnswered(q.id, q.topic, q.subTopic, correct)
     setConfirmed(true)
   }
 
@@ -225,7 +231,8 @@ function DrillDialog({ questions, onClose, onAnswered }: DrillDialogProps) {
 // ─── Main Dashboard ──────────────────────────────────────────────────────────
 
 interface PersonalLearningDashboardProps {
-  onNavigateToFeature?: (featureId: string) => void
+  /** topicHint נשמר זמנית ומוצג במנהל המבחנים לאחר מעבר */
+  onNavigateToFeature?: (featureId: string, topicHint?: string) => void
 }
 
 export default function PersonalLearningDashboard({ onNavigateToFeature }: PersonalLearningDashboardProps) {
@@ -237,8 +244,8 @@ export default function PersonalLearningDashboard({ onNavigateToFeature }: Perso
   const getProfile = useUserProgressStore(s => s.getProfile)
   const getTopicStats = useUserProgressStore(s => s.getTopicStats)
   const getWeakTopics = useUserProgressStore(s => s.getWeakTopics)
-  const trackAnswer = useUserProgressStore(s => s.trackAnswer)
   const clearProfile = useUserProgressStore(s => s.clearProfile)
+  const { trackAnswer } = useTrackAnswer()
 
   const [drillOpen, setDrillOpen] = useState(false)
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
@@ -265,14 +272,24 @@ export default function PersonalLearningDashboard({ onNavigateToFeature }: Perso
     advanced: 'מתקדם',
   }[insight.level]
 
-  function handleDrillAnswer(questionId: string, topic: string, subTopic: string, correct: boolean) {
-    trackAnswer(userId, displayName, {
+  async function handleDrillAnswer(
+    questionId: string,
+    topic: string,
+    subTopic: string,
+    correct: boolean,
+  ) {
+    const r = await trackAnswer({
       questionId,
       topic,
       subTopic,
       correct,
       source: 'ai-drill',
     })
+    if (!r.ok) {
+      window.alert(
+        'הגעת למגבלת השאלות היומית במסלול החינם. שדרגי ל-Student Pro לתרגול ללא הגבלה.',
+      )
+    }
   }
 
   const overallRate =
@@ -610,7 +627,7 @@ export default function PersonalLearningDashboard({ onNavigateToFeature }: Perso
                       color="warning"
                       fullWidth
                       startIcon={<DrillIcon />}
-                      onClick={() => onNavigateToFeature('exam-manager')}
+                      onClick={() => onNavigateToFeature('exam-manager', t.topic)}
                       sx={{ justifyContent: 'flex-start' }}
                     >
                       תרגל: {t.topic} ({t.successRate}% הצלחה)

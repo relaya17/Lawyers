@@ -245,6 +245,9 @@ npx expo start
 | `VITE_SKIP_AUTH_BOOTSTRAP` | `false` | `true` בפיתוח בלבד (כשהשרת כבוי) |
 | `VITE_VAPID_PUBLIC_KEY` | — | מפתח Push Notifications |
 | `VITE_APP_VERSION` | `1.0.0` | גרסת האפליקציה |
+| `VITE_POSTHOG_KEY` | ריק = כבוי | PostHog project API key (analytics) |
+| `VITE_POSTHOG_HOST` | `https://us.i.posthog.com` | Endpoint של PostHog |
+| `VITE_SOCKET_URL` | ריק = נגזר מ-`VITE_API_URL` | Origin של Socket.io (ללא `/api`) |
 
 ### Server (`apps/server/.env`)
 
@@ -260,6 +263,15 @@ npx expo start
 | `MONGODB_URI` | כן | MongoDB URI (Virtual Court) |
 | `RESEND_API_KEY` | אופציונלי | שליחת OTP במייל |
 | `OPENAI_API_KEY` | אופציונלי | AI features |
+| `STRIPE_SECRET_KEY` | כן לתשלומים | מפתח Secret מ-Stripe Dashboard |
+| `STRIPE_WEBHOOK_SECRET` | כן לתשלומים | Secret של endpoint ה-Webhook |
+| `STRIPE_PRICE_PRO_MONTHLY` | כן למסלול Pro | Price ID של מוצר Pro חודשי |
+| `STRIPE_PRICE_PREMIUM_MONTHLY` | כן למסלול Premium | Price ID של מוצר Premium חודשי |
+| `PROMO_ENDS_AT` | אופציונלי | מבצע השקה: תאריך סיום ISO-8601 (עם אזור זמן). בלי ערך — אין בוסט ל-Free |
+| `PROMO_FREE_AI_PER_DAY` | אופציונלי | במבצע: מכסת קריאות AI יומית למשתמשי Free (ברירת מחדל 25; VC LLM + RAG) |
+| `CLIENT_ORIGIN` | אופציונלי | URL בסיס ללקוח (לבניית success/cancel URL) |
+| `POSTHOG_KEY` | אופציונלי | Project API Key (server-side events) |
+| `POSTHOG_HOST` | אופציונלי | ברירת מחדל: `https://us.i.posthog.com` |
 
 > **אזהרת אבטחה:** לעולם אל תעלה קבצי `.env` לגיט. הם נמצאים ב-`.gitignore`.
 
@@ -314,11 +326,160 @@ npx expo start
 - ניהול לקוחות ולידים
 - מעקב פעילויות
 
+### תשלומים ומנויים (`/pricing`, `/account/billing`)
+
+LexStudy פועל במודל **Freemium** עם 3 מסלולים:
+
+| מסלול | מחיר | מיועד ל- | כולל |
+|---|---|---|---|
+| **Tier 1 — Free** | ₪0 | היכרות וסטודנטים | **עד 20 שאלות ביום**, **Virtual Court בסיסי** (תיקים מקומיים; ללא LLM לייצור תיק / שופט AI) |
+| **Tier 2 — Student Pro** | ₪49/חודש | מתכוננים ללשכה | כל 1,200+ השאלות ללא הגבלה יומית, AI Coach ללא הגבלה, Virtual Court מלא |
+| **Tier 3 — Lawyer / Expert** | ₪99/חודש | עורכי דין מתמחים | כל Student Pro + **ניתוח סיכונים בחוזים** + **ייבוא תיקים ופסיקה מהרשת** |
+
+**ארכיטקטורת החיוב:**
+- **Web — Stripe Checkout** — hosted payment page (PCI compliant)
+- **Mobile — RevenueCat** (`react-native-purchases`) — שכבת IAP מאוחדת ל-iOS/Android; entitlement ברירת מחדל `pro_access` (משתנה דרך `EXPO_PUBLIC_REVENUECAT_ENTITLEMENT`).
+- **Stripe Billing Portal** — ניהול מנוי + חשבוניות + ביטול
+- **Webhook עם raw body + dedup** — סנכרון מצב מנוי מאמין
+- **PostgreSQL** שומר `billing_customers` + `billing_subscriptions` + `billing_webhook_events` + `user_daily_question_usage` (מכסת Free) + `user_daily_ai_usage` (מכסת AI במבצע השקה)
+- **`<PaywallGate flag="…">`** — Web; דגלים: `aiCoach`, `adaptiveDrills`, `virtualCourtLimited`, `virtualCourtFull`, `realCaseImport`, `contractRiskAnalysis`, `unlimitedExamQuestions`
+- **Virtual Court:** לאחר הרשמה, `/virtual-court-2` זמין עם `virtualCourtLimited`; קריאות `POST /api/ai/virtual-court/*` דורשות JWT + `virtualCourtFull` (402 אחרת) + מכסת AI במבצע. הלקוח שולח Bearer + CSRF.
+- **`requireEntitlement('flag')`** — middleware שרת שחוסם פיצ'רים גם ברמת API
+- **מכסת Free יומית:** `POST /api/billing/usage/question` מחזיר 429 כשחוצים 20; ה-UI מציג באנר `used / limit` ונועל את המשך התרגול
+- **מבצע השקה (`PROMO_ENDS_AT`):** משתמשי **Free** מקבלים יכולות **Student Pro** (בלי `realCaseImport` / `contractRiskAnalysis`). שאלות תרגול ללא מגבלת 20/יום. **שירותי AI** (VC LLM, `POST /legal/rag/*`) עוברים `requireAiMarginalBudget`: במבצע — עד `PROMO_FREE_AI_PER_DAY` ליום; אחרי המבצע Free מקבל 402 על נתיבי AI אלה.
+- **Web — חובת הרשמה:** מסלולי מוצר (דשבורד, לימוד, VC וכו') עטופים ב-`RequireRegistration` — אורחים מופנים ל-`/register?next=…` (דפי שיווק: `/`, `/landing`, `/login`, `/register`, `/pricing`, `/billing/success`).
+- **Cache תשובות AI (`ai_response_cache` ב-MongoDB):** כל קריאת embedding / VC LLM / RAG answer ממופה ל-`sha256(scope + payload)`. תשובה זהה נשלפת חינם מהקאש (ttl 45–180 יום) — זה שומר עלויות גם אם סטודנטים שואלים אותה שאלה. אם Mongo לא מחובר — fail-open וקריאה ישירה ל-OpenAI.
+
+**הפעלה (מצב Test):**
+
+```powershell
+# 1. צור חשבון ב-Stripe ומפעיל Test mode
+# 2. צור 2 Products + Prices (Pro Monthly, Premium Monthly)
+# 3. הוסף ל-apps/server/.env:
+#    STRIPE_SECRET_KEY=sk_test_...
+#    STRIPE_PRICE_PRO_MONTHLY=price_...
+#    STRIPE_PRICE_PREMIUM_MONTHLY=price_...
+
+# 4. הרץ את מיגרציית החיוב + מכסה יומית
+psql $env:DATABASE_URL -f apps/server/sql/billing/001_subscriptions.sql
+psql $env:DATABASE_URL -f apps/server/sql/billing/002_daily_question_usage.sql
+
+# 5. הפעל Stripe CLI לבדיקת webhook מקומי
+stripe listen --forward-to http://localhost:4000/api/billing/webhook
+# העתק את whsec_... ל-STRIPE_WEBHOOK_SECRET
+
+# 6. הרץ שרת + web, כנס ל-/pricing ועשה checkout עם כרטיס 4242 4242 4242 4242
+```
+
+**Mobile (RevenueCat) — הפעלה:**
+```powershell
+# 1. npx expo install react-native-purchases (כבר קיים ב-apps/mobile)
+# 2. ב-RevenueCat Dashboard: צור Project + App (iOS/Android), הגדר Entitlement (pro_access)
+# 3. חבר מוצרים מ-App Store Connect / Google Play Console ל-Offerings
+# 4. מלא ב-apps/mobile/.env:
+#    EXPO_PUBLIC_REVENUECAT_IOS_KEY=appl_...
+#    EXPO_PUBLIC_REVENUECAT_ANDROID_KEY=goog_...
+#    EXPO_PUBLIC_REVENUECAT_ENTITLEMENT=pro_access
+# 5. IAP דורש Dev Build נייטיב — לא עובד ב-Expo Go:
+#    eas build --profile development --platform ios
+```
+ה-hook `useSubscription()` (`apps/mobile/src/hooks/useSubscription.ts`) מאתחל את ה-SDK רק כשיש מפתחות, מאזין ל-`customerInfoUpdate`, וחושף `{ isPro, ready, available, offering, purchasing, refresh, loadOfferings, purchasePackage, restorePurchases }`. המסך `app/(tabs)/profile.tsx` מציג סטטוס חי, רשימת חבילות עם `priceString` מקומי של ה-Store וכפתור שחזור רכישות. בלי מפתחות — no-op (`isPro=false`, `ready=true`, `available=false`).
+
+### דף נחיתה / רשימת המתנה (`/landing`)
+
+לוכדים לידים לפני השקה מלאה:
+- **Route:** `apps/web/src/pages/Landing/index.tsx` — Hero (כחול נייבי + זהב), בעיה/פתרון, פיצ'רים, טופס waitlist.
+- **API:** `POST /api/marketing/waitlist` (`email`, `source`), unique על email, שולח מייל אישור דרך Resend אם `RESEND_API_KEY` מוגדר.
+- **מיגרציה:** `psql $env:DATABASE_URL -f apps/server/sql/marketing/001_waitlist.sql`.
+
+### Analytics ו-Conversion Funnel (PostHog)
+
+LexStudy משתמש ב-PostHog לאנליטיקת מוצר + funnel תשלומים. כל מפתחות האירועים מוגדרים במקום אחד ב-`apps/web/src/features/analytics/events.ts` — ללא strings קשיחים בקוד.
+
+**אירועים מרכזיים (Paywall funnel):**
+
+1. `paywall.viewed` — כאשר `PaywallGate` מציג חסימה (עם `flag`, `current_plan`)
+2. `paywall.cta_clicked` — לחיצה על "שדרגי" / "השוואת מסלולים"
+3. `pricing.viewed` — פתיחת `/pricing`
+4. `checkout.started` — התחלת Stripe Checkout
+5. `checkout.completed` — הגעה לדף ה-success (client-side)
+6. `checkout.completed_server` — webhook אישר (server-side, אמת)
+7. `subscription.created/updated/deleted` — נשלח משרת בעקבות webhook
+8. `billing.portal_opened` — פתיחת לוח Stripe
+
+**אירועים נוספים:** `$pageview` (אוטומטי בכל שינוי route), `auth.login_completed`, `exam.started/completed`, `virtual_court.case_created`.
+
+**הפעלה:**
+1. צרי חשבון חינם ב-[PostHog Cloud](https://posthog.com) → Project → Project Settings → Project API Key
+2. הדביקי את ה-key ב-`VITE_POSTHOG_KEY` (לקוח) וגם ב-`POSTHOG_KEY` (שרת — לאימותי webhook)
+3. ב-PostHog → Insights → Funnels, בני funnel: `pricing.viewed` → `checkout.started` → `checkout.completed_server` — זה אחוז ההמרה שלך
+
+> **פרטיות:** אם `VITE_POSTHOG_KEY` ריק, הלקוח ב-no-op מלא (לא טוען את ה-SDK). השרת זהה ל-`POSTHOG_KEY`.
+
+### Realtime — בית המשפט הוירטואלי (Socket.io)
+
+במקום polling של REST בלולאה, LexStudy משתמש ב-Socket.io לזרימה דו-כיוונית בזמן אמת:
+
+- **שרת:** `apps/server/src/realtime/socketServer.ts` מאזין על אותו פורט של Express (http + WS multiplex).
+- **JWT Auth:** כל חיבור חייב `auth.token` תקף — אותו Access Token של REST, מאומת דרך `verifyAccessToken()`.
+- **Rooms:** כל תיק וירטואלי הוא חדר נפרד (`court:<caseId>`). פעולת `court:join` מצרפת את ה-socket לחדר. בנוסף, כל משתמש מצטרף אוטומטית ל-`user:<userId>` — שם נשלחות התראות אישיות (`notification:new`) בכל הטאבים.
+- **Broadcast מ-AI:** `POST /api/ai/virtual-court/judge-analysis` ו-`/generate-case` משדרים `court:ai_typing` לפני קריאת LLM ו-`court:ai_response` אחרי — כל הלקוחות בחדר מקבלים מיידית ללא רענון.
+- **הודעת מרצה / מתאם לחדר:** `POST /api/virtual-court-2/cases/:caseId/announce` (JWT + CSRF) — גוף `{ "title", "body" }` משדר `court:announcement` לכל מי שבחדר התיק. בלקוח: כפתור «הודעה לחדר (Realtime)» בדף פרטי התיק, וההודעה מופיעה גם במגש ההתראות (`notificationService`).
+- **גשר גלובלי:** `RealtimeSocketBridge` ב-`main.tsx` מאזין ל-`notification:new` ומזין את אותו מגש שמציג `RealtimeNotifications` ב-NavBar.
+- **לקוח:** `useCourtSocket(caseId)` ב-`apps/web/src/features/realtime/useCourtSocket.ts` מחזיר `{ connected, typing, lastMessage, participants }`. ה-VirtualCourt2CaseDetailPage מציג Chip של "Realtime מחובר" ו"N משתתפים בחדר".
+- **התנתקות:** `signOut` קורא ל-`disconnectSocket()` כדי לסגור את ה-WebSocket ולמנוע שימוש בטוקן ישן.
+- **Reconnect:** אוטומטי — `socket.io-client` מגדיר retry אינסופי עם backoff (1s → 10s).
+
+**קונפיגורציה:** השאירי `VITE_SOCKET_URL` ריק בפיתוח — נגזר אוטומטית מ-`VITE_API_URL` (חותכים `/api`). בפרודקשן הגדירי מפורשות (למשל `wss://api.lexstudy.co.il`). `CORS_ORIGIN` בשרת חייב לכלול את מקור הלקוח — אותה הגדרה של REST.
+
+### Offline First — תרגול ברכבת
+
+TanStack Query + `localStorage` persister שומרים את כל תשובות ה-API ב-24 שעות האחרונות:
+
+- **`PersistQueryClientProvider`** ב-`apps/web/src/main.tsx` עוטף את כל האפליקציה.
+- **`gcTime: 24h`, `networkMode: 'offlineFirst'`** — שאילתות שלא קיבלו רשת משתמשות בקאש המקומי.
+- **Sensitive keys excluded:** `['auth', 'billing', 'csrf', 'stripe']` לא נשמרים לדיסק — לעולם לא מחזירים entitlement/session שהוקפא.
+- **Mutations:** React Query משהה mutations כשאין רשת ומפעיל אוטומטית בחזרה לקליטה.
+- **`OfflineBanner`** (`apps/web/src/features/offline/OfflineBanner.tsx`) מציג sticky בעת ניתוק, נעלם אוטומטית בחזרה.
+- **Service Worker** (`apps/web/public/sw.js`) מבצע cache-first על static assets בלבד; לא נוגע ב-`/api/*` וב-WebSocket upgrades — כך לא מתנגש עם TanStack persister או עם Socket.io.
+
+### RAG — מאגר ידע משפטי (pgvector + OpenAI)
+
+LexStudy תומך ב-**Retrieval-Augmented Generation**: שליפה סמנטית מ-PostgreSQL (הרחבת `vector`), והזרקת קטעים ל-LLM כדי להפחית המצאות ולחייב ציטוט מקורות.
+
+| רכיב | מיקום |
+|---|---|
+| מיגרציה | `apps/server/sql/legal/001_legal_knowledge_base.sql` — טבלה `legal_knowledge_base`, פונקציה `match_legal_documents` |
+| Embeddings | `apps/server/src/services/openaiEmbeddings.ts` — `text-embedding-3-small` (1536), retry אוטומטי על **429**, ו־`createEmbeddingsBatched()` לאצ'ים עם השהיה |
+| שליפה + ניסוח | `apps/server/src/legal/legalRagService.ts` — `searchLegalKnowledge`, `answerWithRag`, `retrieveContextForPrompt` |
+| API משתמש מחובר | `POST /api/legal/rag/query` (תשובה מלאה), `POST /api/legal/rag/search` (שליפה בלבד) |
+| API אדמין | `GET/POST/PATCH ...` תחת `/api/admin/legal-knowledge/*` — **רק `role: admin`** |
+| דשבורד Web | `/admin/vectors` — סטטיסטיקה, טבלה, Playground, שאילתת RAG, הוספת מסמך |
+| נייד | `apps/mobile` — טאב «מאמן AI», `useLegalAI` + `EXPO_PUBLIC_API_URL` |
+| דוגמת הזנה | `pnpm ingest:legal-sample` מתוך `apps/server` (אחרי מיגרציה + `OPENAI_API_KEY`) |
+
+**הפעלה:**
+
+1. ב-Supabase (או Postgres): תחת **Database → Extensions** הפעילי `vector`, ואז הריצי את `001_legal_knowledge_base.sql`.
+2. **אימות ההרחבה:** `SELECT * FROM pg_extension WHERE extname = 'vector';` — אמורה להופיע שורה אחת (`extname = vector`).
+3. הגדירי `OPENAI_API_KEY` (ואופציונלית `OPENAI_EMBEDDING_MODEL`).
+4. אכלסי נתונים: דרך הדשבורד `/admin/vectors` או `pnpm ingest:legal-sample` (בסקריפט: השהיה בין מסמכים — `INGEST_DELAY_MS`, ברירת מחדל 350). לנפח גדול: אצ'ים קטנים + `createEmbeddingsBatched()` כדי להימנע מ-**429** מ-OpenAI.
+5. קבעי משתמש כאדמין: `UPDATE auth_users SET role = 'admin' WHERE LOWER(email) = LOWER('you@example.com');`  
+   **אבטחה:** נתיבי `/api/admin/legal-knowledge/*` עוברים `requireAuth` ואז `requireAdmin`. ה-`role` נקרא מ-**PostgreSQL בכל בקשה** (`getUserFromBearer` → `findUserById`) — לא מ-JWT; שינוי role ב-DB נכנס לתוקף מיד.
+6. (אופציונלי) **שופט AI עם RAG:** `LEGAL_RAG_IN_JUDGE=true` — הקשר מהמאגר מוזרק ל-prompt של `llmJudgeAnalysis` (וגם `LEGAL_RAG_MATCH_THRESHOLD`, `LEGAL_RAG_MATCH_COUNT`, `LEGAL_RAG_VERIFIED_ONLY`).
+
+**401 בלקוח (Web):** `authJson` / `authJsonWithBearer` מפעילים `triggerUnauthorized()` כשמתאים (Bearer תמיד; `authJson` רק אם יש session פעילה). `SessionAuthProvider` רושם handler שמנקה session ומפנה ל-`/login?reason=session`. **Axios** (`axiosClient`) משתמש ב-`getSyncAccessToken()` (מסונכרן מה-Provider) ובאותו טיפול ב-401.
+
+**401 ב-Mobile:** `useLegalAI` קורא ל-`notifyMobileUnauthorized()`; `MobileUnauthorizedRegistrar` ב-`_layout` מנווט ל-`/` (החלף לנתיב login כשיהיה מסך התחברות).
+
+**ערך עסקי:** מאגר מאומת (`verification_status = verified`) ניתן לשווק כמנוי פרימיום; Playground באדמין מאפשר לבדוק citations לפני שמשתמשים רואים תשובה.
+
 ### Auth מאובטח
 - JWT Access Token (זיכרון בלבד) + Refresh Token (HttpOnly cookie)
 - CSRF double-submit cookie
 - OTP ב-email לאימות הרשמה
 - hashing: bcrypt (rounds: 12)
+- **פקעת session / 401:** ראו לעיל (RAG) — גשר לא מפנה על כישלון התחברות רגיל (`authJson` ב-401 רק כשכבר יש `accessToken` בזיכרון)
 
 ---
 

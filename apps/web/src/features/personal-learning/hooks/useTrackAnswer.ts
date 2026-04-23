@@ -3,12 +3,18 @@
  *
  * שימוש:
  *   const { trackAnswer, userId } = useTrackAnswer()
- *   trackAnswer({ questionId: q.id, topic: 'דיני חוזים', subTopic: 'הפרת חוזה', correct: true, source: 'contracts-exam' })
+ *   await trackAnswer({ questionId: q.id, topic: 'דיני חוזים', subTopic: 'הפרת חוזה', correct: true, source: 'contracts-exam' })
  */
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../../../store'
+import { useSessionAuth } from '@/features/auth/providers/SessionAuthProvider'
+import { recordQuestionUsage } from '@/features/billing/api/billingHttp'
 import { useUserProgressStore } from '../store/useUserProgressStore'
+
+export type TrackAnswerResult =
+  | { ok: true }
+  | { ok: false; dailyLimitReached: true }
 
 interface TrackPayload {
   questionId: string
@@ -20,11 +26,24 @@ interface TrackPayload {
 
 export function useTrackAnswer() {
   const user = useSelector((s: RootState) => s.auth?.user)
+  const { accessToken } = useSessionAuth()
   const trackAnswer = useUserProgressStore(s => s.trackAnswer)
 
   const track = useCallback(
-    (payload: TrackPayload) => {
-      if (!user?.id) return   // אינו מחובר — אל תרשום
+    async (payload: TrackPayload): Promise<TrackAnswerResult> => {
+      if (!user?.id) return { ok: true }
+
+      if (accessToken) {
+        try {
+          await recordQuestionUsage(accessToken)
+        } catch (e) {
+          const err = e as { status?: number }
+          if (err.status === 429) {
+            return { ok: false, dailyLimitReached: true }
+          }
+        }
+      }
+
       trackAnswer(
         user.id,
         `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim() || user.email,
@@ -36,8 +55,9 @@ export function useTrackAnswer() {
           source: payload.source,
         },
       )
+      return { ok: true }
     },
-    [user, trackAnswer],
+    [user, accessToken, trackAnswer],
   )
 
   return { trackAnswer: track, userId: user?.id ?? null, isLoggedIn: !!user?.id }

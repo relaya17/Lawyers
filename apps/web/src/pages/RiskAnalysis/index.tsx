@@ -40,6 +40,7 @@ import {
   School
 } from '@mui/icons-material'
 import { PageHero } from '@/design/PageHero'
+import { PaywallGate } from '@/features/billing/components/PaywallGate'
 
 
 interface RiskAnalysisResult {
@@ -260,6 +261,7 @@ export const RiskAnalysisPage: React.FC = () => {
   }
 
   return (
+    <PaywallGate flag="contractRiskAnalysis">
     <Container maxWidth="lg">
       <Box sx={{ py: 3 }}>
         <PageHero
@@ -624,5 +626,6 @@ export const RiskAnalysisPage: React.FC = () => {
         </Dialog>
       </Box>
     </Container>
+    </PaywallGate>
   )
 }

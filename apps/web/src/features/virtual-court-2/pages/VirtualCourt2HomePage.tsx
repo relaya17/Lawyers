@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import { useEntitlements } from '@/features/billing/providers/EntitlementsProvider'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import {
   Alert,
@@ -34,6 +35,7 @@ const STATUSES: Array<CaseStatus | 'all'> = [
 
 export const VirtualCourt2HomePage: React.FC = () => {
   const navigate = useNavigate()
+  const { can, loading: entLoading } = useEntitlements()
   const cases = useVirtualCourt2Store((s) => s.cases)
   const resetToSamples = useVirtualCourt2Store((s) => s.resetToSamples)
 
@@ -77,6 +79,14 @@ export const VirtualCourt2HomePage: React.FC = () => {
         דיונים מרובים לאורך שבועות, פרוטוקול מזכירה, ראיות, ציר זמן, גישור/מו״מ וחדר וידאו. אינו
         תחליף לייעוץ משפטי.
       </Typography>
+
+      {!entLoading && can('virtualCourtLimited') && !can('virtualCourtFull') && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          <strong>מצב חינם:</strong> ניהול תיקים וסימולציה מקומית. ייצור תיק עשיר ב-AI ושופט AI מבוסס LLM
+          זמינים במסלול <strong>Student Pro</strong> —{' '}
+          <RouterLink to="/pricing">שדרוג</RouterLink>.
+        </Alert>
+      )}
 
       <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} sx={{ mb: 2 }}>
         <TextField

@@ -19,6 +19,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="legal-ai"
+        options={{
+          title: 'מאמן AI',
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="sparkles" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="learn"
         options={{
           title: 'למידה',

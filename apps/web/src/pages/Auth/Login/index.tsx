@@ -12,19 +12,20 @@ import {
   CircularProgress,
   Divider,
 } from '@mui/material'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { loginSchema } from '@shared/validation/auth'
 import type { RootState } from '@/store'
 import { BiometricButton } from '@/components/ui/BiometricButton'
 import { useSessionAuth } from '@/features/auth/providers/SessionAuthProvider'
 import { prefetchCsrf } from '@/features/auth/api/authHttp'
+import { safeNextPath } from '@/utils/safeNextPath'
 
 export const LoginPage: React.FC = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { signIn } = useSessionAuth()
   const { isLoading: loading } = useSelector((state: RootState) => state.auth)
 
@@ -53,14 +54,16 @@ export const LoginPage: React.FC = () => {
     setFieldErrors({})
     try {
       await signIn(parsed.data.email, parsed.data.password)
-      navigate('/dashboard', { replace: true })
+      const nextRaw = searchParams.get('next') ?? searchParams.get('redirect')
+      navigate(safeNextPath(nextRaw), { replace: true })
     } catch (e) {
       setSubmitError(e instanceof Error ? e.message : 'התחברות נכשלה')
     }
   }
 
   const handleBiometricSuccess = (_token: string) => {
-    navigate('/dashboard')
+    const nextRaw = searchParams.get('next') ?? searchParams.get('redirect')
+    navigate(safeNextPath(nextRaw))
   }
 
   return (
@@ -145,7 +148,11 @@ export const LoginPage: React.FC = () => {
               <Box sx={{ textAlign: 'center', mt: 2 }}>
                 <Typography variant="body2" color="text.secondary">
                   {t('auth.noAccount')}{' '}
-                  <Link component={RouterLink} to="/register" variant="body2">
+                  <Link
+                    component={RouterLink}
+                    to={searchParams.toString() ? `/register?${searchParams.toString()}` : '/register'}
+                    variant="body2"
+                  >
                     {t('auth.register')}
                   </Link>
                 </Typography>

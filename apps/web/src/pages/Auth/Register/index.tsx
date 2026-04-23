@@ -12,19 +12,21 @@ import {
   CircularProgress,
   Grid,
 } from '@mui/material'
-import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { Link as RouterLink, useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { registerSchema, verifyEmailSchema } from '@shared/validation/auth'
 import type { RootState } from '@/store'
 import { useSessionAuth } from '@/features/auth/providers/SessionAuthProvider'
 import { prefetchCsrf } from '@/features/auth/api/authHttp'
+import { safeNextPath } from '@/utils/safeNextPath'
 
 type Step = 'form' | 'verify'
 
 export const RegisterPage: React.FC = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { signUp, verifyOtp, resendOtp } = useSessionAuth()
   const { isLoading: loading } = useSelector((state: RootState) => state.auth)
 
@@ -95,7 +97,7 @@ export const RegisterPage: React.FC = () => {
     setFieldErrors({})
     try {
       await verifyOtp(parsed.data.email, parsed.data.code)
-      navigate('/dashboard', { replace: true })
+      navigate(safeNextPath(searchParams.get('next')), { replace: true })
     } catch (e) {
       setSubmitError(e instanceof Error ? e.message : 'אימות נכשל')
     }
@@ -254,7 +256,11 @@ export const RegisterPage: React.FC = () => {
             <Box sx={{ textAlign: 'center', mt: 3 }}>
               <Typography variant="body2" color="text.secondary">
                 {t('auth.haveAccount')}{' '}
-                <Link component={RouterLink} to="/login" variant="body2">
+                <Link
+                  component={RouterLink}
+                  to={searchParams.toString() ? `/login?${searchParams.toString()}` : '/login'}
+                  variant="body2"
+                >
                   {t('auth.login')}
                 </Link>
               </Typography>

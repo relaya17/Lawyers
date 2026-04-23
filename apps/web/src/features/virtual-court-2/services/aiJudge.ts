@@ -60,22 +60,27 @@ export function runAIJudgeAnalysisLocal(legalCase: LegalCase, issue: string): AI
  */
 export async function runAIJudgeAnalysis(
   legalCase: LegalCase,
-  issue: string
+  issue: string,
+  accessToken?: string | null,
 ): Promise<AIJudgeAnalysis> {
-  const remote = await fetchLlmJudgeAnalysis({
-    issue: issue || 'שאלה משפטית כללית',
-    legalCase: {
-      title: legalCase.title,
-      level: legalCase.level,
-      track: legalCase.track,
-      summary: legalCase.summary,
-      facts: legalCase.facts,
-      claims: legalCase.claims,
-      defenses: legalCase.defenses,
-      referenceStatutes: legalCase.referenceStatutes,
-      referencePrecedents: legalCase.referencePrecedents,
+  const remote = await fetchLlmJudgeAnalysis(
+    {
+      issue: issue || 'שאלה משפטית כללית',
+      caseId: legalCase.id,
+      legalCase: {
+        title: legalCase.title,
+        level: legalCase.level,
+        track: legalCase.track,
+        summary: legalCase.summary,
+        facts: legalCase.facts,
+        claims: legalCase.claims,
+        defenses: legalCase.defenses,
+        referenceStatutes: legalCase.referenceStatutes,
+        referencePrecedents: legalCase.referencePrecedents,
+      },
     },
-  })
+    accessToken,
+  )
 
   if (!remote) {
     return runAIJudgeAnalysisLocal(legalCase, issue)

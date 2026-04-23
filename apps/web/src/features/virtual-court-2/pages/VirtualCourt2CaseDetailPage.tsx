@@ -6,6 +6,10 @@ import {
   Button,
   Chip,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   MenuItem,
   Stack,
@@ -16,8 +20,14 @@ import {
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import WifiIcon from '@mui/icons-material/Wifi'
+import WifiOffIcon from '@mui/icons-material/WifiOff'
+import PeopleIcon from '@mui/icons-material/People'
+import CampaignIcon from '@mui/icons-material/Campaign'
+import { useSessionAuth } from '@/features/auth/providers/SessionAuthProvider'
+import { useCourtSocket } from '@/features/realtime/useCourtSocket'
 import { useVirtualCourt2Store } from '../store/useVirtualCourt2Store'
-import { pullCaseSnapshot, pushCaseSnapshot } from '../services/virtualCourtRemote'
+import { announceCourtCaseRealtime, pullCaseSnapshot, pushCaseSnapshot } from '../services/virtualCourtRemote'
 import {
   courtLevelLabel,
   judgeModeLabel,
@@ -36,6 +46,7 @@ import { VideoRoomPanel } from '../components/VideoRoomPanel'
 import { TimelinePanel } from '../components/TimelinePanel'
 import { SourcesPanel } from '../components/SourcesPanel'
 import { ImportRealCaseDialog } from '../components/ImportRealCaseDialog'
+import { PaywallGate } from '@/features/billing/components/PaywallGate'
 
 const STATUSES: CaseStatus[] = [
   'draft',
@@ -50,6 +61,7 @@ const STATUSES: CaseStatus[] = [
 export const VirtualCourt2CaseDetailPage: React.FC = () => {
   const { caseId } = useParams<{ caseId: string }>()
   const navigate = useNavigate()
+  const { accessToken, isAuthenticated } = useSessionAuth()
   const legalCase = useVirtualCourt2Store((s) => s.cases.find((c) => c.id === caseId))
   const setStatus = useVirtualCourt2Store((s) => s.setStatus)
   const removeCase = useVirtualCourt2Store((s) => s.removeCase)
@@ -59,6 +71,13 @@ export const VirtualCourt2CaseDetailPage: React.FC = () => {
   const [syncNote, setSyncNote] = useState<string | null>(null)
   const [syncBusy, setSyncBusy] = useState(false)
   const [importOpen, setImportOpen] = useState(false)
+  const [announceOpen, setAnnounceOpen] = useState(false)
+  const [announceTitle, setAnnounceTitle] = useState('')
+  const [announceBody, setAnnounceBody] = useState('')
+  const [announceBusy, setAnnounceBusy] = useState(false)
+  const [announceNote, setAnnounceNote] = useState<string | null>(null)
+
+  const { connected, typing, lastMessage, participants } = useCourtSocket(caseId ?? null)
 
   if (!legalCase) {
     return (
@@ -125,6 +144,28 @@ export const VirtualCourt2CaseDetailPage: React.FC = () => {
     }
   }
 
+  const handleAnnounce = async () => {
+    if (!legalCase || !accessToken || !announceTitle.trim() || !announceBody.trim()) return
+    setAnnounceBusy(true)
+    setAnnounceNote(null)
+    try {
+      await announceCourtCaseRealtime(legalCase.id, accessToken, {
+        title: announceTitle.trim(),
+        body: announceBody.trim(),
+      })
+      setAnnounceNote('ההודעה נשלחה לכל מי שמחובר כעת לתיק (Realtime).')
+      setAnnounceOpen(false)
+      setAnnounceTitle('')
+      setAnnounceBody('')
+    } catch (e) {
+      setAnnounceNote(
+        e instanceof Error ? e.message : 'שליחה נכשלה — ודאו שההתחברות פעילה והשרת רץ.',
+      )
+    } finally {
+      setAnnounceBusy(false)
+    }
+  }
+
   return (
     <Container maxWidth="lg" sx={{ py: 2 }}>
       <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }} flexWrap="wrap" useFlexGap>
@@ -150,19 +191,66 @@ export const VirtualCourt2CaseDetailPage: React.FC = () => {
         <Chip size="small" variant="outlined" label={`מסלול: ${trackLabel[legalCase.track]}`} />
         <Chip size="small" variant="outlined" label={judgeModeLabel[legalCase.judgeMode]} />
         <Chip size="small" variant="outlined" label={`נושא: ${legalCase.topic}`} />
+        <Chip
+          size="small"
+          color={connected ? 'success' : 'default'}
+          variant={connected ? 'filled' : 'outlined'}
+          icon={connected ? <WifiIcon /> : <WifiOffIcon />}
+          label={connected ? 'Realtime מחובר' : 'Realtime לא מחובר'}
+        />
+        {participants.size > 0 && (
+          <Chip
+            size="small"
+            variant="outlined"
+            icon={<PeopleIcon />}
+            label={`${participants.size} משתתפים בחדר`}
+          />
+        )}
       </Stack>
 
+      {typing && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          {typing === 'judge' ? 'השופט AI כותב החלטה…' : 'שותף בחדר מקליד…'}
+        </Alert>
+      )}
+      {lastMessage && (
+        <Alert severity="success" sx={{ mb: 2 }} onClose={() => undefined}>
+          תשובת AI חדשה התקבלה בזמן אמת ({new Date(lastMessage.ts).toLocaleTimeString('he-IL')}).
+        </Alert>
+      )}
+
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ mb: 2 }} flexWrap="wrap" useFlexGap>
-        <Button variant="contained" color="secondary" size="small" onClick={() => setImportOpen(true)}>
-          ייבוא ממקרה אמיתי
-        </Button>
+        <PaywallGate flag="realCaseImport" preview>
+          <Button variant="contained" color="secondary" size="small" onClick={() => setImportOpen(true)}>
+            ייבוא ממקרה אמיתי
+          </Button>
+        </PaywallGate>
         <Button variant="outlined" size="small" disabled={syncBusy} onClick={handlePushCloud}>
           שמירה לענן (שרת)
         </Button>
         <Button variant="outlined" size="small" disabled={syncBusy} onClick={handlePullCloud}>
           טעינה מהענן
         </Button>
+        {isAuthenticated && accessToken && (
+          <Button
+            variant="outlined"
+            size="small"
+            color="primary"
+            startIcon={<CampaignIcon />}
+            onClick={() => {
+              setAnnounceNote(null)
+              setAnnounceOpen(true)
+            }}
+          >
+            הודעה לחדר (Realtime)
+          </Button>
+        )}
       </Stack>
+      {announceNote && (
+        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setAnnounceNote(null)}>
+          {announceNote}
+        </Alert>
+      )}
       {syncNote && (
         <Alert severity="info" sx={{ mb: 2 }} onClose={() => setSyncNote(null)}>
           {syncNote}
@@ -266,6 +354,44 @@ export const VirtualCourt2CaseDetailPage: React.FC = () => {
           setSyncNote('התיק עודכן מייבוא ממקרה אמיתי — יש לאמת ציטוטים מול מקורות רשמיים.')
         }}
       />
+
+      <Dialog open={announceOpen} onClose={() => !announceBusy && setAnnounceOpen(false)} fullWidth maxWidth="sm">
+        <DialogTitle>הודעה למשתתפים בזמן אמת</DialogTitle>
+        <DialogContent>
+          <Stack spacing={2} sx={{ mt: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              כל מי שפותח כעת את אותו תיק ומחובר למערכת יקבל התראה במגש ההתראות. מתאים להנחיות מרצה או תיאום דיון.
+            </Typography>
+            <TextField
+              label="כותרת"
+              value={announceTitle}
+              onChange={(e) => setAnnounceTitle(e.target.value)}
+              fullWidth
+              autoFocus
+            />
+            <TextField
+              label="תוכן"
+              value={announceBody}
+              onChange={(e) => setAnnounceBody(e.target.value)}
+              fullWidth
+              multiline
+              minRows={4}
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAnnounceOpen(false)} disabled={announceBusy}>
+            ביטול
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => void handleAnnounce()}
+            disabled={announceBusy || !announceTitle.trim() || !announceBody.trim()}
+          >
+            שלח
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   )
 }

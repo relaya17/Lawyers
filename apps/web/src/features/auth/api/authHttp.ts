@@ -3,6 +3,9 @@
  * Access JWT לא נשמר ב-localStorage — רק בזיכרון (Context/Redux).
  */
 
+import { getSyncAccessToken } from './accessTokenSync'
+import { triggerUnauthorized } from './authUnauthorizedBridge'
+
 const API_ROOT = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace(
   /\/$/,
   '',
@@ -51,6 +54,9 @@ export async function authJson<T>(path: string, init: RequestInit = {}): Promise
     headers,
   })
   if (!r.ok) {
+    if (r.status === 401 && getSyncAccessToken()) {
+      triggerUnauthorized()
+    }
     const j = (await r.json().catch(() => ({}))) as {
       error?: string
       details?: unknown
@@ -94,6 +100,9 @@ export async function authJsonWithBearer<T>(
     headers,
   })
   if (!r.ok) {
+    if (r.status === 401) {
+      triggerUnauthorized()
+    }
     const j = (await r.json().catch(() => ({}))) as { error?: string }
     const err = new Error(j.error || `HTTP ${r.status}`) as Error & { status?: number }
     err.status = r.status

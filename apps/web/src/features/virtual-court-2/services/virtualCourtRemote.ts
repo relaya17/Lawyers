@@ -1,4 +1,5 @@
 import { currentApiConfig } from '@/app/config/apiConfig'
+import { authJsonWithBearer } from '@/features/auth/api/authHttp'
 
 const base = () => currentApiConfig.baseURL.replace(/\/$/, '')
 
@@ -37,50 +38,58 @@ export interface LlmJudgeAnalysisResponse {
   disclaimers: string[]
 }
 
-export async function fetchLlmGenerateCase(body: {
-  topic: string
-  track: string
-  level: string
-  judgeMode: string
-}): Promise<LlmGenerateCaseResponse | null> {
+export async function fetchLlmGenerateCase(
+  body: {
+    topic: string
+    track: string
+    level: string
+    judgeMode: string
+    caseId?: string
+  },
+  accessToken: string | null | undefined,
+): Promise<LlmGenerateCaseResponse | null> {
+  if (!accessToken) return null
   try {
-    const r = await fetch(`${base()}/ai/virtual-court/generate-case`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(body),
-    })
-    if (r.status === 503) return null
-    if (!r.ok) return null
-    return (await r.json()) as LlmGenerateCaseResponse
-  } catch {
+    return await authJsonWithBearer<LlmGenerateCaseResponse>(
+      '/ai/virtual-court/generate-case',
+      accessToken,
+      { method: 'POST', body: JSON.stringify(body) },
+    )
+  } catch (e) {
+    const err = e as { status?: number }
+    if (err.status === 503) return null
     return null
   }
 }
 
-export async function fetchLlmJudgeAnalysis(body: {
-  issue: string
-  legalCase: {
-    title: string
-    level: string
-    track: string
-    summary: string
-    facts: string[]
-    claims: string[]
-    defenses: string[]
-    referenceStatutes: unknown[]
-    referencePrecedents: unknown[]
-  }
-}): Promise<LlmJudgeAnalysisResponse | null> {
+export async function fetchLlmJudgeAnalysis(
+  body: {
+    issue: string
+    caseId?: string
+    legalCase: {
+      title: string
+      level: string
+      track: string
+      summary: string
+      facts: string[]
+      claims: string[]
+      defenses: string[]
+      referenceStatutes: unknown[]
+      referencePrecedents: unknown[]
+    }
+  },
+  accessToken: string | null | undefined,
+): Promise<LlmJudgeAnalysisResponse | null> {
+  if (!accessToken) return null
   try {
-    const r = await fetch(`${base()}/ai/virtual-court/judge-analysis`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(body),
-    })
-    if (r.status === 503) return null
-    if (!r.ok) return null
-    return (await r.json()) as LlmJudgeAnalysisResponse
-  } catch {
+    return await authJsonWithBearer<LlmJudgeAnalysisResponse>(
+      '/ai/virtual-court/judge-analysis',
+      accessToken,
+      { method: 'POST', body: JSON.stringify(body) },
+    )
+  } catch (e) {
+    const err = e as { status?: number }
+    if (err.status === 503) return null
     return null
   }
 }
@@ -110,6 +119,22 @@ export async function pullCaseSnapshot(caseId: string): Promise<unknown | null> 
   } catch {
     return null
   }
+}
+
+/** הודעה בזמן אמת לכל מי שנמצא בדף התיק (חדר Socket.io). דורש JWT. */
+export async function announceCourtCaseRealtime(
+  caseId: string,
+  accessToken: string,
+  payload: { title: string; body: string },
+): Promise<{ ok: boolean; caseId: string }> {
+  return authJsonWithBearer<{ ok: boolean; caseId: string }>(
+    `/virtual-court-2/cases/${encodeURIComponent(caseId)}/announce`,
+    accessToken,
+    {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    },
+  )
 }
 
 export type RealCaseImportApiResponse = LlmGenerateCaseResponse & {

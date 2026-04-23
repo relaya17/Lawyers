@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTrackAnswer } from '../../../../features/personal-learning/hooks/useTrackAnswer';
+import { useEntitlements } from '@/features/billing/providers/EntitlementsProvider';
 import { 
   Card, 
   CardContent, 
@@ -169,6 +170,7 @@ interface ExamManagerProps {
 
 export const ExamManager: React.FC<ExamManagerProps> = ({ onStartExam }) => {
   const { trackAnswer } = useTrackAnswer();
+  const { dailyQuestions, refresh: refreshEntitlements } = useEntitlements();
   const [selectedTab, setSelectedTab] = useState(0);
   const [examHistory, setExamHistory] = useState<ExamHistory[]>([]);
   const [userAchievements, setUserAchievements] = useState<Achievement[]>(achievements);
@@ -182,6 +184,8 @@ export const ExamManager: React.FC<ExamManagerProps> = ({ onStartExam }) => {
     strongestCategory: '',
     weakestCategory: ''
   });
+  const [adaptiveTopicHint, setAdaptiveTopicHint] = useState<string | null>(null);
+  const [dailyQuotaNote, setDailyQuotaNote] = useState<string | null>(null);
 
   // טעינת נתונים מ-localStorage
   useEffect(() => {
@@ -195,6 +199,18 @@ export const ExamManager: React.FC<ExamManagerProps> = ({ onStartExam }) => {
     const savedAchievements = localStorage.getItem('user_achievements');
     if (savedAchievements) {
       setUserAchievements(JSON.parse(savedAchievements));
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      const t = sessionStorage.getItem('lexstudy_weak_topic');
+      if (t) {
+        setAdaptiveTopicHint(t);
+        sessionStorage.removeItem('lexstudy_weak_topic');
+      }
+    } catch {
+      /* ignore */
     }
   }, []);
 
@@ -246,7 +262,7 @@ export const ExamManager: React.FC<ExamManagerProps> = ({ onStartExam }) => {
   };
 
   // השלמת מבחן
-  const handleExamComplete = (results: any) => {
+  const handleExamComplete = async (results: any) => {
     const newExam: ExamHistory = {
       id: `exam_${Date.now()}`,
       date: new Date(),
@@ -264,17 +280,46 @@ export const ExamManager: React.FC<ExamManagerProps> = ({ onStartExam }) => {
     setExamHistory(updatedHistory);
     localStorage.setItem('exam_history', JSON.stringify(updatedHistory));
 
-    // רישום התקדמות אישית לפי נושא
+    // רישום התקדמות אישית לפי נושא (+ מכסה יומית בשרת למשתמשי Free)
+    setDailyQuotaNote(null);
+    let hitDailyCap = false;
     if (results.categoryBreakdown instanceof Map) {
-      results.categoryBreakdown.forEach((stats: { correct: number; total: number }, category: string) => {
-        for (let i = 0; i < stats.correct; i++) {
-          trackAnswer({ questionId: `${examMode}_${category}_c_${i}`, topic: category, subTopic: 'כללי', correct: true, source: 'exam-manager' });
+      outer: for (const [category, stats] of results.categoryBreakdown.entries()) {
+        const s = stats as { correct: number; total: number };
+        for (let i = 0; i < s.correct; i++) {
+          const r = await trackAnswer({
+            questionId: `${examMode}_${category}_c_${i}`,
+            topic: category,
+            subTopic: 'כללי',
+            correct: true,
+            source: 'exam-manager',
+          });
+          if (!r.ok) {
+            hitDailyCap = true;
+            break outer;
+          }
         }
-        for (let i = 0; i < (stats.total - stats.correct); i++) {
-          trackAnswer({ questionId: `${examMode}_${category}_w_${i}`, topic: category, subTopic: 'כללי', correct: false, source: 'exam-manager' });
+        for (let i = 0; i < s.total - s.correct; i++) {
+          const r = await trackAnswer({
+            questionId: `${examMode}_${category}_w_${i}`,
+            topic: category,
+            subTopic: 'כללי',
+            correct: false,
+            source: 'exam-manager',
+          });
+          if (!r.ok) {
+            hitDailyCap = true;
+            break outer;
+          }
         }
-      });
+      }
     }
+    if (hitDailyCap) {
+      setDailyQuotaNote(
+        'חלק מהתשובות לא נרשמו בשרת — הגעת למגבלת 20 שאלות ביום במסלול החינם. שדרגי ל-Student Pro לתרגול ללא הגבלה.',
+      );
+    }
+    void refreshEntitlements();
 
     calculateStats(updatedHistory);
     checkAchievements(newExam, updatedHistory);
@@ -374,6 +419,25 @@ export const ExamManager: React.FC<ExamManagerProps> = ({ onStartExam }) => {
 
   return (
     <Box sx={{ maxWidth: 1200, margin: 'auto', p: 3 }}>
+      {dailyQuestions?.limit != null && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          שאלות היום (מסלול חינם): {dailyQuestions.used} / {dailyQuestions.limit}
+        </Alert>
+      )}
+      {dailyQuotaNote && (
+        <Alert severity="warning" sx={{ mb: 2 }} onClose={() => setDailyQuotaNote(null)}>
+          {dailyQuotaNote}
+        </Alert>
+      )}
+      {adaptiveTopicHint && (
+        <Alert
+          severity="info"
+          sx={{ mb: 2 }}
+          onClose={() => setAdaptiveTopicHint(null)}
+        >
+          מומלץ לתרגל עכשיו נושא שזוהה כחלש: <strong>{adaptiveTopicHint}</strong>
+        </Alert>
+      )}
       {/* כותרת */}
       <Card sx={{ mb: 3, background: 'linear-gradient(135deg, #1e88e5 0%, #1565c0 100%)', color: 'white' }}>
         <CardHeader

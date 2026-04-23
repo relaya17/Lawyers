@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useEntitlements } from '@/features/billing/providers/EntitlementsProvider'
+import { useSessionAuth } from '@/features/auth/providers/SessionAuthProvider'
 import { useNavigate, Link as RouterLink } from 'react-router-dom'
 import {
   Alert,
@@ -33,6 +35,9 @@ const MODES: JudgeMode[] = ['ai', 'student', 'hybrid']
 export const VirtualCourt2NewCasePage: React.FC = () => {
   const navigate = useNavigate()
   const addCase = useVirtualCourt2Store((s) => s.addCase)
+  const { can, loading: entLoading } = useEntitlements()
+  const { accessToken } = useSessionAuth()
+  const canFull = can('virtualCourtFull')
 
   const [topic, setTopic] = useState('')
   const [track, setTrack] = useState<CaseTrack>('civil')
@@ -40,6 +45,12 @@ export const VirtualCourt2NewCasePage: React.FC = () => {
   const [judgeMode, setMode] = useState<JudgeMode>('ai')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string>('')
+
+  useEffect(() => {
+    if (!entLoading && !canFull && (judgeMode === 'ai' || judgeMode === 'hybrid')) {
+      setMode('student')
+    }
+  }, [entLoading, canFull, judgeMode])
 
   const handleCreate = async () => {
     if (!topic.trim()) {
@@ -49,7 +60,11 @@ export const VirtualCourt2NewCasePage: React.FC = () => {
     setError('')
     setBusy(true)
     try {
-      const c = await generateCaseByTopic({ topic: topic.trim(), track, level, judgeMode })
+      const mode: JudgeMode = canFull ? judgeMode : 'student'
+      const c = await generateCaseByTopic(
+        { topic: topic.trim(), track, level, judgeMode: mode },
+        accessToken,
+      )
       addCase(c)
       navigate(`/virtual-court-2/${c.id}`)
     } finally {
@@ -69,6 +84,14 @@ export const VirtualCourt2NewCasePage: React.FC = () => {
         ציינו נושא/מקרה — המערכת תייצר שלד תיק ללימוד, כולל תקדימים וחקיקה רלוונטיים לפי הנושא.
         לאחר מכן תוכלו להוסיף משתתפים, דיונים, ראיות ופסיקה.
       </Typography>
+
+      {!entLoading && !canFull && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          במסלול החינם נוצר <strong>שלד תיק מקומי</strong> (ללא LLM בשרת). מי שמחוברים עם Student Pro מקבלים
+          ייצור תיק עשיר ב-AI.{' '}
+          <RouterLink to="/pricing">שדרוג</RouterLink>
+        </Alert>
+      )}
 
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
@@ -119,9 +142,14 @@ export const VirtualCourt2NewCasePage: React.FC = () => {
               value={judgeMode}
               onChange={(e) => setMode(e.target.value as JudgeMode)}
               fullWidth
+              helperText={
+                !canFull
+                  ? 'במסלול חינם זמין רק מצב שופט סטודנט. שופט AI — ב-Student Pro.'
+                  : undefined
+              }
             >
               {MODES.map((m) => (
-                <MenuItem key={m} value={m}>
+                <MenuItem key={m} value={m} disabled={!canFull && m !== 'student'}>
                   {judgeModeLabel[m]}
                 </MenuItem>
               ))}

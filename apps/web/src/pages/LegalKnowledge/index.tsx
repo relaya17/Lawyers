@@ -946,7 +946,14 @@ export const LegalKnowledgePage: React.FC = () => {
               return <FeatureComponent onLearnMore={() => {}} onStartChallenge={() => {}} />;
             }
             if (selectedFeature.id === 'personal-dashboard') {
-              return <FeatureComponent onNavigateToFeature={(featureId: string) => {
+              return <FeatureComponent onNavigateToFeature={(featureId: string, topicHint?: string) => {
+                if (topicHint) {
+                  try {
+                    sessionStorage.setItem('lexstudy_weak_topic', topicHint);
+                  } catch {
+                    /* ignore */
+                  }
+                }
                 const f = legalFeatures.find(x => x.id === featureId);
                 if (f) { setSelectedFeature(f); setLaunchMode('exam'); }
               }} />;

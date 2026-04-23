@@ -45,7 +45,8 @@
 		"contractTemplates": "תבניות חוזים",
 		"security": "אבטחה",
 		"virtualCourt": "בית משפט וירטואלי",
-		"virtualCourt2": "בית משפט וירטואלי 2"
+		"virtualCourt2": "בית משפט וירטואלי 2",
+		"pricing": "מחירון"
 	},
 	"auth": {
 		"login": "התחברות",

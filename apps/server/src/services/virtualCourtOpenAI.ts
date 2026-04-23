@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { extractJsonObject } from '../lib/extractJson.js';
+import { retrieveContextForPrompt } from '../legal/legalRagService.js';
+import { withJsonCache } from './aiResponseCache.js';
 
 const CourtLevelSchema = z.enum(['magistrate', 'district', 'supreme', 'other']);
 const ConfidenceSchema = z.enum(['low', 'medium', 'high']);
@@ -114,7 +116,14 @@ export async function llmGenerateCase(input: {
   track: string;
   level: string;
   judgeMode: string;
+  caseId?: string;
 }): Promise<GenerateCaseResponse> {
+  const cacheInput = {
+    topic: input.topic,
+    track: input.track,
+    level: input.level,
+    judgeMode: input.judgeMode,
+  };
   const user = JSON.stringify(
     {
       task: 'generate_case',
@@ -141,14 +150,23 @@ export async function llmGenerateCase(input: {
           { title: 'string', section: 'string optional', excerpt: 'string', sourceUrl: 'string optional' },
         ],
       },
-      case_request: input,
+      case_request: cacheInput,
     },
     null,
     2
   );
 
-  const raw = await completeOpenAIJson(GENERATE_SYSTEM, user);
-  return GenerateCaseResponseSchema.parse(raw);
+  const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+  const { value } = await withJsonCache<unknown>(
+    {
+      scope: 'vc_generate_case',
+      payload: { model, system: GENERATE_SYSTEM, request: cacheInput },
+      ttlDays: 90,
+      model,
+    },
+    () => completeOpenAIJson(GENERATE_SYSTEM, user),
+  );
+  return GenerateCaseResponseSchema.parse(value);
 }
 
 export async function llmJudgeAnalysis(input: {
@@ -165,6 +183,28 @@ export async function llmJudgeAnalysis(input: {
     referencePrecedents: unknown[];
   };
 }): Promise<JudgeAnalysisResponse> {
+  let enrichedInput = input;
+  if (process.env.LEGAL_RAG_IN_JUDGE === 'true') {
+    const ragQuery = [
+      input.issue,
+      input.caseJson.title,
+      input.caseJson.summary,
+      ...input.caseJson.facts.slice(0, 4),
+    ].join('\n');
+    const ragContext = await retrieveContextForPrompt({
+      query: ragQuery.slice(0, 6000),
+      matchThreshold: parseFloat(process.env.LEGAL_RAG_MATCH_THRESHOLD || '0.45'),
+      matchCount: Math.min(8, parseInt(process.env.LEGAL_RAG_MATCH_COUNT || '4', 10) || 4),
+      verifiedOnly: process.env.LEGAL_RAG_VERIFIED_ONLY === 'true',
+    });
+    if (ragContext) {
+      enrichedInput = {
+        ...input,
+        issue: `${input.issue}\n\n[קטעים מהמאגר הווקטורי — יש לבסס ניתוח גם עליהם כשהם רלוונטיים]\n${ragContext}`,
+      };
+    }
+  }
+
   const user = JSON.stringify(
     {
       task: 'judge_analysis',
@@ -177,12 +217,21 @@ export async function llmJudgeAnalysis(input: {
         precedents: 'array of { title, citation, court?, year?, summary, relevance, sourceUrl? }',
         disclaimers: 'string[] — e.g. not legal advice, simulation only',
       },
-      input,
+      input: enrichedInput,
     },
     null,
     2
   );
 
-  const raw = await completeOpenAIJson(JUDGE_SYSTEM, user);
-  return JudgeAnalysisResponseSchema.parse(raw);
+  const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+  const { value } = await withJsonCache<unknown>(
+    {
+      scope: 'vc_judge_analysis',
+      payload: { model, system: JUDGE_SYSTEM, user },
+      ttlDays: 90,
+      model,
+    },
+    () => completeOpenAIJson(JUDGE_SYSTEM, user),
+  );
+  return JudgeAnalysisResponseSchema.parse(value);
 }

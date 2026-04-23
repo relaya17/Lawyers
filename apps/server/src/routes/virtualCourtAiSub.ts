@@ -5,6 +5,10 @@ import {
   llmGenerateCase,
   llmJudgeAnalysis,
 } from '../services/virtualCourtOpenAI.js';
+import { broadcastAiResponse, broadcastAiTyping } from '../realtime/socketServer.js';
+import { requireAuth } from '../middleware/requireAuth.js';
+import { requireEntitlement } from '../middleware/requirePremium.js';
+import { requireAiMarginalBudget } from '../middleware/requireAiMarginalBudget.js';
 
 export const virtualCourtAiSubRouter = Router();
 
@@ -13,10 +17,12 @@ const GenerateBodySchema = z.object({
   track: z.string(),
   level: z.string(),
   judgeMode: z.string(),
+  caseId: z.string().optional(),
 });
 
 const JudgeBodySchema = z.object({
   issue: z.string(),
+  caseId: z.string().optional(),
   legalCase: z.object({
     title: z.string(),
     level: z.string(),
@@ -32,6 +38,9 @@ const JudgeBodySchema = z.object({
 
 virtualCourtAiSubRouter.post(
   '/generate-case',
+  requireAuth,
+  requireEntitlement('virtualCourtFull'),
+  requireAiMarginalBudget(),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!isLlmConfigured()) {
@@ -39,7 +48,15 @@ virtualCourtAiSubRouter.post(
         return;
       }
       const body = GenerateBodySchema.parse(req.body);
+      if (body.caseId) broadcastAiTyping({ caseId: body.caseId, role: 'judge' });
       const data = await llmGenerateCase(body);
+      if (body.caseId) {
+        broadcastAiResponse({
+          caseId: body.caseId,
+          role: 'judge',
+          content: typeof data === 'object' ? JSON.stringify(data) : String(data),
+        });
+      }
       res.json(data);
     } catch (err) {
       next(err);
@@ -49,6 +66,9 @@ virtualCourtAiSubRouter.post(
 
 virtualCourtAiSubRouter.post(
   '/judge-analysis',
+  requireAuth,
+  requireEntitlement('virtualCourtFull'),
+  requireAiMarginalBudget(),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!isLlmConfigured()) {
@@ -56,10 +76,18 @@ virtualCourtAiSubRouter.post(
         return;
       }
       const body = JudgeBodySchema.parse(req.body);
+      if (body.caseId) broadcastAiTyping({ caseId: body.caseId, role: 'judge' });
       const data = await llmJudgeAnalysis({
         issue: body.issue,
         caseJson: body.legalCase,
       });
+      if (body.caseId) {
+        broadcastAiResponse({
+          caseId: body.caseId,
+          role: 'judge',
+          content: typeof data === 'object' ? JSON.stringify(data) : String(data),
+        });
+      }
       res.json(data);
     } catch (err) {
       next(err);

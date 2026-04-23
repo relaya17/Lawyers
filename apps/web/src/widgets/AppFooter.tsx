@@ -126,6 +126,9 @@ export const AppFooter: React.FC = () => {
             <Link component={RouterLink} to="/support" color="inherit" variant="body2">
               {t('footer.support', { defaultValue: 'תמיכה' })}
             </Link>
+            <Link component={RouterLink} to="/landing" color="inherit" variant="body2">
+              {t('footer.landing', { defaultValue: 'דף נחיתה' })}
+            </Link>
           </Box>
         </Box>
       </Container>

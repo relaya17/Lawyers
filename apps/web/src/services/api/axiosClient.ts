@@ -1,6 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import { apiConfig } from '@/app/config/apiConfig'
 import { logger } from '@shared/utils/logger'
+import { getSyncAccessToken } from '@/features/auth/api/accessTokenSync'
+import { triggerUnauthorized } from '@/features/auth/api/authUnauthorizedBridge'
 
 // API Response Types
 export interface ApiResponse<T = unknown> {
@@ -33,8 +35,7 @@ const createApiClient = (): AxiosInstance => {
   // Request Interceptor
   client.interceptors.request.use(
     (config) => {
-      // Add auth token if available
-      const token = localStorage.getItem('authToken')
+      const token = getSyncAccessToken() || localStorage.getItem('authToken')
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
       }
@@ -82,9 +83,8 @@ const createApiClient = (): AxiosInstance => {
 
         switch (status) {
           case 401:
-            // Unauthorized - redirect to login
             localStorage.removeItem('authToken')
-            window.location.href = '/login'
+            triggerUnauthorized()
             break
           case 403:
             // Forbidden - show access denied message

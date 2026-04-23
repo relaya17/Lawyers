@@ -157,13 +157,19 @@ function mapCourt(c?: string): Precedent['court'] {
 /**
  * יוצר תיק: מנסה LLM בשרת (OPENAI_API_KEY), ואם אין — נופל חזרה למחולל המקומי.
  */
-export async function generateCaseByTopic(input: GenerateCaseInput): Promise<LegalCase> {
-  const llm = await fetchLlmGenerateCase({
-    topic: input.topic,
-    track: input.track,
-    level: input.level,
-    judgeMode: input.judgeMode,
-  })
+export async function generateCaseByTopic(
+  input: GenerateCaseInput,
+  accessToken?: string | null,
+): Promise<LegalCase> {
+  const llm = await fetchLlmGenerateCase(
+    {
+      topic: input.topic,
+      track: input.track,
+      level: input.level,
+      judgeMode: input.judgeMode,
+    },
+    accessToken,
+  )
 
   if (!llm) {
     return generateCaseLocal(input)

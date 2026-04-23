@@ -10,6 +10,9 @@ import { useDispatch } from 'react-redux'
 import type { User } from '@shared/store/slices/authSlice'
 import { logout, setAuthSession, setAuthLoading } from '@shared/store/slices/authSlice'
 import { authJson, clearCsrfCache, prefetchCsrf } from '../api/authHttp'
+import { setSyncAccessToken } from '../api/accessTokenSync'
+import { registerUnauthorizedHandler } from '../api/authUnauthorizedBridge'
+import { disconnectSocket } from '@/features/realtime/socketClient'
 
 type AuthStatus = 'bootstrapping' | 'ready'
 
@@ -46,6 +49,7 @@ export const SessionAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     (u: User, token: string) => {
       setUser(u)
       setAccessToken(token)
+      setSyncAccessToken(token)
       dispatch(setAuthSession({ user: u, accessToken: token }))
     },
     [dispatch],
@@ -54,6 +58,7 @@ export const SessionAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const clearSession = useCallback(() => {
     setUser(null)
     setAccessToken(null)
+    setSyncAccessToken(null)
     clearCsrfCache()
     dispatch(logout())
   }, [dispatch])
@@ -71,6 +76,23 @@ export const SessionAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       throw new Error('פג תוקף ההתחברות — נא להתחבר מחדש')
     }
   }, [applySession, clearSession])
+
+  useEffect(() => {
+    registerUnauthorizedHandler(() => {
+      clearSession()
+      disconnectSocket()
+      try {
+        localStorage.removeItem('authToken')
+      } catch {
+        /* ignore */
+      }
+      const p = window.location.pathname
+      if (!p.startsWith('/login') && !p.startsWith('/register')) {
+        window.location.assign('/login?reason=session')
+      }
+    })
+    return () => registerUnauthorizedHandler(null)
+  }, [clearSession])
 
   useEffect(() => {
     // כשהשרת לא פועל (פיתוח מקומי) — דלג על CSRF/session bootstrap
@@ -183,6 +205,7 @@ export const SessionAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch {
       /* ניקוי מקומי בכל מקרה */
     } finally {
+      disconnectSocket()
       clearSession()
       dispatch(setAuthLoading(false))
     }

@@ -1,7 +1,9 @@
-// Service Worker for ContractLab Pro PWA
-// Service Worker עבור PWA
+// Service Worker for LexStudy PWA
+// Offline strategy: cache-first for static assets, network-first for HTML.
+// API requests are NOT cached here — TanStack Query (localStorage persister)
+// handles API response caching so we don't end up serving stale auth/billing data.
 
-const CACHE_NAME = "contractlab-pro-v1.0.1";
+const CACHE_NAME = "lexstudy-static-v1.1.0";
 const urlsToCache = [
   "/",
   "/index.html",
@@ -51,6 +53,18 @@ self.addEventListener("fetch", (event) => {
   // Skip non-http(s) requests (e.g. chrome-extension://)
   const url = event.request.url;
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    return;
+  }
+
+  // Never cache API requests — we let TanStack Query's persister handle
+  // data caching with proper staleness / invalidation. Caching here could
+  // return stale auth/billing responses.
+  if (url.includes('/api/')) {
+    return;
+  }
+
+  // Never intercept WebSocket upgrades — Socket.io needs direct access.
+  if (event.request.headers.get('upgrade') === 'websocket') {
     return;
   }
 

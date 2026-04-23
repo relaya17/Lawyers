@@ -15,6 +15,7 @@ import { store } from '@shared/store'
 import { theme } from '../theme/index'
 import { I18nProvider } from '@/i18n/I18nProvider'
 import { AuthProvider } from './AuthProvider'
+import { EntitlementsProvider } from '@/features/billing/providers/EntitlementsProvider'
 
 // יצירת QueryClient עם הגדרות מותאמות
 const queryClient = new QueryClient({
@@ -51,24 +52,24 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
           <QueryClientProvider client={queryClient}>
             <I18nProvider>
               <AuthProvider>
-                <ThemeProvider theme={theme}>
-                  <CssBaseline />
-                  <AccessibilityProvider>
-                    <TouchGestureProvider>
-                      {children}
-                    </TouchGestureProvider>
-                  </AccessibilityProvider>
-                  <Toaster
-                    position="top-center"
-                    toastOptions={{
-                      duration: 4000,
-                      style: {
-                        background: '#363636',
-                        color: '#fff',
-                      },
-                    }}
-                  />
-                </ThemeProvider>
+                <EntitlementsProvider>
+                  <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <AccessibilityProvider>
+                      <TouchGestureProvider>{children}</TouchGestureProvider>
+                    </AccessibilityProvider>
+                    <Toaster
+                      position="top-center"
+                      toastOptions={{
+                        duration: 4000,
+                        style: {
+                          background: '#363636',
+                          color: '#fff',
+                        },
+                      }}
+                    />
+                  </ThemeProvider>
+                </EntitlementsProvider>
               </AuthProvider>
             </I18nProvider>
             <ReactQueryDevtools initialIsOpen={false} />

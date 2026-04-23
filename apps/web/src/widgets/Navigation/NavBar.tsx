@@ -46,6 +46,7 @@ const navigationItems = [
   { path: '/virtual-court-2', label: 'navigation.virtualCourt2' },
   { path: '/contracts', label: 'navigation.contractManagement' },
   { path: '/services', label: 'navigation.services' },
+  { path: '/pricing', label: 'navigation.pricing' },
 ]
 
 const languages = [
@@ -425,6 +426,26 @@ export const NavBar: React.FC<NavBarProps> = () => {
              >
                {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
              </IconButton>
+
+             {user?.role === 'admin' && (
+               <Box
+                 component="button"
+                 type="button"
+                 onClick={() => navigate('/admin/vectors')}
+                 sx={{
+                   color: 'inherit',
+                   background: 'none',
+                   border: 'none',
+                   cursor: 'pointer',
+                   fontSize: '0.8rem',
+                   textDecoration: 'underline',
+                   mr: 1,
+                   display: { xs: 'none', md: 'inline' },
+                 }}
+               >
+                 מאגר AI
+               </Box>
+             )}
 
              {/* Real-time Notifications */}
              <RealtimeNotifications />

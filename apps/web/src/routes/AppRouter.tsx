@@ -2,7 +2,8 @@ import React, { Suspense, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { Box } from '@mui/material'
 import { Helmet } from 'react-helmet-async'
-import { PrivateRoute } from './PrivateRoute'
+import { RequireRegistration } from './RequireRegistration'
+import { RoleGuard } from './RoleGuard'
 import NavBar from '../widgets/Navigation/NavBar'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import AIAssistant from '../widgets/AIAssistant'
@@ -34,6 +35,13 @@ const ContractEditorPage = React.lazy(() => import('../pages/ContractEditor').th
 const NegotiationPage = React.lazy(() => import('../pages/Negotiation').then(m => ({ default: m.NegotiationPage })))
 const VersionControlPage = React.lazy(() => import('../pages/VersionControl').then(m => ({ default: m.VersionControlPage })))
 const WorkflowAutomationPage = React.lazy(() => import('../pages/WorkflowAutomation'))
+const PricingPage = React.lazy(() => import('../pages/Pricing').then(m => ({ default: m.default })))
+const BillingSuccessPage = React.lazy(() => import('../pages/BillingSuccess').then(m => ({ default: m.default })))
+const AccountBillingPage = React.lazy(() => import('../pages/AccountBilling').then(m => ({ default: m.default })))
+const VectorManagementPage = React.lazy(() =>
+  import('../pages/admin/VectorManagement').then((m) => ({ default: m.VectorManagementPage })),
+)
+const LandingPage = React.lazy(() => import('../pages/Landing').then((m) => ({ default: m.LandingPage })))
 
 const PageLoader: React.FC = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
@@ -75,33 +83,46 @@ export const AppRouter: React.FC = () => {
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/contracts" element={<ContractsPage />} />
-                <Route path="/contract-editor" element={<ContractEditorPage />} />
-                <Route path="/contract-editor/:id" element={<ContractEditorPage />} />
-                <Route path="/negotiation" element={<NegotiationPage />} />
-                <Route path="/version-control" element={<VersionControlPage />} />
-                <Route path="/workflow-automation" element={<WorkflowAutomationPage />} />
-                <Route path="/legal-knowledge" element={<LegalKnowledgePage />} />
-                <Route path="/adaptive-learning" element={<AdaptiveLearningPage />} />
-                <Route path="/simulator" element={<SimulatorPage />} />
-                <Route path="/virtual-court/*" element={<VirtualCourtPage />} />
-                <Route path="/virtual-court-2/*" element={<VirtualCourt2Page />} />
-                <Route path="/risk-analysis" element={<RiskAnalysisPage />} />
-                <Route path="/regulatory-compliance" element={<RegulatoryCompliancePage />} />
-                <Route path="/contract-templates" element={<ContractTemplatesPage />} />
-                <Route path="/contract-templates/:templateId" element={<ContractTemplateDetailsPage />} />
-                <Route path="/marketplace" element={<MarketplacePage />} />
-                <Route path="/services" element={<ServicesPage />} />
-                <Route path="/ai-assistant" element={<AIAssistantPage />} />
-                <Route path="/security" element={<SecurityPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/landing" element={<LandingPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
-                <Route element={<PrivateRoute />}>
-                  {/* protected routes placeholder */}
+                <Route path="/pricing" element={<PricingPage />} />
+                <Route path="/billing/success" element={<BillingSuccessPage />} />
+
+                <Route element={<RequireRegistration />}>
+                  <Route path="/contracts" element={<ContractsPage />} />
+                  <Route path="/contract-editor" element={<ContractEditorPage />} />
+                  <Route path="/contract-editor/:id" element={<ContractEditorPage />} />
+                  <Route path="/negotiation" element={<NegotiationPage />} />
+                  <Route path="/version-control" element={<VersionControlPage />} />
+                  <Route path="/workflow-automation" element={<WorkflowAutomationPage />} />
+                  <Route path="/legal-knowledge" element={<LegalKnowledgePage />} />
+                  <Route path="/adaptive-learning" element={<AdaptiveLearningPage />} />
+                  <Route path="/simulator" element={<SimulatorPage />} />
+                  <Route path="/virtual-court/*" element={<VirtualCourtPage />} />
+                  <Route path="/virtual-court-2/*" element={<VirtualCourt2Page />} />
+                  <Route path="/risk-analysis" element={<RiskAnalysisPage />} />
+                  <Route path="/regulatory-compliance" element={<RegulatoryCompliancePage />} />
+                  <Route path="/contract-templates" element={<ContractTemplatesPage />} />
+                  <Route path="/contract-templates/:templateId" element={<ContractTemplateDetailsPage />} />
+                  <Route path="/marketplace" element={<MarketplacePage />} />
+                  <Route path="/services" element={<ServicesPage />} />
+                  <Route path="/ai-assistant" element={<AIAssistantPage />} />
+                  <Route path="/security" element={<SecurityPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/account/billing" element={<AccountBillingPage />} />
+                  <Route
+                    path="/admin/vectors"
+                    element={
+                      <RoleGuard allowed={['admin']}>
+                        <VectorManagementPage />
+                      </RoleGuard>
+                    }
+                  />
                 </Route>
+
                 <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </Suspense>

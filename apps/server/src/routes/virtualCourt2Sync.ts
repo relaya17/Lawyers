@@ -2,6 +2,8 @@ import { Router, type Request, type Response, type NextFunction } from 'express'
 import mongoose from 'mongoose';
 import { z } from 'zod';
 import { VirtualCourtCaseSnapshot } from '../models/VirtualCourtCaseSnapshot.js';
+import { requireAuth } from '../middleware/requireAuth.js';
+import { broadcastCourtAnnouncement } from '../realtime/socketServer.js';
 
 export const virtualCourt2SyncRouter = Router();
 
@@ -11,6 +13,11 @@ function dbReady(): boolean {
 
 const PutBodySchema = z.object({
   payload: z.unknown(),
+});
+
+const AnnounceBodySchema = z.object({
+  title: z.string().min(1).max(200),
+  body: z.string().min(1).max(8000),
 });
 
 virtualCourt2SyncRouter.put(
@@ -35,6 +42,31 @@ virtualCourt2SyncRouter.put(
       next(err);
     }
   }
+);
+
+/** הודעה בזמן אמת לכל מי שמחובר לחדר התיק (Socket.io). דורש התחברות. */
+virtualCourt2SyncRouter.post(
+  '/cases/:caseId/announce',
+  requireAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { caseId } = req.params;
+      const { title, body } = AnnounceBodySchema.parse(req.body);
+      const user = req.authUser!;
+      const fromName =
+        [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.email;
+      broadcastCourtAnnouncement({
+        caseId,
+        title,
+        body,
+        fromUserId: user.id,
+        fromName,
+      });
+      res.json({ ok: true, caseId });
+    } catch (err) {
+      next(err);
+    }
+  },
 );
 
 virtualCourt2SyncRouter.get(
