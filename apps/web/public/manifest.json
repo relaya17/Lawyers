@@ -1,0 +1,110 @@
+{
+  "short_name": "חוזים מודרן",
+  "name": "חוזים מודרן עורכי דין - פלטפורמה מתקדמת לניהול חוזים ולמידה משפטית",
+  "description": "פלטפורמה מתקדמת לניהול חוזים, ניתוח סיכון, מו״מ חכם ולמידה משפטית",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "apple-touch-icon-152.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "apple-touch-icon-152.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "apple-touch-icon-152.svg",
+      "type": "image/svg+xml",
+      "sizes": "152x152",
+      "purpose": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1565c0",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "he",
+  "dir": "rtl",
+  "categories": [
+    "business",
+    "productivity",
+    "education",
+    "legal"
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "חוזה חדש",
+      "short_name": "חוזה חדש",
+      "description": "צור חוזה חדש",
+      "url": "/contracts/new",
+      "icons": [
+        {
+          "src": "apple-touch-icon-152.svg",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "ניתוח סיכון",
+      "short_name": "ניתוח סיכון",
+      "description": "נתח סיכונים בחוזה",
+      "url": "/risk-analysis",
+      "icons": [
+        {
+          "src": "apple-touch-icon-152.svg",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "מעבדה חוזית",
+      "short_name": "מעבדה",
+      "description": "סימולציות למידה",
+      "url": "/simulator",
+      "icons": [
+        {
+          "src": "apple-touch-icon-152.svg",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "ניהול לקוחות",
+      "short_name": "CRM",
+      "description": "ניהול קשרי לקוחות",
+      "url": "/crm",
+      "icons": [
+        {
+          "src": "apple-touch-icon-152.svg",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "handle_links": "preferred",
+  "protocol_handlers": [
+    {
+      "protocol": "web+contractlab",
+      "url": "/contracts/%s"
+    }
+  ]
+}

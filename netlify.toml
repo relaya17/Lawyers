@@ -1,0 +1,195 @@
+# ⚡ Netlify Configuration for ContractLab Pro
+# קובץ הגדרות נטליפי מתקדם לפרויקט
+
+[build]
+  base = "/"
+  # Ensure pnpm is available in Netlify build images (Node 16+ includes Corepack)
+  # NODE_ENV=development ensures devDependencies (typescript, vite) are installed
+  command = "corepack enable && NODE_ENV=development pnpm install --frozen-lockfile && pnpm -F @lawyers/web build:netlify"
+  publish = "apps/web/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  PNPM_VERSION = "9.15.4"
+  NPM_FLAGS = "--frozen-lockfile"
+  PNPM_FLAGS = "--frozen-lockfile"
+  NODE_OPTIONS = "--max-old-space-size=4096"
+  # Environment variables for build
+  VITE_BUILD_TARGET = "netlify"
+  CI = "true"
+
+# 📦 Cache Configuration - אופטימיזציית מטמון
+[build.processing]
+  skip_processing = false
+
+# 🗂️ Cache Configuration - הגדרות מטמון
+# Netlify automatically caches node_modules and build artifacts
+# No additional cache plugin needed
+
+# 🚀 Redirects - הפניות וניתוב
+# SPA Routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+
+# API Proxy (if needed)
+[[redirects]]
+  from = "/api/*"
+  to = "https://api.contractlab.ai/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+# Legacy redirects
+[[redirects]]
+  from = "/old-path"
+  to = "/new-path"
+  status = 301
+
+# 🔒 Security Headers - כותרות אבטחה
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Security Headers
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    
+    # CSP - Content Security Policy
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' ws: wss: https:; frame-src 'none'; object-src 'none';"
+
+# ⚡ Performance Headers - כותרות ביצועים
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/*.woff2"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.woff"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.ttf"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.ico"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# 🏠 Root page caching
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# 📱 PWA Headers - כותרות PWA
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+    Content-Type = "application/manifest+json"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Type = "application/javascript"
+
+[[headers]]
+  for = "/offline.html"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# 🎯 Build Processing - עיבוד build
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+
+[build.processing.images]
+  compress = true
+
+# 🧪 Context Configuration - הגדרות context
+[context.production]
+  environment = { NODE_ENV = "production", VITE_ENV = "production" }
+  
+[context.deploy-preview]
+  environment = { NODE_ENV = "staging", VITE_ENV = "staging" }
+  
+[context.branch-deploy]
+  environment = { NODE_ENV = "development", VITE_ENV = "development" }
+
+# 🌍 Branch-specific settings
+[context.main]
+  environment = { NODE_ENV = "production" }
+
+[context.staging]
+  environment = { NODE_ENV = "staging" }
+
+# 🔧 Build notifications
+[build.publish_timeout]
+  minutes = 30
+
+# 📊 Analytics (if using Netlify Analytics)
+[template.environment]
+  NETLIFY_ANALYTICS_ID = "your-analytics-id"
+
+

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1976d2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1565c0;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5f5f5;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- רקע -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- עיגול רקע ללוגו -->
+  <circle cx="600" cy="250" r="120" fill="url(#logoGradient)" opacity="0.1"/>
+  
+  <!-- לוגו ממורכז -->
+  <g transform="translate(500, 150)">
+    <!-- מאזני צדק -->
+    <g transform="translate(30, 35)">
+      <!-- עמוד מרכזי -->
+      <rect x="11" y="0" width="2" height="25" fill="white"/>
+      <!-- קורה אופקית -->
+      <rect x="0" y="0" width="24" height="2" fill="white"/>
+      <!-- קערות מאזניים -->
+      <ellipse cx="4" cy="25" rx="6" ry="2" fill="white"/>
+      <ellipse cx="20" cy="25" rx="6" ry="2" fill="white"/>
+      <!-- חבלים -->
+      <line x1="4" y1="2" x2="4" y2="23" stroke="white" stroke-width="1"/>
+      <line x1="20" y1="2" x2="20" y2="23" stroke="white" stroke-width="1"/>
+    </g>
+    
+    <!-- מסמך -->
+    <g transform="translate(85, 35)">
+      <rect x="0" y="0" width="20" height="25" fill="white" rx="2"/>
+      <!-- פינה מקופלת -->
+      <path d="M 18 0 L 20 2 L 18 4 L 16 2 Z" fill="white"/>
+      <!-- קווים בתוך המסמך -->
+      <rect x="3" y="6" width="12" height="1" fill="#1565c0"/>
+      <rect x="3" y="9" width="12" height="1" fill="#1565c0"/>
+      <rect x="3" y="12" width="12" height="1" fill="#1565c0"/>
+    </g>
+    
+    <!-- עט נוצה -->
+    <g transform="translate(90, 30)">
+      <path d="M 0 0 L 15 15 L 12 18 L -3 3 Z" fill="white"/>
+      <path d="M 15 15 L 18 12 L 20 14 L 17 17 Z" fill="white"/>
+    </g>
+  </g>
+  
+  <!-- טקסט עברי ממורכז -->
+  <text x="600" y="380" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">חוזים מודרן</text>
+  <text x="600" y="430" font-family="Arial, sans-serif" font-size="36" fill="white" text-anchor="middle">עורכי דין</text>
+  
+  <!-- תיאור -->
+  <text x="600" y="480" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle" opacity="0.9">פלטפורמה מתקדמת לניהול חוזים ולמידה משפטית</text>
+  
+  <!-- אלמנטים דקורטיביים -->
+  <circle cx="200" cy="150" r="3" fill="white" opacity="0.3"/>
+  <circle cx="1000" cy="200" r="2" fill="white" opacity="0.3"/>
+  <circle cx="150" cy="450" r="2" fill="white" opacity="0.3"/>
+  <circle cx="1050" cy="400" r="3" fill="white" opacity="0.3"/>
+</svg>

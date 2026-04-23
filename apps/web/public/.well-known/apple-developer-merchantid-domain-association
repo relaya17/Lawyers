@@ -1,0 +1,9 @@
+{
+    "domain_association": {
+        "merchant_identifier": "merchant.com.contractlab.pro",
+        "domain": "contractlab.pro",
+        "status": "active",
+        "created_at": "2024-01-01T00:00:00Z",
+        "updated_at": "2024-01-01T00:00:00Z"
+    }
+}
