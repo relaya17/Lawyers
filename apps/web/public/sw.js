@@ -1,274 +1,188 @@
 // Service Worker for LexStudy PWA
-// Offline strategy: cache-first for static assets, network-first for HTML.
-// API requests are NOT cached here — TanStack Query (localStorage persister)
-// handles API response caching so we don't end up serving stale auth/billing data.
+// Strategy:
+//  - HTML navigations: NETWORK-FIRST (prevents stale index.html pointing to
+//    missing chunk hashes after a new deploy — the root cause of broken PWAs).
+//  - Hashed /assets/* (JS/CSS chunks): NETWORK-ONLY (Netlify already sets
+//    immutable long-TTL headers; we must never serve stale hashed bundles).
+//  - Static icons/manifest/offline page: cache-first with network fallback.
+//  - API and WebSocket: never intercepted.
+//  - Self-heal: if a chunk request returns HTML (Netlify SPA fallback) we
+//    clear caches and unregister so the next reload gets a clean tree.
 
-const CACHE_NAME = "lexstudy-static-v1.1.0";
-const urlsToCache = [
-  "/",
-  "/index.html",
+const CACHE_VERSION = "v1.2.0";
+const CACHE_NAME = `lexstudy-static-${CACHE_VERSION}`;
+
+// Only truly static resources are pre-cached. We intentionally DO NOT cache
+// `/` or `/index.html` here — that would pin the shell to old bundle hashes.
+const PRECACHE_URLS = [
   "/manifest.json",
   "/offline.html",
   "/apple-touch-icon-152.svg",
   "/favicon.ico",
 ];
 
-// iOS Safari specific cache strategy
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-// התקנת Service Worker
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log("Opened cache");
-      return cache.addAll(urlsToCache);
-    })
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.all(
+        PRECACHE_URLS.map((u) =>
+          cache.add(u).catch(() => {
+            // Missing precache asset must not block SW install.
+          })
+        )
+      )
+    )
   );
-
-  // Force activation — take over immediately
   self.skipWaiting();
 });
 
-// הפעלת Service Worker
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log("Deleting old cache:", cacheName);
-            return caches.delete(cacheName);
-          }
+    (async () => {
+      const names = await caches.keys();
+      await Promise.all(
+        names.map((name) => {
+          if (name !== CACHE_NAME) return caches.delete(name);
         })
       );
-    })
-  );
-
-  // Claim all clients immediately
-  event.waitUntil(self.clients.claim());
-});
-
-// Intercept network requests
-self.addEventListener("fetch", (event) => {
-  // Skip non-http(s) requests (e.g. chrome-extension://)
-  const url = event.request.url;
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    return;
-  }
-
-  // Never cache API requests — we let TanStack Query's persister handle
-  // data caching with proper staleness / invalidation. Caching here could
-  // return stale auth/billing responses.
-  if (url.includes('/api/')) {
-    return;
-  }
-
-  // Never intercept WebSocket upgrades — Socket.io needs direct access.
-  if (event.request.headers.get('upgrade') === 'websocket') {
-    return;
-  }
-
-  // iOS Safari specific handling
-  if (isIOS && event.request.method === "GET") {
-    event.respondWith(
-      caches.match(event.request).then((response) => {
-        // החזר מהמטמון אם קיים
-        if (response) {
-          return response;
-        }
-
-        // אחרת, בקש מהרשת
-        return fetch(event.request)
-          .then((response) => {
-            // בדוק אם התקבלה תגובה תקינה
-            if (
-              !response ||
-              response.status !== 200 ||
-              response.type !== "basic"
-            ) {
-              return response;
-            }
-
-            // שמור במטמון
-            const responseToCache = response.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-
-            return response;
-          })
-          .catch((error) => {
-            console.warn("Fetch failed for:", event.request.url, error);
-            // Fallback for offline
-            if (event.request.destination === "document") {
-              return caches.match("/offline.html");
-            }
-            // Return empty response for other requests
-            return new Response("", { status: 404, statusText: "Not Found" });
-          });
-      })
-    );
-  } else {
-    // Regular handling for other browsers
-    event.respondWith(
-      caches.match(event.request).then((response) => {
-        // החזר מהמטמון אם קיים
-        if (response) {
-          return response;
-        }
-
-        // אחרת, בקש מהרשת
-        return fetch(event.request)
-          .then((response) => {
-            // בדוק אם התקבלה תגובה תקינה
-            if (
-              !response ||
-              response.status !== 200 ||
-              response.type !== "basic"
-            ) {
-              return response;
-            }
-
-            // שמור במטמון רק אם זה http/https
-            const responseToCache = response.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              if (url.startsWith('http://') || url.startsWith('https://')) {
-                cache.put(event.request, responseToCache);
-              }
-            });
-
-            return response;
-          })
-          .catch((error) => {
-            console.warn("Fetch failed for:", event.request.url, error);
-            // החזר תגובה ריקה במקרה של שגיאה
-            return new Response("", { status: 404, statusText: "Not Found" });
-          });
-      })
-    );
-  }
-});
-
-// Background sync for offline actions
-self.addEventListener("sync", (event) => {
-  if (event.tag === "background-sync") {
-    event.waitUntil(doBackgroundSync());
-  }
-});
-
-// Push notifications
-self.addEventListener("push", (event) => {
-  const options = {
-    body: event.data ? event.data.text() : "התראה חדשה מ-ContractLab Pro",
-    icon: "/apple-touch-icon-152.svg",
-    badge: "/apple-touch-icon-152.svg",
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1,
-    },
-    actions: [
-      {
-        action: "explore",
-        title: "פתח אפליקציה",
-        icon: "/apple-touch-icon-152.svg",
-      },
-    ],
-  };
-
-  event.waitUntil(
-    self.registration.showNotification("ContractLab Pro", options)
+      await self.clients.claim();
+    })()
   );
 });
 
-// Click on notification
-self.addEventListener("notificationclick", (event) => {
-  event.notification.close();
+function isNavigationRequest(req) {
+  if (req.mode === "navigate") return true;
+  if (req.destination === "document") return true;
+  const accept = req.headers.get("accept") || "";
+  return accept.includes("text/html");
+}
 
-  if (event.action === "explore") {
-    event.waitUntil(clients.openWindow("/"));
-  } else {
-    // Default action - open the app
-    event.waitUntil(clients.openWindow("/"));
-  }
-});
+function isHashedAsset(url) {
+  return /\/assets\/.+\.(js|css|mjs|woff2?|ttf|otf|png|jpe?g|webp|svg|gif)$/.test(
+    url.pathname
+  );
+}
 
-// Background sync function
-async function doBackgroundSync() {
+async function selfHealAndReload() {
   try {
-    // Sync any pending data
-    console.log("Background sync completed");
-  } catch (error) {
-    console.error("Background sync failed:", error);
+    const names = await caches.keys();
+    await Promise.all(names.map((n) => caches.delete(n)));
+    const regs = await self.registration.unregister();
+    const clients = await self.clients.matchAll({ type: "window" });
+    clients.forEach((c) => c.navigate(c.url));
+    return regs;
+  } catch (_e) {
+    // Ignore self-heal errors — SW will retry on next boot.
   }
 }
 
-// iOS Safari specific message handling
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
+  if (req.method !== "GET") return;
+
+  const url = new URL(req.url);
+
+  // Only handle same-origin requests. Cross-origin goes directly to network.
+  if (url.origin !== self.location.origin) return;
+
+  // API and WebSocket — never intercept.
+  if (url.pathname.startsWith("/api/")) return;
+  if (req.headers.get("upgrade") === "websocket") return;
+
+  // Navigations → network-first, fallback to offline page.
+  if (isNavigationRequest(req)) {
+    event.respondWith(
+      (async () => {
+        try {
+          const fresh = await fetch(req);
+          return fresh;
+        } catch (_err) {
+          const offline = await caches.match("/offline.html");
+          return (
+            offline ||
+            new Response("<h1>Offline</h1>", {
+              status: 503,
+              headers: { "Content-Type": "text/html; charset=utf-8" },
+            })
+          );
+        }
+      })()
+    );
+    return;
   }
 
-  if (event.data && event.data.type === "GET_VERSION") {
+  // Hashed build assets → network-only, self-heal on MIME mismatch.
+  if (isHashedAsset(url)) {
+    event.respondWith(
+      (async () => {
+        const response = await fetch(req);
+        const ct = response.headers.get("content-type") || "";
+        const isJsOrCss = /\.(js|mjs)$/.test(url.pathname)
+          ? ct.includes("javascript") || ct.includes("ecmascript")
+          : /\.css$/.test(url.pathname)
+          ? ct.includes("css")
+          : true;
+        if (response.ok && !isJsOrCss) {
+          // Netlify served index.html for a missing chunk — stale PWA shell.
+          // Clear caches and unregister; the page reload will pick up the new
+          // index.html with fresh chunk hashes.
+          event.waitUntil(selfHealAndReload());
+        }
+        return response;
+      })()
+    );
+    return;
+  }
+
+  // Other static GETs → cache-first with network fallback (and background
+  // refresh so the next visit gets newer content).
+  event.respondWith(
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      const cached = await cache.match(req);
+      const networkPromise = fetch(req)
+        .then((resp) => {
+          if (resp && resp.status === 200 && resp.type === "basic") {
+            cache.put(req, resp.clone()).catch(() => {});
+          }
+          return resp;
+        })
+        .catch(() => null);
+
+      if (cached) {
+        event.waitUntil(networkPromise);
+        return cached;
+      }
+      const network = await networkPromise;
+      if (network) return network;
+      return new Response("", { status: 504, statusText: "Offline" });
+    })()
+  );
+});
+
+self.addEventListener("message", (event) => {
+  if (!event.data) return;
+  if (event.data.type === "SKIP_WAITING") self.skipWaiting();
+  if (event.data.type === "GET_VERSION" && event.ports && event.ports[0]) {
     event.ports[0].postMessage({ version: CACHE_NAME });
   }
 });
 
-// Cache First strategy with better error handling
-async function cacheFirst(request) {
-  try {
-    // Try to get from cache first
-    const cachedResponse = await caches.match(request);
-    if (cachedResponse) {
-      return cachedResponse;
-    }
+self.addEventListener("push", (event) => {
+  const options = {
+    body: event.data ? event.data.text() : "התראה חדשה",
+    icon: "/apple-touch-icon-152.svg",
+    badge: "/apple-touch-icon-152.svg",
+    vibrate: [100, 50, 100],
+    data: { dateOfArrival: Date.now(), primaryKey: 1 },
+    actions: [
+      { action: "explore", title: "פתח אפליקציה", icon: "/apple-touch-icon-152.svg" },
+    ],
+  };
+  event.waitUntil(self.registration.showNotification("LexStudy", options));
+});
 
-    // If not in cache, try to fetch from network
-    const networkResponse = await fetch(request);
-
-    // Check if response is valid
-    if (!networkResponse || networkResponse.status !== 200) {
-      // If network request failed, return offline page
-      const offlineResponse = await caches.match("/offline.html");
-      if (offlineResponse) {
-        return offlineResponse;
-      }
-      return new Response("Service Unavailable", { status: 503 });
-    }
-
-    // Clone the response and cache it
-    const responseToCache = networkResponse.clone();
-    const cache = await caches.open(CACHE_NAME);
-    cache.put(request, responseToCache);
-
-    return networkResponse;
-  } catch (error) {
-    console.warn("Cache First strategy failed:", error);
-
-    // Return offline page or fallback response
-    const offlineResponse = await caches.match("/offline.html");
-    if (offlineResponse) {
-      return offlineResponse;
-    }
-
-    // Fallback response for API requests
-    if (
-      request.url.includes("/api/") ||
-      request.url.includes("risk-analysis")
-    ) {
-      return new Response(
-        JSON.stringify({
-          error: "Service unavailable",
-          message: "Please check your connection and try again",
-        }),
-        {
-          status: 503,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    // For other requests, return a simple offline message
-    return new Response("Service Unavailable", { status: 503 });
-  }
-}
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(self.clients.openWindow("/"));
+});
