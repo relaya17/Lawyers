@@ -19,6 +19,7 @@ import {
   issueCsrfCookie,
   getUserFromBearer,
 } from '../auth/authService.js';
+import { loginWithGoogle } from '../auth/googleAuth.js';
 import { authDbHealth } from '../db/pgPool.js';
 
 export const authRouter = Router();
@@ -96,6 +97,20 @@ authRouter.post('/resend-otp', limitGeneral, async (req, res, next) => {
       res.status(400).json(parseZod(e));
       return;
     }
+    next(e);
+  }
+});
+
+authRouter.post('/google', limitLogin, async (req, res, next) => {
+  try {
+    const { credential } = req.body as { credential?: string };
+    if (!credential) {
+      res.status(400).json({ error: 'חסר Google credential token' });
+      return;
+    }
+    const out = await loginWithGoogle(credential, req, res);
+    res.json(out);
+  } catch (e) {
     next(e);
   }
 });

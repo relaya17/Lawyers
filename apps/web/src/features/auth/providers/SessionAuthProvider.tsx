@@ -22,6 +22,7 @@ export interface SessionAuthContextValue {
   accessToken: string | null
   isAuthenticated: boolean
   signIn: (email: string, password: string) => Promise<void>
+  signInWithGoogle: (credential: string) => Promise<void>
   signUp: (input: {
     email: string
     password: string
@@ -143,6 +144,23 @@ export const SessionAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     [applySession, dispatch],
   )
 
+  const signInWithGoogle = useCallback(
+    async (credential: string) => {
+      dispatch(setAuthLoading(true))
+      try {
+        await prefetchCsrf()
+        const data = await authJson<{ user: User; accessToken: string }>('/auth/google', {
+          method: 'POST',
+          body: JSON.stringify({ credential }),
+        })
+        applySession(data.user, data.accessToken)
+      } finally {
+        dispatch(setAuthLoading(false))
+      }
+    },
+    [applySession, dispatch],
+  )
+
   const signUp = useCallback(
     async (input: {
       email: string
@@ -218,6 +236,7 @@ export const SessionAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       accessToken,
       isAuthenticated: !!user && !!accessToken,
       signIn,
+      signInWithGoogle,
       signUp,
       verifyOtp,
       resendOtp,
@@ -229,6 +248,7 @@ export const SessionAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       user,
       accessToken,
       signIn,
+      signInWithGoogle,
       signUp,
       verifyOtp,
       resendOtp,

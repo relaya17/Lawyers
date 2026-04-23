@@ -19,6 +19,8 @@ import { registerSchema, verifyEmailSchema } from '@shared/validation/auth'
 import type { RootState } from '@/store'
 import { useSessionAuth } from '@/features/auth/providers/SessionAuthProvider'
 import { prefetchCsrf } from '@/features/auth/api/authHttp'
+import { GoogleLoginButton } from '@/features/auth/components/GoogleLoginButton'
+import { Divider } from '@mui/material'
 import { safeNextPath } from '@/utils/safeNextPath'
 
 type Step = 'form' | 'verify'
@@ -252,6 +254,16 @@ export const RegisterPage: React.FC = () => {
                   שלח קוד מחדש
                 </Button>
               </Box>
+            )}
+            {step === 'form' && (
+              <>
+                <Divider sx={{ my: 2 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    או הירשם עם
+                  </Typography>
+                </Divider>
+                <GoogleLoginButton />
+              </>
             )}
             <Box sx={{ textAlign: 'center', mt: 3 }}>
               <Typography variant="body2" color="text.secondary">

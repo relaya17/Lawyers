@@ -7,6 +7,8 @@ import { billingRouter } from './billing.js';
 import { legalRagRouter } from './legalRag.js';
 import { adminLegalKnowledgeRouter } from './adminLegalKnowledge.js';
 import { marketingRouter } from './marketing.js';
+import { pleadingsGameRouter } from './pleadingsGame.js';
+import { courtroomRouter } from './courtroom.js';
 
 export const router = Router();
 
@@ -36,3 +38,9 @@ router.use('/billing', billingRouter);
 
 // Marketing — waitlist (ללא אימות)
 router.use('/marketing', marketingRouter);
+
+// משחק כתבי טענות — אימון, הערכת AI, זכויות יסוד
+router.use('/pleadings-game', pleadingsGameRouter);
+
+// חדר דיונים חי — פרוטוקול בזמן אמת, וידאו, ראיות, תפקידים
+router.use('/courtroom', courtroomRouter);

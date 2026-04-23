@@ -44,6 +44,7 @@ const navigationItems = [
   { path: '/adaptive-learning', label: 'navigation.adaptiveLearning' },
   { path: '/virtual-court', label: 'navigation.virtualCourt' },
   { path: '/virtual-court-2', label: 'navigation.virtualCourt2' },
+  { path: '/courtroom', label: 'navigation.courtroom' },
   { path: '/contracts', label: 'navigation.contractManagement' },
   { path: '/services', label: 'navigation.services' },
   { path: '/pricing', label: 'navigation.pricing' },

@@ -1,4 +1,5 @@
 import React from 'react'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 
 import { Provider as ReduxProvider } from 'react-redux'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -47,6 +48,7 @@ interface AppProvidersProps {
 export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
   return (
     <AppErrorBoundary>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ''}>
       <HelmetProvider>
         <ReduxProvider store={store}>
           <QueryClientProvider client={queryClient}>
@@ -76,6 +78,7 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
           </QueryClientProvider>
         </ReduxProvider>
       </HelmetProvider>
+      </GoogleOAuthProvider>
     </AppErrorBoundary>
   )
 }

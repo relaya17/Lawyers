@@ -19,6 +19,7 @@ import { loginSchema } from '@shared/validation/auth'
 import type { RootState } from '@/store'
 import { BiometricButton } from '@/components/ui/BiometricButton'
 import { useSessionAuth } from '@/features/auth/providers/SessionAuthProvider'
+import { GoogleLoginButton } from '@/features/auth/components/GoogleLoginButton'
 import { prefetchCsrf } from '@/features/auth/api/authHttp'
 import { safeNextPath } from '@/utils/safeNextPath'
 
@@ -131,6 +132,12 @@ export const LoginPage: React.FC = () => {
               <Divider sx={{ my: 2 }}>
                 <Typography variant="body2" color="text.secondary">
                   {t('biometric.or')}
+                </Typography>
+              </Divider>
+              <GoogleLoginButton />
+              <Divider sx={{ my: 2 }}>
+                <Typography variant="body2" color="text.secondary">
+                  או
                 </Typography>
               </Divider>
               <BiometricButton

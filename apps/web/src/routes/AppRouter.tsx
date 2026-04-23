@@ -42,6 +42,13 @@ const VectorManagementPage = React.lazy(() =>
   import('../pages/admin/VectorManagement').then((m) => ({ default: m.VectorManagementPage })),
 )
 const LandingPage = React.lazy(() => import('../pages/Landing').then((m) => ({ default: m.LandingPage })))
+const PleadingsGamePage = React.lazy(() => import('../pages/PleadingsGame').then((m) => ({ default: m.PleadingsGamePage })))
+const CourtroomLobbyPage = React.lazy(() =>
+  import('../features/courtroom/pages/CourtroomLobbyPage').then((m) => ({ default: m.default })),
+)
+const LiveCourtroomPage = React.lazy(() =>
+  import('../features/courtroom/pages/LiveCourtroomPage').then((m) => ({ default: m.default })),
+)
 
 const PageLoader: React.FC = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
@@ -101,6 +108,8 @@ export const AppRouter: React.FC = () => {
                   <Route path="/simulator" element={<SimulatorPage />} />
                   <Route path="/virtual-court/*" element={<VirtualCourtPage />} />
                   <Route path="/virtual-court-2/*" element={<VirtualCourt2Page />} />
+                  <Route path="/courtroom" element={<CourtroomLobbyPage />} />
+                  <Route path="/courtroom/:sessionId" element={<LiveCourtroomPage />} />
                   <Route path="/risk-analysis" element={<RiskAnalysisPage />} />
                   <Route path="/regulatory-compliance" element={<RegulatoryCompliancePage />} />
                   <Route path="/contract-templates" element={<ContractTemplatesPage />} />
@@ -108,6 +117,7 @@ export const AppRouter: React.FC = () => {
                   <Route path="/marketplace" element={<MarketplacePage />} />
                   <Route path="/services" element={<ServicesPage />} />
                   <Route path="/ai-assistant" element={<AIAssistantPage />} />
+                  <Route path="/pleadings-game" element={<PleadingsGamePage />} />
                   <Route path="/security" element={<SecurityPage />} />
                   <Route path="/settings" element={<SettingsPage />} />
                   <Route path="/profile" element={<ProfilePage />} />

@@ -7,6 +7,7 @@
  * מניעת 429: השהיה בין מסמכים (משתנה סביבה INGEST_DELAY_MS, ברירת מחדל 350ms).
  * לנפח גדול: השתמשי ב-createEmbeddingsBatched בקוד ייעודי.
  */
+import 'dotenv/config';
 import pg from 'pg';
 import { createEmbedding, embeddingToPgVectorLiteral } from '../src/services/openaiEmbeddings.js';
 

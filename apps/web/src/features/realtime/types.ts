@@ -25,10 +25,53 @@ export interface ServerToClientEvents {
     ts: number
   }) => void
   'notification:new': (p: { id: string; title: string; body: string; ts: number }) => void
+
+  // --- Live Courtroom (Phase 1) ---
+  'courtroom:protocol_line': (p: {
+    sessionId: string
+    line: unknown
+    ts: number
+  }) => void
+  'courtroom:protocol_edit': (p: {
+    sessionId: string
+    lineId: string
+    text: string
+    editedBy: string
+    ts: number
+  }) => void
+  'courtroom:speaker_change': (p: {
+    sessionId: string
+    speakerUserId: string | null
+    ts: number
+  }) => void
+  'courtroom:evidence_present': (p: {
+    sessionId: string
+    evidenceId: string
+    ts: number
+  }) => void
+  'courtroom:evidence_hide': (p: {
+    sessionId: string
+    evidenceId: string
+    ts: number
+  }) => void
+  'courtroom:role_assigned': (p: {
+    sessionId: string
+    userId: string
+    role: string
+    color: string
+    ts: number
+  }) => void
+  'courtroom:hearing_start': (p: { sessionId: string; ts: number }) => void
+  'courtroom:hearing_end': (p: { sessionId: string; ts: number }) => void
 }
 
 export interface ClientToServerEvents {
   'court:join': (caseId: string, ack?: (ok: boolean) => void) => void
   'court:leave': (caseId: string) => void
   'court:typing': (p: { caseId: string; isTyping: boolean }) => void
+
+  // --- Live Courtroom (Phase 1) ---
+  'courtroom:join': (sessionId: string, ack?: (ok: boolean) => void) => void
+  'courtroom:leave': (sessionId: string) => void
+  'courtroom:speaking': (p: { sessionId: string; isSpeaking: boolean }) => void
 }

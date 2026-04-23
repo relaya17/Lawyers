@@ -33,12 +33,55 @@ export interface ServerToClientEvents {
     ts: number;
   }) => void;
   'notification:new': (p: { id: string; title: string; body: string; ts: number }) => void;
+
+  // --- Live Courtroom (Phase 1) ---
+  'courtroom:protocol_line': (p: {
+    sessionId: string;
+    line: unknown;
+    ts: number;
+  }) => void;
+  'courtroom:protocol_edit': (p: {
+    sessionId: string;
+    lineId: string;
+    text: string;
+    editedBy: string;
+    ts: number;
+  }) => void;
+  'courtroom:speaker_change': (p: {
+    sessionId: string;
+    speakerUserId: string | null;
+    ts: number;
+  }) => void;
+  'courtroom:evidence_present': (p: {
+    sessionId: string;
+    evidenceId: string;
+    ts: number;
+  }) => void;
+  'courtroom:evidence_hide': (p: {
+    sessionId: string;
+    evidenceId: string;
+    ts: number;
+  }) => void;
+  'courtroom:role_assigned': (p: {
+    sessionId: string;
+    userId: string;
+    role: string;
+    color: string;
+    ts: number;
+  }) => void;
+  'courtroom:hearing_start': (p: { sessionId: string; ts: number }) => void;
+  'courtroom:hearing_end': (p: { sessionId: string; ts: number }) => void;
 }
 
 export interface ClientToServerEvents {
   'court:join': (caseId: string, ack?: (ok: boolean) => void) => void;
   'court:leave': (caseId: string) => void;
   'court:typing': (p: { caseId: string; isTyping: boolean }) => void;
+
+  // --- Live Courtroom (Phase 1) ---
+  'courtroom:join': (sessionId: string, ack?: (ok: boolean) => void) => void;
+  'courtroom:leave': (sessionId: string) => void;
+  'courtroom:speaking': (p: { sessionId: string; isSpeaking: boolean }) => void;
 }
 
 function caseRoom(caseId: string): string {
@@ -47,6 +90,10 @@ function caseRoom(caseId: string): string {
 
 function userRoom(userId: string): string {
   return `user:${userId}`;
+}
+
+function sessionRoom(sessionId: string): string {
+  return `courtroom:${sessionId}`;
 }
 
 /**
@@ -117,9 +164,96 @@ export function attachSocketServer(httpServer: HttpServer): SocketIOServer {
         role: 'counsel',
       });
     });
+
+    // --- Live Courtroom (Phase 1) ---
+    socket.on('courtroom:join', (sessionId: string, ack?: (ok: boolean) => void) => {
+      if (!sessionId || typeof sessionId !== 'string') {
+        ack?.(false);
+        return;
+      }
+      void socket.join(sessionRoom(sessionId));
+      ack?.(true);
+    });
+
+    socket.on('courtroom:leave', (sessionId: string) => {
+      void socket.leave(sessionRoom(sessionId));
+    });
+
+    socket.on('courtroom:speaking', (payload: { sessionId: string; isSpeaking: boolean }) => {
+      if (!payload?.sessionId) return;
+      io?.to(sessionRoom(payload.sessionId)).emit('courtroom:speaker_change', {
+        sessionId: payload.sessionId,
+        speakerUserId: payload.isSpeaking ? data.userId : null,
+        ts: Date.now(),
+      });
+    });
   });
 
   return io;
+}
+
+// ---------- Live Courtroom broadcasts ----------
+
+export function broadcastProtocolLine(sessionId: string, line: unknown): void {
+  io?.to(sessionRoom(sessionId)).emit('courtroom:protocol_line', {
+    sessionId,
+    line,
+    ts: Date.now(),
+  });
+}
+
+export function broadcastProtocolEdit(params: {
+  sessionId: string;
+  lineId: string;
+  text: string;
+  editedBy: string;
+}): void {
+  io?.to(sessionRoom(params.sessionId)).emit('courtroom:protocol_edit', {
+    ...params,
+    ts: Date.now(),
+  });
+}
+
+export function broadcastEvidencePresent(sessionId: string, evidenceId: string): void {
+  io?.to(sessionRoom(sessionId)).emit('courtroom:evidence_present', {
+    sessionId,
+    evidenceId,
+    ts: Date.now(),
+  });
+}
+
+export function broadcastEvidenceHide(sessionId: string, evidenceId: string): void {
+  io?.to(sessionRoom(sessionId)).emit('courtroom:evidence_hide', {
+    sessionId,
+    evidenceId,
+    ts: Date.now(),
+  });
+}
+
+export function broadcastRoleAssigned(params: {
+  sessionId: string;
+  userId: string;
+  role: string;
+  color: string;
+}): void {
+  io?.to(sessionRoom(params.sessionId)).emit('courtroom:role_assigned', {
+    ...params,
+    ts: Date.now(),
+  });
+}
+
+export function broadcastHearingStart(sessionId: string): void {
+  io?.to(sessionRoom(sessionId)).emit('courtroom:hearing_start', {
+    sessionId,
+    ts: Date.now(),
+  });
+}
+
+export function broadcastHearingEnd(sessionId: string): void {
+  io?.to(sessionRoom(sessionId)).emit('courtroom:hearing_end', {
+    sessionId,
+    ts: Date.now(),
+  });
 }
 
 export function getIO(): SocketIOServer | null {

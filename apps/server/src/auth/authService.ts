@@ -88,7 +88,7 @@ export function issueCsrfCookie(res: Response): string {
   return t;
 }
 
-async function issueAuthResponse(
+export async function issueAuthResponse(
   userRow: AuthUserRow,
   req: Request,
   res: Response,

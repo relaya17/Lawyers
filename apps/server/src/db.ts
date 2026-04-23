@@ -12,8 +12,8 @@ export async function connectDB(): Promise<void> {
     await mongoose.connect(MONGODB_URI);
     console.log('[DB] Connected to MongoDB');
   } catch (err) {
-    console.error('[DB] Connection failed:', err);
-    process.exit(1);
+    console.error('[DB] Connection failed (server will continue without DB):',
+      (err as Error).message);
   }
 }
 

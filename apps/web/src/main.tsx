@@ -7,6 +7,7 @@ import { I18nextProvider } from 'react-i18next'
 import { QueryClient } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 
 import AppRouter from './routes'
 import { store } from '@/store'
@@ -94,21 +95,23 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         }}
       >
         <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <SessionAuthProvider>
-            <RealtimeSocketBridge />
-            <EntitlementsProvider>
-              <AnalyticsProvider>
-                <HelmetProvider>
-                  <I18nextProvider i18n={i18n}>
-                    <ThemeProvider>
-                      <OfflineBanner />
-                      <AppRouter />
-                    </ThemeProvider>
-                  </I18nextProvider>
-                </HelmetProvider>
-              </AnalyticsProvider>
-            </EntitlementsProvider>
-          </SessionAuthProvider>
+          <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ''}>
+            <SessionAuthProvider>
+              <RealtimeSocketBridge />
+              <EntitlementsProvider>
+                <AnalyticsProvider>
+                  <HelmetProvider>
+                    <I18nextProvider i18n={i18n}>
+                      <ThemeProvider>
+                        <OfflineBanner />
+                        <AppRouter />
+                      </ThemeProvider>
+                    </I18nextProvider>
+                  </HelmetProvider>
+                </AnalyticsProvider>
+              </EntitlementsProvider>
+            </SessionAuthProvider>
+          </GoogleOAuthProvider>
         </BrowserRouter>
       </PersistQueryClientProvider>
     </Provider>
