@@ -11,7 +11,7 @@ export function MobileUnauthorizedRegistrar() {
   useEffect(() => {
     registerMobileUnauthorized(() => {
       try {
-        router.replace('/');
+        router.replace('/login');
       } catch {
         /* ignore */
       }
